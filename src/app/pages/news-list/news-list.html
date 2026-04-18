@@ -58,21 +58,21 @@
             <button class="page-link" (click)="goToPage(currentPage - 1)">Anterior</button>
           </li>
 
-          @if (getPages()[0] > 1) {
+          @if (pages[0] > 1) {
             <li class="page-item"><button class="page-link" (click)="goToPage(1)">1</button></li>
-            @if (getPages()[0] > 2) {
+            @if (pages[0] > 2) {
               <li class="page-item disabled"><span class="page-link">...</span></li>
             }
           }
 
-          @for (p of getPages(); track p) {
+          @for (p of pages; track p) {
             <li class="page-item" [class.active]="p === currentPage">
               <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
             </li>
           }
 
-          @if (getPages()[getPages().length - 1] < totalPages) {
-            @if (getPages()[getPages().length - 1] < totalPages - 1) {
+          @if (pages[pages.length - 1] < totalPages) {
+            @if (pages[pages.length - 1] < totalPages - 1) {
               <li class="page-item disabled"><span class="page-link">...</span></li>
             }
             <li class="page-item"><button class="page-link" (click)="goToPage(totalPages)">{{ totalPages }}</button></li>
