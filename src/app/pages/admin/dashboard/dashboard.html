@@ -1,0 +1,143 @@
+<div>
+  <h4 class="mb-1 fw-semibold">Dashboard</h4>
+  <p class="text-muted mb-4">Bem-vindo, {{ auth.getEmail() }}</p>
+
+  <div class="row g-3">
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/noticias" class="card-link text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#2e6f9e1a; color:#2e6f9e;">
+            <i class="fa-solid fa-newspaper fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Notícias</div>
+            <div class="dash-sub">Gerir artigos publicados</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/relatorios" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#dc35451a; color:#dc3545;">
+            <i class="fa-solid fa-file-pdf fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Relatórios</div>
+            <div class="dash-sub">Gerir documentos PDF</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/servicos" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#1984631a; color:#198463;">
+            <i class="fa-solid fa-hand-holding-heart fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Serviços</div>
+            <div class="dash-sub">Valências do centro</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/contactos" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#fd7e141a; color:#fd7e14;">
+            <i class="fa-solid fa-address-book fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Contactos</div>
+            <div class="dash-sub">Telefones, emails, morada</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/paginas" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#6f42c11a; color:#6f42c1;">
+            <i class="fa-solid fa-file-lines fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Páginas</div>
+            <div class="dash-sub">Conteúdo dinâmico das páginas</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/admins" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#0dcaf01a; color:#0dcaf0;">
+            <i class="fa-solid fa-users-gear fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Administradores</div>
+            <div class="dash-sub">Gerir contas de acesso</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-sm-6 col-xl-4">
+      <a routerLink="/admin/logs" class="text-decoration-none">
+        <div class="dash-card">
+          <div class="dash-icon" style="background:#6c757d1a; color:#6c757d;">
+            <i class="fa-solid fa-list-check fa-lg"></i>
+          </div>
+          <div>
+            <div class="dash-label">Registos</div>
+            <div class="dash-sub">Histórico de operações</div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.dash-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.dash-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+.dash-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.dash-label {
+  font-weight: 600;
+  color: #212529;
+  font-size: 0.95rem;
+}
+.dash-sub {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-top: 2px;
+}
+</style>
