@@ -1,0 +1,47 @@
+<div class="container py-4">
+  <div class="page-with-sidebar">
+
+    <div class="main-content">
+      <h3 class="section-heading">Órgãos Sociais</h3>
+      <div class="section-underline"></div>
+      <p>
+        Os órgãos de gestão do CPASM são constituídos por voluntários que exercem a sua missão de forma gratuita, com espírito de serviço e compromisso com a comunidade.
+      </p>
+
+      <h3 class="section-heading">Direção</h3>
+      <div class="section-underline"></div>
+      <ul>
+        <li><strong>Presidente:</strong> Padre Nuno Paulo Isidoro Pacheco</li>
+        <li><strong>Vice-Presidente:</strong> Sara Alexandra Penas Faustino</li>
+        <li><strong>Secretária:</strong> Maria de Fátima Jorge Tavares</li>
+        <li><strong>Tesoureira:</strong> Anabela Birrento da Silva</li>
+        <li><strong>Vogal:</strong> Maria Paula do Rosário Dias Folgado Diogo</li>
+      </ul>
+
+      <h3 class="section-heading">Conselho Fiscal</h3>
+      <div class="section-underline"></div>
+      <ul>
+        <li><strong>Presidente:</strong> Maria Fernanda Pardaleiro Velez</li>
+        <li><strong>Secretário:</strong> Agostinho Maria Medroa</li>
+        <li><strong>Vogal:</strong> António José Picanço dos Santos</li>
+      </ul>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h5 class="section-heading">Últimas Notícias</h5>
+      <div class="section-underline"></div>
+      @for (item of sidebarNews; track item.id) {
+        <div class="sidebar-news-item mb-3">
+          <a [routerLink]="['/noticias', item.id]" style="text-decoration:none; color:inherit;">
+            <img [src]="getImageUrl(item.url)" class="img-fluid mb-1" [alt]="item.title" style="width:100%; height:80px; object-fit:cover; border-radius:4px;">
+            <p class="mb-0" style="font-size:0.85rem; font-weight:600; color:#2e6f9e;">{{ item.title }}</p>
+            <small class="text-muted">{{ formatDate(item.dateHour) }}</small>
+          </a>
+        </div>
+      }
+      <a routerLink="/noticias" class="btn btn-primary btn-sm w-100 mt-2">Ver todas</a>
+    </aside>
+
+  </div>
+</div>

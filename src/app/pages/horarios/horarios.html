@@ -1,0 +1,54 @@
+<div class="container py-4">
+  <div class="page-with-sidebar">
+
+    <div class="main-content">
+      <h3 class="section-heading">Horário de Funcionamento</h3>
+      <div class="section-underline"></div>
+
+      <div class="mb-4">
+        <select class="form-select" style="max-width: 400px;" (change)="onSetorChange($event)">
+          <option value="secretaria">Secretaria</option>
+          <option value="ninho">Ninho</option>
+          <option value="coordenadora">Atendimento da Coordenadora Pedagógica</option>
+          <option value="educadoras">Atendimento das Educadoras aos Encarregados de Educação</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Dia da Semana</th>
+              <th>Horário</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of currentHorarios; track entry.dia) {
+              <tr>
+                <td>{{ entry.dia }}</td>
+                <td>{{ entry.horario }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h5 class="section-heading">Últimas Notícias</h5>
+      <div class="section-underline"></div>
+      @for (item of sidebarNews; track item.id) {
+        <div class="sidebar-news-item mb-3">
+          <a [routerLink]="['/noticias', item.id]" style="text-decoration:none; color:inherit;">
+            <img [src]="getImageUrl(item.url)" class="img-fluid mb-1" [alt]="item.title" style="width:100%; height:80px; object-fit:cover; border-radius:4px;">
+            <p class="mb-0" style="font-size:0.85rem; font-weight:600; color:#2e6f9e;">{{ item.title }}</p>
+            <small class="text-muted">{{ formatDate(item.dateHour) }}</small>
+          </a>
+        </div>
+      }
+      <a routerLink="/noticias" class="btn btn-primary btn-sm w-100 mt-2">Ver todas</a>
+    </aside>
+
+  </div>
+</div>
