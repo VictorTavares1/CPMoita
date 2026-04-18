@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { NewsService, NewsDetail, NewsItem } from '../../services/news';
 
@@ -7,6 +7,7 @@ import { NewsService, NewsDetail, NewsItem } from '../../services/news';
   imports: [RouterLink],
   templateUrl: './news-detail.html',
   styleUrl: './news-detail.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NewsDetailComponent implements OnInit {
   news: NewsDetail | null = null;
@@ -18,7 +19,8 @@ export class NewsDetailComponent implements OnInit {
 
   constructor(
     private newsService: NewsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -28,7 +30,7 @@ export class NewsDetailComponent implements OnInit {
     });
 
     this.newsService.getNews(1, 5).subscribe({
-      next: (res) => (this.sidebarNews = res.data),
+      next: (res) => { this.sidebarNews = res.data; this.cdr.markForCheck(); },
     });
   }
 
@@ -39,10 +41,12 @@ export class NewsDetailComponent implements OnInit {
       next: (res) => {
         this.news = res;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.notFound = true;
         this.loading = false;
+        this.cdr.markForCheck();
       },
     });
   }

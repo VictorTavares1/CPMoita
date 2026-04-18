@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 
@@ -7,15 +7,16 @@ import { NewsService, NewsItem } from '../../services/news';
   imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home implements OnInit {
   latestNews: NewsItem[] = [];
 
-  constructor(private newsService: NewsService) {}
+  constructor(private newsService: NewsService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.newsService.getNews(1, 3).subscribe({
-      next: (res) => (this.latestNews = res.data),
+      next: (res) => { this.latestNews = res.data; this.cdr.markForCheck(); },
       error: (err) => console.error('Erro ao carregar notícias:', err),
     });
   }
