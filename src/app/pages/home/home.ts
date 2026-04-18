@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
