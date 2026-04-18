@@ -45,3 +45,8 @@ Thumbs.db
 
 # DB credentials
 /db/info.json
+
+# Claude / AI tooling
+.agents/
+.claude/
+skills-lock.json
