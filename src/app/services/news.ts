@@ -10,6 +10,14 @@ export interface NewsItem {
   url: string | null;
 }
 
+export interface NewsDetail {
+  id: number;
+  title: string;
+  content: string;
+  dateHour: string;
+  images: string[];
+}
+
 export interface NewsResponse {
   data: NewsItem[];
   total: number;
@@ -19,11 +27,19 @@ export interface NewsResponse {
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
-  private apiUrl = 'http://localhost/CPMoita/api/news.php';
+  private baseUrl = 'http://localhost/CPMoita/api';
 
   constructor(private http: HttpClient) {}
 
   getNews(page: number = 1, limit: number = 9): Observable<NewsResponse> {
-    return this.http.get<NewsResponse>(`${this.apiUrl}?page=${page}&limit=${limit}`);
+    return this.http.get<NewsResponse>(`${this.baseUrl}/news.php?page=${page}&limit=${limit}`);
+  }
+
+  getNewsDetail(id: number): Observable<NewsDetail> {
+    return this.http.get<NewsDetail>(`${this.baseUrl}/news-detail.php?id=${id}`);
+  }
+
+  searchNews(query: string): Observable<NewsItem[]> {
+    return this.http.get<NewsItem[]>(`${this.baseUrl}/news-search.php?q=${encodeURIComponent(query)}`);
   }
 }

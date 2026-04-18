@@ -1,0 +1,108 @@
+<div class="container py-4">
+  <div class="page-with-sidebar">
+
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+
+      @if (loading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">A carregar...</span>
+          </div>
+        </div>
+      }
+
+      @if (notFound) {
+        <div class="alert alert-danger">Notícia não encontrada.</div>
+      }
+
+      @if (!loading && news) {
+        <div class="card border-0 shadow-sm">
+          <div class="card-body p-4 p-md-5">
+
+            <!-- Título -->
+            <h1 class="fw-bold mb-3" style="color: #2e6f9e;">{{ news.title }}</h1>
+
+            <div class="d-flex align-items-center gap-2 text-muted small mb-4">
+              <i class="fas fa-calendar-alt"></i>
+              <span>{{ formatDate(news.dateHour) }}</span>
+            </div>
+
+            <!-- Carousel de imagens -->
+            @if (news.images.length > 0) {
+              <div id="newsCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+
+                @if (news.images.length > 1) {
+                  <div class="carousel-indicators">
+                    @for (img of news.images; track img; let i = $index) {
+                      <button type="button"
+                              data-bs-target="#newsCarousel"
+                              [attr.data-bs-slide-to]="i"
+                              [class.active]="i === 0"
+                              [attr.aria-current]="i === 0 ? 'true' : null">
+                      </button>
+                    }
+                  </div>
+                }
+
+                <div class="carousel-inner rounded-3 overflow-hidden">
+                  @for (img of news.images; track img; let i = $index) {
+                    <div class="carousel-item" [class.active]="i === 0">
+                      <img [src]="getImageUrl(img)"
+                           class="d-block w-100"
+                           style="height: 400px; object-fit: cover;"
+                           [alt]="news.title">
+                    </div>
+                  }
+                </div>
+
+                @if (news.images.length > 1) {
+                  <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                  </button>
+                }
+
+              </div>
+            }
+
+            <!-- Conteúdo HTML -->
+            <section class="fs-5 lh-lg text-dark" [innerHTML]="news.content"></section>
+
+            <!-- Voltar -->
+            <div class="mt-4">
+              <a routerLink="/noticias" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Voltar às notícias
+              </a>
+            </div>
+
+          </div>
+        </div>
+      }
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="news-sidebar">
+      <h3 class="sidebar-title">Últimas Notícias</h3>
+      <div class="sidebar-underline"></div>
+
+      @for (item of sidebarNews; track item.id) {
+        <a [routerLink]="['/noticias', item.id]" class="sidebar-news-item">
+          <div class="sidebar-news-image">
+            <img [src]="getImageUrl(item.url ?? '')" [alt]="item.title">
+          </div>
+          <div class="sidebar-news-content">
+            <h5>{{ item.title }}</h5>
+            <small>{{ formatDate(item.dateHour) }}</small>
+          </div>
+        </a>
+      }
+
+      <a routerLink="/noticias" class="sidebar-view-all">Ver todas as notícias →</a>
+    </aside>
+
+  </div>
+</div>

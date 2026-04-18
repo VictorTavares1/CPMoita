@@ -1,0 +1,90 @@
+<div class="container py-4">
+
+  <!-- Cabeçalho -->
+  @if (isSearching) {
+    <h3 class="section-heading">Resultados para: <strong>{{ searchQuery }}</strong></h3>
+  } @else {
+    <h3 class="section-heading">Notícias</h3>
+  }
+  <div class="section-underline"></div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">A carregar...</span>
+      </div>
+    </div>
+  }
+
+  <!-- Sem resultados -->
+  @if (!loading && news.length === 0) {
+    @if (isSearching) {
+      <div class="alert alert-info mt-3">
+        Nenhuma notícia encontrada para <strong>{{ searchQuery }}</strong>.
+      </div>
+    } @else {
+      <div class="alert alert-warning mt-3">Sem notícias disponíveis.</div>
+    }
+  }
+
+  <!-- Grelha de notícias -->
+  @if (!loading && news.length > 0) {
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      @for (item of news; track item.id) {
+        <div class="col">
+          <a [routerLink]="['/noticias', item.id]" style="text-decoration: none; color: inherit;">
+            <div class="card border-0 h-100">
+              <div class="news-image-container">
+                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title">
+              </div>
+              <div class="card-body" style="background-color: #ffffff;">
+                <h4 class="card-title" style="color: #2e6f9e; font-weight: bold;">{{ item.title }}</h4>
+                <p class="card-text" style="color: black;">{{ stripHtml(item.content) | slice:0:100 }}...</p>
+                <small class="text-muted">Publicado a {{ formatDate(item.dateHour) }}</small>
+              </div>
+            </div>
+          </a>
+        </div>
+      }
+    </div>
+
+    <!-- Paginação (só na listagem normal) -->
+    @if (!isSearching && totalPages > 1) {
+      <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">Anterior</button>
+          </li>
+
+          @if (getPages()[0] > 1) {
+            <li class="page-item"><button class="page-link" (click)="goToPage(1)">1</button></li>
+            @if (getPages()[0] > 2) {
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+          }
+
+          @for (p of getPages(); track p) {
+            <li class="page-item" [class.active]="p === currentPage">
+              <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+            </li>
+          }
+
+          @if (getPages()[getPages().length - 1] < totalPages) {
+            @if (getPages()[getPages().length - 1] < totalPages - 1) {
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+            <li class="page-item"><button class="page-link" (click)="goToPage(totalPages)">{{ totalPages }}</button></li>
+          }
+
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">Próximo</button>
+          </li>
+
+        </ul>
+      </nav>
+    }
+  }
+
+</div>
