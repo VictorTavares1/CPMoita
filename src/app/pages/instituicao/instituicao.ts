@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 import { PageContentsService, PageContents } from '../../services/page-contents';
 
 @Component({
   selector: 'app-instituicao',
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './instituicao.html',
   styleUrl: './instituicao.css',
 })
