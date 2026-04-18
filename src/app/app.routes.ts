@@ -14,6 +14,9 @@ import { Erpi } from './pages/servicos/erpi/erpi';
 import { AdminLogin } from './pages/admin/login/login';
 import { AdminLayout } from './pages/admin/layout/admin-layout';
 import { AdminDashboard } from './pages/admin/dashboard/dashboard';
+import { AdminNoticias } from './pages/admin/noticias/noticias-list';
+import { AdminNoticiasAdd } from './pages/admin/noticias/noticias-add';
+import { AdminNoticiasEdit } from './pages/admin/noticias/noticias-edit';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -41,6 +44,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: AdminDashboard },
+      { path: 'noticias', component: AdminNoticias },
+      { path: 'noticias/add', component: AdminNoticiasAdd },
+      { path: 'noticias/edit/:id', component: AdminNoticiasEdit },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

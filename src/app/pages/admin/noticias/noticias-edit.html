@@ -1,0 +1,81 @@
+<div>
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a routerLink="/admin/noticias" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    <h4 class="mb-0 fw-semibold">Editar Notícia</h4>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5 text-muted">
+      <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+    </div>
+  } @else {
+
+    @if (toast()) {
+      <div class="alert alert-success py-2 small">{{ toast() }}</div>
+    }
+    @if (error()) {
+      <div class="alert alert-danger py-2 small">{{ error() }}</div>
+    }
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="row g-3">
+
+          <div class="col-12">
+            <label class="form-label fw-semibold">Título <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="titulo">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-semibold">Conteúdo <span class="text-danger">*</span></label>
+            <div id="editor" style="height:320px;"></div>
+          </div>
+
+          <div class="col-12 d-flex gap-2 justify-content-end">
+            <a routerLink="/admin/noticias" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
+              @if (saving()) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+              }
+              Guardar Alterações
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Imagens -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold py-3">Imagens da Notícia</div>
+      <div class="card-body p-4">
+
+        <div class="row g-3 mb-4">
+          @if (news && news.images.length === 0) {
+            <p class="text-muted small">Sem imagens.</p>
+          }
+          @for (img of news?.images ?? []; track img.id) {
+            <div class="col-md-3 col-sm-4 col-6 position-relative">
+              <img [src]="imageUrl(img.url)" class="img-fluid rounded" style="height:150px; width:100%; object-fit:cover;">
+              <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+                (click)="deleteImage(img.id)" title="Apagar">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          }
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+          <input type="file" class="form-control form-control-sm" id="imgInput" multiple accept="image/*" style="max-width:320px;">
+          <button class="btn btn-outline-primary btn-sm" (click)="uploadImages()">
+            <i class="fa-solid fa-upload me-1"></i> Adicionar
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  }
+</div>
