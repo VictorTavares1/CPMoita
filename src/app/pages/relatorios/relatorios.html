@@ -1,0 +1,23 @@
+<div class="container py-4">
+  <h3 class="section-heading">Relatório de Contas</h3>
+  <div class="section-underline"></div>
+  <p>Disponibilizamos abaixo os Relatórios de Contas anuais. Cada ano corresponde a um ficheiro ZIP com todos os documentos em formato PDF.</p>
+
+  @if (years.length === 0) {
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">A carregar...</span>
+      </div>
+    </div>
+  } @else {
+    <ul class="list-group" style="max-width: 400px;">
+      @for (year of years; track year) {
+        <li class="list-group-item">
+          <a [href]="downloadBase + year" style="color:#2e6f9e; font-weight:600; text-decoration:none;">
+            <i class="fas fa-file-pdf me-2"></i>Relatório de Contas {{ year }}
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</div>
