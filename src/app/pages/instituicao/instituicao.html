@@ -1,0 +1,107 @@
+<div class="container py-4">
+  <div class="page-with-sidebar">
+
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+
+      <!-- Quem Somos -->
+      <h3 class="section-heading">Quem Somos</h3>
+      <div class="section-underline"></div>
+      <p>
+        O Centro Paroquial de Ação Social da Moita é uma Instituição Particular de Solidariedade Social (IPSS)
+        sem fins lucrativos, integrada na Paróquia da Moita (Diocese de Setúbal).
+      </p>
+      <p>
+        Fundado em abril de 1952, tem como propósito apoiar os mais carenciados, promovendo a dignidade humana,
+        o respeito pelo próximo e o espírito de solidariedade cristã.
+      </p>
+      <p>
+        Com 73 anos de história, desenvolve atualmente a sua atividade nas áreas da Infância e Sénior, apoiando
+        diariamente cerca de 300 utentes, com o contributo de 82 colaboradores e uma Direção voluntária.
+      </p>
+
+      <!-- Percurso Histórico (dinâmico se existir na BD, senão estático) -->
+      <h3 class="section-heading">
+        {{ get('historia_titulo') || 'Percurso Histórico' }}
+      </h3>
+      <div class="section-underline"></div>
+
+      @if (get('historia_texto')) {
+        <div [innerHTML]="get('historia_texto')"></div>
+      } @else {
+        <ul>
+          <li><strong>1952</strong> – Fundado pelo Padre João Evangelista como Centro Paroquial de Assistência da Moita, com orfanatos para meninas e rapazes e um asilo para idosos.</li>
+          <li><strong>Padre Fernando Belo</strong> – Transferiu o lar de idosos para Sarilhos Pequenos, criando o Lar Nossa Senhora da Boa Viagem, o Centro de Dia (1982), o Jardim de Infância "O Ninho" e o CATL "O Barco".</li>
+          <li><strong>Padre João Tavares</strong> – Construiu o novo edifício do Jardim de Infância e CATL, inaugurado em 2004.</li>
+          <li><strong>Padre Sílvio Couto</strong> – Criou a resposta social Creche "O Regaço".</li>
+          <li><strong>Atualmente</strong> – Sob a presidência do Padre Nuno Pacheco, a instituição continua a crescer e a responder aos desafios sociais.</li>
+        </ul>
+      }
+
+      <!-- Missão -->
+      <h3 class="section-heading">Missão</h3>
+      <div class="section-underline"></div>
+      <p>
+        Promover a dignidade humana através de respostas sociais dirigidas a crianças, famílias e idosos,
+        especialmente os mais vulneráveis.
+      </p>
+
+      <!-- Visão -->
+      <h3 class="section-heading">Visão</h3>
+      <div class="section-underline"></div>
+      <p>
+        Ser uma instituição de referência regional pela qualidade das respostas sociais e pelo impacto
+        positivo na comunidade.
+      </p>
+
+      <!-- Valores (dinâmico se existir na BD) -->
+      <h3 class="section-heading">
+        {{ get('valores_titulo') || 'Valores' }}
+      </h3>
+      <div class="section-underline"></div>
+      <ul>
+        <li><strong>Matriz Cristã</strong> – Inspiração na doutrina social da Igreja Católica.</li>
+        <li><strong>Equidade</strong> – Acesso justo e transparente aos cuidados.</li>
+        <li><strong>Sustentabilidade</strong> – Gestão responsável e equilibrada.</li>
+      </ul>
+
+      <!-- Objetivos Estratégicos -->
+      <h3 class="section-heading">Objetivos Estratégicos</h3>
+      <div class="section-underline"></div>
+      <ul>
+        <li>Valorizar a qualidade dos serviços prestados.</li>
+        <li>Reforçar a sustentabilidade financeira.</li>
+        <li>Desenvolver a comunicação e imagem institucional.</li>
+        <li>Perspetivar a construção de um novo equipamento para a ERPI.</li>
+      </ul>
+
+      <p>
+        <a href="http://localhost/centro-paroquial-moita/docs/2015/Estatutos_2015.pdf" target="_blank" rel="noopener">
+          Consulte aqui os estatutos da instituição
+        </a>
+      </p>
+
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="news-sidebar">
+      <h3 class="sidebar-title">Últimas Notícias</h3>
+      <div class="sidebar-underline"></div>
+
+      @for (item of sidebarNews; track item.id) {
+        <a [routerLink]="['/noticias', item.id]" class="sidebar-news-item">
+          <div class="sidebar-news-image">
+            <img [src]="getImageUrl(item.url)" [alt]="item.title">
+          </div>
+          <div class="sidebar-news-content">
+            <h5>{{ item.title }}</h5>
+            <small>{{ formatDate(item.dateHour) }}</small>
+          </div>
+        </a>
+      }
+
+      <a routerLink="/noticias" class="sidebar-view-all">Ver todas as notícias →</a>
+    </aside>
+
+  </div>
+</div>
