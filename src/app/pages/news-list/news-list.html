@@ -40,7 +40,7 @@
               </div>
               <div class="card-body" style="background-color: #ffffff;">
                 <h4 class="card-title" style="color: #2e6f9e; font-weight: bold;">{{ item.title }}</h4>
-                <p class="card-text" style="color: black;">{{ stripHtml(item.content) | slice:0:100 }}...</p>
+                <p class="card-text" style="color: black;">{{ stripHtml(item.content).slice(0, 100) }}...</p>
                 <small class="text-muted">Publicado a {{ formatDate(item.dateHour) }}</small>
               </div>
             </div>
