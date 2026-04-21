@@ -1,16 +1,10 @@
 <div class="container py-4">
-  <h1 class="section-heading text-center" style="margin: 30px 0;">Pré-Escolar "O Ninho"</h1>
+  <h1 class="section-heading text-center" style="margin: 30px 0;">
+    {{ service?.titulo || 'Pré-Escolar "O Ninho"' }}
+  </h1>
   <div class="section-underline"></div>
 
-  <p class="mt-3">
-    Uma casa de gerações que gera ações, onde os valores familiares prevalecem. Com várias décadas de funcionamento, o nosso Ninho é conhecido por ser casa de várias gerações da mesma família.
-  </p>
-  <p>
-    Na nossa instituição, acreditamos que a Educação Pré-Escolar é uma etapa fundamental no desenvolvimento da criança. Num ambiente acolhedor, familiar, seguro e estimulante, promovemos aprendizagens significativas através do brincar, da descoberta e da interação com os outros.
-  </p>
-  <p>
-    Valorizamos a curiosidade natural das crianças, incentivando a autonomia, a criatividade e o respeito pelas diferenças.
-  </p>
+  <div class="mt-3" [innerHTML]="service?.descricao || 'Uma casa de gerações que gera ações, onde os valores familiares prevalecem. Com várias décadas de funcionamento, o nosso Ninho é conhecido por ser casa de várias gerações da mesma família.'"></div>
 
   <h2 class="section-heading text-center mt-4">Ninho por Cores</h2>
   <div class="section-underline"></div>
