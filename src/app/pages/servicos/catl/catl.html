@@ -1,13 +1,8 @@
 <div class="container py-4">
-  <h1 class="section-heading">CATL "O Barco"</h1>
+  <h1 class="section-heading">{{ service?.titulo || 'CATL "O Barco"' }}</h1>
   <div class="section-underline"></div>
 
-  <p class="mt-3">
-    O nosso CATL oferece um espaço seguro, educativo e divertido para crianças em idade escolar, no período pós-letivo e durante as pausas escolares.
-  </p>
-  <p>
-    Promovemos atividades lúdicas, culturais, desportivas e de apoio ao estudo, que contribuem para o desenvolvimento pessoal e social das crianças. Com uma equipa dedicada e atenta, incentivamos a autonomia, o trabalho em grupo e o respeito pelo outro, sempre num ambiente de confiança e bem-estar.
-  </p>
+  <div class="mt-3" [innerHTML]="service?.descricao || 'O nosso CATL oferece um espaço seguro, educativo e divertido para crianças em idade escolar, no período pós-letivo e durante as pausas escolares.'"></div>
   <p><strong style="color:#2e6f9e;">Capacidade:</strong> cerca de 70 crianças</p>
 
   <div class="mt-3 mb-4">
