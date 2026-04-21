@@ -1,0 +1,76 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-semibold">Gerir Contactos</h4>
+      <p class="text-muted small mb-0">{{ contacts.length }} contactos no total</p>
+    </div>
+    <a routerLink="/admin/contactos/add" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-plus me-1"></i> Novo Contacto
+    </a>
+  </div>
+
+  @if (toast()) {
+    <div class="alert alert-{{ toastType() }} alert-dismissible py-2 small">{{ toast() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      @if (loading()) {
+        <div class="text-center py-5 text-muted">
+          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+        </div>
+      } @else {
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:15%">Tipo</th>
+              <th style="width:35%">Valor</th>
+              <th style="width:25%">Ícone</th>
+              <th style="width:10%" class="text-center">Estado</th>
+              <th style="width:15%" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (contacts.length === 0) {
+              <tr><td colspan="5" class="text-center text-muted py-4">Nenhum contacto encontrado.</td></tr>
+            }
+            @for (c of contacts; track c.id) {
+              <tr [class.table-secondary]="c.idState === 2">
+                <td>
+                  <span class="badge bg-primary">{{ c.tipo }}</span>
+                </td>
+                <td>
+                  <strong>{{ c.valor }}</strong>
+                  @if (c.idState === 2) {
+                    <span class="badge bg-secondary ms-2">Inativo</span>
+                  }
+                </td>
+                <td class="text-muted small">
+                  <i [class]="c.icone + ' me-1'"></i> {{ c.icone }}
+                </td>
+                <td class="text-center">
+                  @if (c.idState === 1) {
+                    <span class="badge bg-success">Ativo</span>
+                  } @else {
+                    <span class="badge bg-secondary">Inativo</span>
+                  }
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a [routerLink]="['/admin/contactos/edit', c.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <button class="btn btn-sm" [class]="c.idState === 1 ? 'btn-outline-danger' : 'btn-outline-success'"
+                      (click)="toggleState(c)" [title]="c.idState === 1 ? 'Desativar' : 'Reativar'">
+                      <i class="fa-solid" [class]="c.idState === 1 ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>
