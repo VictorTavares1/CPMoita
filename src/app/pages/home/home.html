@@ -20,8 +20,8 @@
               <img src="images/cpm.png" class="d-block w-100" alt="Centro Paroquial">
               <div class="carousel-caption">
                 <div class="col-9">
-                  <h1>A Nossa História</h1>
-                  <p>Conheça o Centro Paroquial de Ação Social da Moita, a sua história, missão e valores ao serviço da comunidade</p>
+                  <h1>{{ get('hero_titulo') || 'A Nossa História' }}</h1>
+                  <p>{{ get('hero_subtitulo') || 'Conheça o Centro Paroquial de Ação Social da Moita, a sua história, missão e valores ao serviço da comunidade' }}</p>
                   <a routerLink="/instituicao" class="btn btn-primary">Saber mais</a>
                 </div>
               </div>
@@ -72,6 +72,17 @@
     </div>
   </div>
 </div>
+
+<!-- Missão -->
+@if (get('missao_titulo') || get('missao_texto')) {
+  <div class="container my-5">
+    <div class="text-center">
+      <h2 class="titleLined">{{ get('missao_titulo') || 'A Nossa Missão' }}</h2>
+    </div>
+    <div class="mb-4"></div>
+    <div class="text-center" [innerHTML]="get('missao_texto')"></div>
+  </div>
+}
 
 <!-- Últimas Notícias -->
 <div class="container-fluid px-0">
