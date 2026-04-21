@@ -1,3 +1,17 @@
+@if (contacts.length > 0) {
+  <div class="contacts-bar">
+    @for (contact of contacts; track contact.id) {
+      @if (contact.tipo === 'telefone') {
+        <a href="tel:{{ contact.valor }}"><i [class]="contact.icone"></i> {{ contact.valor }}</a>
+      } @else if (contact.tipo === 'email') {
+        <a href="mailto:{{ contact.valor }}"><i [class]="contact.icone"></i> {{ contact.valor }}</a>
+      } @else if (contact.tipo === 'facebook') {
+        <a href="{{ contact.valor }}" target="_blank" rel="noopener"><i [class]="contact.icone"></i> Facebook</a>
+      }
+    }
+  </div>
+}
+
 <nav class="navbar bg-body-tertiary sticky-top-brand">
   <div class="container-fluid justify-content-center">
     <a class="navbar-brand text-center" routerLink="/">

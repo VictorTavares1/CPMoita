@@ -2,6 +2,29 @@
   background-color: #e3e6ea !important;
 }
 
+.contacts-bar {
+  background-color: #2e6f9e;
+  color: white;
+  padding: 5px 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+
+.contacts-bar a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.contacts-bar a:hover {
+  text-decoration: underline;
+}
+
 .sticky-top-brand {
   position: sticky;
   top: 0;
