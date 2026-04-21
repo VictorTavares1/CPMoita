@@ -10,12 +10,25 @@
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
         <h2>Contactos</h2>
-        <p>
-          Rua Bartolomeu Dias, nºs 11-13<br>
-          2860-438 Moita<br>
-          Tlf: 21 289 0714 |
-          <a href="mailto:cparoquialdamoita@gmail.com" style="color: inherit;">cparoquialdamoita&#64;gmail.com</a>
-        </p>
+        @for (contact of contacts; track contact.id) {
+          <p>
+            @if (contact.tipo === 'telefone') {
+              <a href="tel:{{ contact.valor }}" style="color: inherit;">
+                <i [class]="contact.icone"></i> {{ contact.valor }}
+              </a>
+            } @else if (contact.tipo === 'email') {
+              <a href="mailto:{{ contact.valor }}" style="color: inherit;">
+                <i [class]="contact.icone"></i> {{ contact.valor }}
+              </a>
+            } @else if (contact.tipo === 'morada') {
+              <span><i [class]="contact.icone"></i> {{ contact.valor }}</span>
+            } @else if (contact.tipo === 'facebook') {
+              <a href="{{ contact.valor }}" target="_blank" rel="noopener" style="color: inherit;">
+                <i [class]="contact.icone"></i> Facebook
+              </a>
+            }
+          </p>
+        }
       </div>
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
