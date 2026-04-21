@@ -1,0 +1,47 @@
+<div>
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <a routerLink="/admin/servicos" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left"></i>
+    </a>
+    <h4 class="mb-0 fw-semibold">Novo Serviço</h4>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger py-2 small">{{ error() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="mb-3">
+        <label class="form-label">Título <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="titulo"
+          placeholder="Ex: Serviço de Apoio Domiciliário">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Descrição <span class="text-danger">*</span></label>
+        <textarea class="form-control" [(ngModel)]="descricao" rows="4"
+          placeholder="Descrição do serviço..."></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Ícone ou Imagem <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="iconeOuImagem"
+          placeholder="Ex: fa-solid fa-house-user ou /uploads/servico.jpg">
+        @if (iconeOuImagem) {
+          <div class="mt-2 text-muted small">
+            Pré-visualização: <i [class]="iconeOuImagem"></i> {{ iconeOuImagem }}
+          </div>
+        }
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
+          @if (saving()) { <span class="spinner-border spinner-border-sm me-1"></span> }
+          Guardar
+        </button>
+        <a routerLink="/admin/servicos" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>

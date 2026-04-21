@@ -1,0 +1,52 @@
+<div>
+  <div class="mb-4">
+    <h4 class="mb-0 fw-semibold">Gerir Conteúdo das Páginas</h4>
+    <p class="text-muted small mb-0">Edite os textos e títulos que aparecem nas páginas públicas do site</p>
+  </div>
+
+  @if (toast()) {
+    <div class="alert alert-{{ toastType() }} py-2 small">{{ toast() }}</div>
+  }
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      @if (loading()) {
+        <div class="text-center py-5 text-muted">
+          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+        </div>
+      } @else {
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:15%">Página</th>
+              <th style="width:20%">Chave</th>
+              <th style="width:10%">Tipo</th>
+              <th style="width:35%">Conteúdo</th>
+              <th style="width:10%">Atualizado</th>
+              <th style="width:10%" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (contents.length === 0) {
+              <tr><td colspan="6" class="text-center text-muted py-4">Nenhum conteúdo encontrado.</td></tr>
+            }
+            @for (c of contents; track c.id) {
+              <tr>
+                <td><span class="badge bg-primary">{{ pageLabel(c.nomePagina) }}</span></td>
+                <td class="small text-muted">{{ c['chaveSecção'] }}</td>
+                <td><span class="badge bg-secondary">{{ c.tipoConteudo }}</span></td>
+                <td class="small text-truncate" style="max-width:250px;">{{ c.conteudoPagina }}</td>
+                <td class="small text-muted">{{ formatDate(c.atualizadoEm) }}</td>
+                <td class="text-center">
+                  <a [routerLink]="['/admin/paginas/edit', c.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

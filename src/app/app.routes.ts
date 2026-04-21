@@ -17,6 +17,14 @@ import { AdminDashboard } from './pages/admin/dashboard/dashboard';
 import { AdminNoticias } from './pages/admin/noticias/noticias-list';
 import { AdminNoticiasAdd } from './pages/admin/noticias/noticias-add';
 import { AdminNoticiasEdit } from './pages/admin/noticias/noticias-edit';
+import { AdminContactos } from './pages/admin/contactos/contactos-list';
+import { AdminContactosAdd } from './pages/admin/contactos/contactos-add';
+import { AdminContactosEdit } from './pages/admin/contactos/contactos-edit';
+import { AdminServicos } from './pages/admin/servicos/servicos-list';
+import { AdminServicosAdd } from './pages/admin/servicos/servicos-add';
+import { AdminServicosEdit } from './pages/admin/servicos/servicos-edit';
+import { AdminPaginas } from './pages/admin/paginas/paginas-list';
+import { AdminPaginasEdit } from './pages/admin/paginas/paginas-edit';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -47,6 +55,14 @@ export const routes: Routes = [
       { path: 'noticias', component: AdminNoticias },
       { path: 'noticias/add', component: AdminNoticiasAdd },
       { path: 'noticias/edit/:id', component: AdminNoticiasEdit },
+      { path: 'contactos', component: AdminContactos },
+      { path: 'contactos/add', component: AdminContactosAdd },
+      { path: 'contactos/edit/:id', component: AdminContactosEdit },
+      { path: 'servicos', component: AdminServicos },
+      { path: 'servicos/add', component: AdminServicosAdd },
+      { path: 'servicos/edit/:id', component: AdminServicosEdit },
+      { path: 'paginas', component: AdminPaginas },
+      { path: 'paginas/edit/:id', component: AdminPaginasEdit },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
