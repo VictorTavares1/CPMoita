@@ -21,7 +21,7 @@ export class Horarios implements OnInit {
     secretaria: {
       nome: 'Secretaria',
       horarios: [
-        { dia: 'Segunda-feira', horario: '10:00 - 12:00' },
+        { dia: 'Segunda-feira', horario: '10:00 - 10:00' },
         { dia: 'Terça-feira', horario: '08:00 - 18:00' },
         { dia: 'Quarta-feira', horario: '08:00 - 18:00' },
         { dia: 'Quinta-feira', horario: '08:00 - 18:00' },
