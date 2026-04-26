@@ -8,5 +8,5 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Erpi {
-  readonly downloadBase = 'http://localhost/centro-paroquial-moita/db/download.php?file=';
+  readonly downloadBase = '/CPMoita/docs/';
 }
