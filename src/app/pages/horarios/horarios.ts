@@ -58,6 +58,7 @@ export class Horarios implements OnInit {
   };
 
   currentHorarios: HorarioEntry[] = this.setores['secretaria'].horarios;
+  showTable = true;
 
   constructor(private newsService: NewsService, private cdr: ChangeDetectorRef) {}
 
@@ -69,8 +70,13 @@ export class Horarios implements OnInit {
 
   onSetorChange(event: Event): void {
     this.selectedSetor = (event.target as HTMLSelectElement).value;
-    this.currentHorarios = this.setores[this.selectedSetor]?.horarios ?? [];
+    this.showTable = false;
     this.cdr.markForCheck();
+    setTimeout(() => {
+      this.currentHorarios = this.setores[this.selectedSetor]?.horarios ?? [];
+      this.showTable = true;
+      this.cdr.markForCheck();
+    }, 10);
   }
 
   formatDate(dateStr: string): string {
