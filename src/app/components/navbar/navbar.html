@@ -2,15 +2,13 @@
   <div class="container-fluid justify-content-center">
     <a class="navbar-brand text-center" routerLink="/">
       <img src="images/CPMLogo.png" alt="Logotipo" width="60" class="d-block mx-auto mb-2">
-      @if (!scrolled) {
-        <span class="d-none d-sm-inline">Centro Paroquial da Moita</span>
-        <span class="d-sm-none">CPM</span>
-      }
+      <span class="d-none d-sm-inline brand-text" [class.hidden]="scrolled">Centro Paroquial da Moita</span>
+      <span class="d-sm-none brand-text" [class.hidden]="scrolled">CPM</span>
     </a>
   </div>
 </nav>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top-menu">
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top-menu" [style.top.px]="brandHeight">
   <div class="container-fluid">
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
