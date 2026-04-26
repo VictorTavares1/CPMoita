@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  min-height: 60vh;
+}
+
+.cores {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.cores-lista {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.cor {
+  padding: 15px 30px;
+  border-radius: 30px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.verde {
+  background-color: #2ecc71;
+}
+
+.azul {
+  background-color: #3498db;
+}
+
+.amarelo {
+  background-color: #f1c40f;
+  color: #000;
+}
+
+.vermelho {
+  background-color: #e74c3c;
+}

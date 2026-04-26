@@ -1,26 +1,40 @@
 <div class="container py-4">
-  <h1 class="section-heading text-center" style="margin: 30px 0;">
-    {{ service?.titulo || 'Pré-Escolar "O Ninho"' }}
-  </h1>
+  <h1 class="section-heading text-center" style="margin: 30px 0;">Pré-Escolar "O Ninho"</h1>
   <div class="section-underline"></div>
 
-  <div class="mt-3" [innerHTML]="service?.descricao || 'Uma casa de gerações que gera ações, onde os valores familiares prevalecem. Com várias décadas de funcionamento, o nosso Ninho é conhecido por ser casa de várias gerações da mesma família.'"></div>
+  <p class="descricao" style="text-align: left; margin: 30px 0;">
+    Uma casa de gerações que gera ações, onde os valores familiares prevalecem.
+    Com várias décadas de funcionamento, o nosso Ninho é conhecido por ser casa de várias gerações da mesma família.
 
-  <h2 class="section-heading text-center mt-4">Ninho por Cores</h2>
-  <div class="section-underline"></div>
+    <br><br>
 
-  <div class="d-flex gap-3 justify-content-center flex-wrap mt-3 mb-4">
-    <button class="btn btn-success" (click)="selectCor('verde')">Verde</button>
-    <button class="btn btn-primary" (click)="selectCor('azul')">Azul</button>
-    <button class="btn btn-warning" (click)="selectCor('amarelo')">Amarela</button>
-    <button class="btn btn-danger" (click)="selectCor('vermelho')">Vermelha</button>
-  </div>
+    Na nossa instituição, acreditamos que a Educação Pré-Escolar é uma etapa fundamental no desenvolvimento da criança.
+    Num ambiente acolhedor, familiar, seguro e estimulante, promovemos aprendizagens significativas através do brincar, da descoberta e da interação com os outros.
 
-  @if (currentImages.length > 0) {
-    <div class="d-flex flex-wrap justify-content-center gap-3">
+    <br><br>
+
+    Valorizamos a curiosidade natural das crianças, incentivando a autonomia, a criatividade e o respeito pelas diferenças.
+    Valorizar a educação é acreditar no poder de cada aprendizado para inspirar novas gerações.
+  </p>
+
+  <div class="cores">
+    <h2 class="section-heading text-center" style="margin: 30px 0;">Ninho por Cores</h2>
+    <div class="section-underline"></div>
+
+    <div class="cores-lista">
+      <div class="cor verde" (click)="selectCor('verde')">Verde</div>
+      <div class="cor azul" (click)="selectCor('azul')">Azul</div>
+      <div class="cor amarelo" (click)="selectCor('amarelo')">Amarela</div>
+      <div class="cor vermelho" (click)="selectCor('vermelho')">Vermelha</div>
+    </div>
+
+    <div style="margin-top: 40px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 30px;">
       @for (img of currentImages; track img) {
-        <img [src]="img" alt="Imagem da sala" style="max-width:500px; height:auto; border-radius:8px;">
+        <img [src]="img" alt="Imagem da sala" style="max-width: 500px; height: auto; border-radius: 8px;">
       }
     </div>
-  }
+  </div>
+
+  <h3>&nbsp;</h3>
+  <h4>&nbsp;</h4>
 </div>
