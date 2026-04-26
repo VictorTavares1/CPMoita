@@ -10,15 +10,17 @@
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
         <h2>Contactos</h2>
-        @if (getContact('morada'); as morada) {
-          <p>{{ morada.valor }}</p>
-        }
-        @if (getContact('telefone'); as tel) {
-          <p>Tlf: <a [href]="'tel:' + tel.valor" style="color: inherit;">{{ tel.valor }}</a></p>
-        }
-        @if (getContact('email'); as mail) {
-          <p><a [href]="'mailto:' + mail.valor" style="color: inherit;">{{ mail.valor }}</a></p>
-        }
+        <p>
+          @if (getContact('morada'); as morada) {
+            {{ morada.valor }}<br>
+          }
+          @if (getContact('telefone'); as tel) {
+            Tlf: <a [href]="'tel:' + tel.valor" style="color: inherit;">{{ tel.valor }}</a> |
+          }
+          @if (getContact('email'); as mail) {
+            <a [href]="'mailto:' + mail.valor" style="color: inherit;">{{ mail.valor }}</a>
+          }
+        </p>
       </div>
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
