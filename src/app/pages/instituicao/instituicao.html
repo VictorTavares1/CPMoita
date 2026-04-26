@@ -1,10 +1,8 @@
 <div class="container py-4">
   <div class="page-with-sidebar">
 
-    <!-- Conteúdo principal -->
     <div class="main-content">
 
-      <!-- Quem Somos -->
       <h3 class="section-heading">Quem Somos</h3>
       <div class="section-underline"></div>
       <p>
@@ -20,25 +18,16 @@
         diariamente cerca de 300 utentes, com o contributo de 82 colaboradores e uma Direção voluntária.
       </p>
 
-      <!-- Percurso Histórico (dinâmico se existir na BD, senão estático) -->
-      <h3 class="section-heading">
-        {{ get('historia_titulo') || 'Percurso Histórico' }}
-      </h3>
+      <h3 class="section-heading">Percurso Histórico</h3>
       <div class="section-underline"></div>
+      <ul>
+        <li><strong>1952</strong> – Fundado pelo Padre João Evangelista como Centro Paroquial de Assistência da Moita, com orfanatos para meninas e rapazes e um asilo para idosos.</li>
+        <li><strong>Padre Fernando Belo</strong> – Transferiu o lar de idosos para Sarilhos Pequenos, criando o Lar Nossa Senhora da Boa Viagem, o Centro de Dia (1982), o Jardim de Infância "O Ninho" e o CATL "O Barco".</li>
+        <li><strong>Padre João Tavares</strong> – Construiu o novo edifício do Jardim de Infância e CATL, inaugurado em 2004.</li>
+        <li><strong>Padre Sílvio Couto</strong> – Criou a resposta social Creche "O Regaço".</li>
+        <li><strong>Atualmente</strong> – Sob a presidência do Padre Nuno Pacheco, a instituição continua a crescer e a responder aos desafios sociais.</li>
+      </ul>
 
-      @if (get('historia_texto')) {
-        <div [innerHTML]="get('historia_texto')"></div>
-      } @else {
-        <ul>
-          <li><strong>1952</strong> – Fundado pelo Padre João Evangelista como Centro Paroquial de Assistência da Moita, com orfanatos para meninas e rapazes e um asilo para idosos.</li>
-          <li><strong>Padre Fernando Belo</strong> – Transferiu o lar de idosos para Sarilhos Pequenos, criando o Lar Nossa Senhora da Boa Viagem, o Centro de Dia (1982), o Jardim de Infância "O Ninho" e o CATL "O Barco".</li>
-          <li><strong>Padre João Tavares</strong> – Construiu o novo edifício do Jardim de Infância e CATL, inaugurado em 2004.</li>
-          <li><strong>Padre Sílvio Couto</strong> – Criou a resposta social Creche "O Regaço".</li>
-          <li><strong>Atualmente</strong> – Sob a presidência do Padre Nuno Pacheco, a instituição continua a crescer e a responder aos desafios sociais.</li>
-        </ul>
-      }
-
-      <!-- Missão -->
       <h3 class="section-heading">Missão</h3>
       <div class="section-underline"></div>
       <p>
@@ -46,7 +35,6 @@
         especialmente os mais vulneráveis.
       </p>
 
-      <!-- Visão -->
       <h3 class="section-heading">Visão</h3>
       <div class="section-underline"></div>
       <p>
@@ -54,10 +42,7 @@
         positivo na comunidade.
       </p>
 
-      <!-- Valores (dinâmico se existir na BD) -->
-      <h3 class="section-heading">
-        {{ get('valores_titulo') || 'Valores' }}
-      </h3>
+      <h3 class="section-heading">Valores</h3>
       <div class="section-underline"></div>
       <ul>
         <li><strong>Matriz Cristã</strong> – Inspiração na doutrina social da Igreja Católica.</li>
@@ -65,7 +50,6 @@
         <li><strong>Sustentabilidade</strong> – Gestão responsável e equilibrada.</li>
       </ul>
 
-      <!-- Objetivos Estratégicos -->
       <h3 class="section-heading">Objetivos Estratégicos</h3>
       <div class="section-underline"></div>
       <ul>
@@ -84,9 +68,9 @@
     </div>
 
     <!-- Sidebar -->
-    <aside class="news-sidebar">
-      <h3 class="sidebar-title">Últimas Notícias</h3>
-      <div class="sidebar-underline"></div>
+    <div>
+      <h3 class="section-heading">Últimas Notícias</h3>
+      <div class="section-underline"></div>
 
       @for (item of sidebarNews; track item.id) {
         <a [routerLink]="['/noticias', item.id]" class="sidebar-news-item">
@@ -101,7 +85,7 @@
       }
 
       <a routerLink="/noticias" class="sidebar-view-all">Ver todas as notícias →</a>
-    </aside>
+    </div>
 
   </div>
 </div>
