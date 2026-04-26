@@ -33,7 +33,25 @@
 
 .sticky-top-menu {
   position: sticky;
+  top: 0;
   z-index: 1000;
+}
+
+.menu-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* compensate page content when menu is fixed so it doesn't hide under it */
+.menu-placeholder {
+  display: none;
+}
+
+.menu-placeholder.visible {
+  display: block;
 }
 
 .brand-text {
