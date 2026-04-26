@@ -1,44 +1,49 @@
 <div class="container py-4">
-  <h1 class="section-heading">{{ service?.titulo || 'ERPI' }}</h1>
+  <h1 class="section-heading">ERPI</h1>
   <div class="section-underline"></div>
 
-  <h2 class="section-heading mt-3">Estrutura Residencial para Pessoas Idosas</h2>
+  <h2 class="section-heading">Estrutura Residencial para Pessoas Idosas</h2>
   <div class="section-underline"></div>
 
-  <div class="mt-3" [innerHTML]="service?.descricao || 'Constitui uma resposta social desenvolvida em alojamento coletivo para seniores e tem como objetivo atender e acolher pessoas idosas cuja situação social, familiar, económica ou de saúde, não permita uma resposta alternativa.'"></div>
-
-  <p class="text-center fw-bold" style="color:#2e6f9e; font-size:18px; margin:30px 0;">
-    Funcionamento: 24 horas por dia
+  <p class="descricao" style="text-align: left; margin: 30px 0;">
+    Constitui uma resposta social desenvolvida em alojamento coletivo para seniores e tem como objetivo atender e acolher pessoas idosas cuja situação social, familiar, económica ou de saúde, não permita uma resposta alternativa. Procura-se fomentar a auto estima a alegria de viver e proporcionar serviços adequados à satisfação dos utentes.
   </p>
+
+  <p style="text-align: center; font-weight: bold; color: #2e6f9e; font-size: 18px; margin: 30px 0;">Funcionamento: 24 horas por dia</p>
 
   <h3 class="section-heading">Serviços Prestados</h3>
   <div class="section-underline"></div>
-  <ul class="mt-2">
-    <li>Alojamento e alimentação</li>
-    <li>Cuidados médicos e de enfermagem</li>
-    <li>Cuidados de higiene e conforto pessoal do utente</li>
-    <li>Cuidados de higiene e tratamento de roupas</li>
-    <li>Vigilância 24 horas</li>
-    <li>Animação Social, recriação e ocupação de tempos livres</li>
-  </ul>
 
-  <h4 class="section-heading mt-4">Centro de Dia</h4>
+  <div class="servicos-list" style="text-align: left;">
+    <ul style="list-style-position: inside; text-align: left;">
+      <li>Alojamento e alimentação</li>
+      <li>Cuidados médicos e de enfermagem</li>
+      <li>Cuidados de higiene e conforto pessoal do utente</li>
+      <li>Cuidados de higiene e tratamento de roupas</li>
+      <li>Vigilância 24 horas</li>
+      <li>Animação Social, recriação e ocupação de tempos livres</li>
+    </ul>
+  </div>
+
+  <h4 class="section-heading" style="margin-top: 50px;">Centro de Dia</h4>
   <div class="section-underline"></div>
-  <p class="mt-2">
+
+  <p class="descricao" style="text-align: left; margin: 30px 0;">
     O Centro de Dia que funciona na ERPI de Nossa Senhora da Boa Viagem e está ao serviço de toda a população, tem como objetivo a prestação de um conjunto de serviços em horário diurno, mantendo os seniores no seu seio familiar, ajudando a melhorar a vida do idoso e da sua família e a conservar as competências sociais, psíquicas e físicas, promovendo a sua auto estima.
   </p>
 
-  <h5 class="section-heading mt-4">Regulamentos</h5>
+  <h5 class="section-heading" style="margin-top: 50px;">Regulamentos</h5>
   <div class="section-underline"></div>
-  <div class="mt-3">
+
+  <div style="text-align: left; margin: 30px 0;">
     <p>
-      <a [href]="downloadBase + 'Regulamento_Centro_de_Dia.pdf'" style="color:#2e6f9e; font-weight:bold; text-decoration:none;">
-        <i class="fas fa-file-pdf me-2"></i>Regulamento Centro de Dia (PDF)
+      <a [href]="downloadBase + 'Regulamento_Centro_de_Dia.pdf'" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
+        ⇩ Regulamento Centro de Dia (PDF)
       </a>
     </p>
     <p>
-      <a [href]="downloadBase + 'Regulamento_ERPI.pdf'" style="color:#2e6f9e; font-weight:bold; text-decoration:none;">
-        <i class="fas fa-file-pdf me-2"></i>Regulamento ERPI (PDF)
+      <a [href]="downloadBase + 'Regulamento_ERPI.pdf'" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
+        ⇩ Regulamento ERPI (PDF)
       </a>
     </p>
   </div>
