@@ -2,26 +2,8 @@
   background-color: #e3e6ea !important;
 }
 
-.contacts-bar {
-  background-color: #2e6f9e;
-  color: white;
-  padding: 5px 20px;
-  display: flex;
-  gap: 20px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  font-size: 0.85rem;
+.brand-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1a1a1a;
 }
-
-.contacts-bar a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.contacts-bar a:hover {
-  text-decoration: underline;
-}
-
