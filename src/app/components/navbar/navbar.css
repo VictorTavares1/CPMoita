@@ -26,19 +26,12 @@
 }
 
 .sticky-top-brand {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1001;
 }
 
 .sticky-top-menu {
   position: sticky;
-  top: 100px;
+  top: 0;
   z-index: 1000;
-}
-
-@media (max-width: 991.98px) {
-  .sticky-top-menu {
-    top: 76px;
-  }
 }
