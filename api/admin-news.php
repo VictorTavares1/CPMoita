@@ -69,7 +69,7 @@ if ($method === 'POST') {
 
     // Log
     $opId = 1; $uid = $user['user_id'];
-    $stmt3 = $conn->prepare("INSERT INTO logs (dateHour, idUtilizador, idOperacao, idNoticia) VALUES (NOW(), ?, ?, ?)");
+    $stmt3 = $conn->prepare("INSERT INTO logs (idUser, idOperation, idNews) VALUES (?, ?, ?)");
     $stmt3->bind_param('iii', $uid, $opId, $newsId);
     $stmt3->execute();
 
@@ -91,7 +91,7 @@ if ($method === 'PUT') {
     $stmt->execute();
 
     $opId = 2; $uid = $user['user_id'];
-    $stmt2 = $conn->prepare("INSERT INTO logs (dateHour, idUtilizador, idOperacao, idNoticia) VALUES (NOW(), ?, ?, ?)");
+    $stmt2 = $conn->prepare("INSERT INTO logs (idUser, idOperation, idNews) VALUES (?, ?, ?)");
     $stmt2->bind_param('iii', $uid, $opId, $id);
     $stmt2->execute();
 
@@ -107,7 +107,7 @@ if ($method === 'DELETE') {
     $conn->query("UPDATE news SET idState = CASE WHEN idState = 1 THEN 2 ELSE 1 END WHERE id = $id");
 
     $opId = 3; $uid = $user['user_id'];
-    $stmt = $conn->prepare("INSERT INTO logs (dateHour, idUtilizador, idOperacao, idNoticia) VALUES (NOW(), ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO logs (idUser, idOperation, idNews) VALUES (?, ?, ?)");
     $stmt->bind_param('iii', $uid, $opId, $id);
     $stmt->execute();
 
