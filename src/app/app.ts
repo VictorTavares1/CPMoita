@@ -22,6 +22,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styles: [`
     main { flex: 1; }
     main.no-shell { flex: none; }
+    app-navbar { position: sticky; top: 0; z-index: 1000; }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
