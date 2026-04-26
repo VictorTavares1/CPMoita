@@ -26,18 +26,11 @@
 }
 
 .sticky-top-brand {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1001;
 }
 
 .sticky-top-menu {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.menu-fixed {
   position: fixed;
   top: 0;
   left: 0;
@@ -45,12 +38,7 @@
   z-index: 1000;
 }
 
-/* compensate page content when menu is fixed so it doesn't hide under it */
 .menu-placeholder {
-  display: none;
-}
-
-.menu-placeholder.visible {
   display: block;
 }
 
