@@ -45,7 +45,9 @@ if ($method === 'DELETE') {
     if ($row) {
         $file = __DIR__ . '/../uploads/' . $row['url'];
         if (file_exists($file)) unlink($file);
-        $conn->query("DELETE FROM images WHERE id = $id");
+        $del = $conn->prepare("DELETE FROM images WHERE id = ?");
+        $del->bind_param('i', $id);
+        $del->execute();
     }
     echo json_encode(['success' => true]);
     exit();
