@@ -23,4 +23,8 @@ export class Footer implements OnInit {
       error: (err) => console.error('Erro ao carregar contactos:', err),
     });
   }
+
+  getContact(tipo: string): Contact | undefined {
+    return this.contacts.find(c => c.tipo === tipo);
+  }
 }

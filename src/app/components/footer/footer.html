@@ -10,24 +10,14 @@
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
         <h2>Contactos</h2>
-        @for (contact of contacts; track contact.id) {
-          <p>
-            @if (contact.tipo === 'telefone') {
-              <a href="tel:{{ contact.valor }}" style="color: inherit;">
-                <i [class]="contact.icone"></i> {{ contact.valor }}
-              </a>
-            } @else if (contact.tipo === 'email') {
-              <a href="mailto:{{ contact.valor }}" style="color: inherit;">
-                <i [class]="contact.icone"></i> {{ contact.valor }}
-              </a>
-            } @else if (contact.tipo === 'morada') {
-              <span><i [class]="contact.icone"></i> {{ contact.valor }}</span>
-            } @else if (contact.tipo === 'facebook') {
-              <a href="{{ contact.valor }}" target="_blank" rel="noopener" style="color: inherit;">
-                <i [class]="contact.icone"></i> Facebook
-              </a>
-            }
-          </p>
+        @if (getContact('morada'); as morada) {
+          <p>{{ morada.valor }}</p>
+        }
+        @if (getContact('telefone'); as tel) {
+          <p>Tlf: <a [href]="'tel:' + tel.valor" style="color: inherit;">{{ tel.valor }}</a></p>
+        }
+        @if (getContact('email'); as mail) {
+          <p><a [href]="'mailto:' + mail.valor" style="color: inherit;">{{ mail.valor }}</a></p>
         }
       </div>
 
@@ -39,7 +29,7 @@
 
       <div class="col-12 col-sm-6 col-lg-3 text-center text-lg-start">
         <h2>Políticas</h2>
-        <p><a href="docs/Protecção_de_dados.pdf" target="_blank" style="color: inherit;">Protecção de Dados</a></p>
+        <p><a href="/CPMoita/docs/Protecção_de_dados.pdf" target="_blank" style="color: inherit;">Protecção de Dados</a></p>
       </div>
 
     </div>
