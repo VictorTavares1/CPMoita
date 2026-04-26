@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostListener, ElementRef, AfterViewInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -9,10 +9,17 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Navbar {
+export class Navbar implements AfterViewInit {
   scrolled = false;
+  brandHeight = 0;
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef, private el: ElementRef) {}
+
+  ngAfterViewInit(): void {
+    const brand = this.el.nativeElement.querySelector('.sticky-top-brand') as HTMLElement;
+    if (brand) this.brandHeight = brand.offsetHeight;
+    this.cdr.markForCheck();
+  }
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
