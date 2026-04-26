@@ -20,10 +20,12 @@ export class AdminNoticiasAdd implements AfterViewInit {
   constructor(private svc: AdminNewsService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit(): void {
-    this.quill = new Quill('#editor', {
-      modules: { toolbar: true },
-      theme: 'snow',
-    });
+    setTimeout(() => {
+      this.quill = new Quill('#editor', {
+        modules: { toolbar: true },
+        theme: 'snow',
+      });
+    }, 50);
   }
 
   getSelectedFiles(): FileList | null {
@@ -50,7 +52,7 @@ export class AdminNoticiasAdd implements AfterViewInit {
     }
 
     this.svc.create(fd).subscribe({
-      next: () => this.router.navigate(['/admin/noticias']),
+      next: () => this.router.navigate(['/admin/noticias'], { state: { toast: 'Notícia inserida com sucesso.' } }),
       error: () => {
         this.loading.set(false);
         this.error.set('Erro ao inserir notícia. Tente novamente.');
