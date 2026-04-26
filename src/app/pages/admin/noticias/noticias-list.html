@@ -62,7 +62,7 @@
                 <td colspan="4" class="text-center text-muted py-4">Nenhuma notícia encontrada.</td>
               </tr>
             }
-            @for (n of filtered; track n.id) {
+            @for (n of paged; track n.id) {
               <tr [class.table-secondary]="n.idState === 2">
                 <td>
                   <strong>{{ n.title }}</strong>
@@ -96,4 +96,22 @@
       }
     </div>
   </div>
+
+  @if (totalPages > 1) {
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor:pointer;">Anterior</a>
+        </li>
+        @for (p of [].constructor(totalPages); track $index) {
+          <li class="page-item" [class.active]="currentPage === $index + 1">
+            <a class="page-link" (click)="goToPage($index + 1)" style="cursor:pointer;">{{ $index + 1 }}</a>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor:pointer;">Próxima</a>
+        </li>
+      </ul>
+    </nav>
+  }
 </div>

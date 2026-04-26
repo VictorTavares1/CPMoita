@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminNewsService, AdminNewsItem } from '../../../services/admin-news';
 
@@ -12,14 +12,22 @@ import { AdminNewsService, AdminNewsItem } from '../../../services/admin-news';
 export class AdminNoticias implements OnInit {
   allNews: AdminNewsItem[] = [];
   filtered: AdminNewsItem[] = [];
+  paged: AdminNewsItem[] = [];
   search = '';
   dateFrom = '';
   dateTo = '';
+  currentPage = 1;
+  readonly pageSize = 10;
   loading = signal(true);
   toast = signal('');
   toastType = signal('success');
 
-  constructor(private svc: AdminNewsService, private cdr: ChangeDetectorRef) {}
+  constructor(private svc: AdminNewsService, private cdr: ChangeDetectorRef, private router: Router) {
+    const state = this.router.getCurrentNavigation()?.extras?.state as { toast?: string } | undefined;
+    if (state?.toast) {
+      this.showToast(state.toast, 'success');
+    }
+  }
 
   ngOnInit(): void {
     this.load();
@@ -30,7 +38,7 @@ export class AdminNoticias implements OnInit {
     this.svc.getAll().subscribe({
       next: (data) => {
         this.allNews = data;
-        this.applyFilters();
+        this.applyFilters(); // already calls updatePaged
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -53,6 +61,24 @@ export class AdminNoticias implements OnInit {
       });
     }
     this.filtered = result;
+    this.currentPage = 1;
+    this.updatePaged();
+  }
+
+  updatePaged(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    this.paged = this.filtered.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filtered.length / this.pageSize);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.updatePaged();
+    this.cdr.markForCheck();
   }
 
   clearFilters(): void {
@@ -68,7 +94,7 @@ export class AdminNoticias implements OnInit {
     this.svc.toggleState(news.id).subscribe({
       next: () => {
         news.idState = news.idState === 1 ? 2 : 1;
-        this.applyFilters();
+        this.applyFilters(); // already calls updatePaged
         this.showToast(news.idState === 2 ? 'Notícia desativada.' : 'Notícia reativada.', 'success');
         this.cdr.markForCheck();
       },
