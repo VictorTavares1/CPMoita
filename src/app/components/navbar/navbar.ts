@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
-  host: { style: 'display: contents' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
