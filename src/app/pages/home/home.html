@@ -103,12 +103,7 @@
           <a [routerLink]="['/noticias', item.id]" style="text-decoration: none; color: inherit;">
             <div class="card border-0">
               <div class="news-image-container">
-                @if (item.url) {
-                  <img [src]="'http://localhost/centro-paroquial-moita/uploads/' + item.url"
-                    class="news-image" [alt]="item.title">
-                } @else {
-                  <img src="images/CPMLogo.png" class="news-image" [alt]="item.title">
-                }
+                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title">
               </div>
               <div class="card-body" style="background-color: #ffffff;">
                 <h4 class="card-title" style="color: #2e6f9e; font-weight: bold;">{{ item.title }}</h4>

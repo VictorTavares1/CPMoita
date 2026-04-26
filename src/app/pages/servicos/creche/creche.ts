@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ServicesListService, Service } from '../../../services/services-list';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-creche',
@@ -9,7 +10,7 @@ import { ServicesListService, Service } from '../../../services/services-list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Creche implements OnInit {
-  readonly uploadsUrl = 'http://localhost/centro-paroquial-moita/uploads/';
+  readonly uploadsUrl = environment.uploadsUrl + '/';
   service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private cdr: ChangeDetectorRef) {}

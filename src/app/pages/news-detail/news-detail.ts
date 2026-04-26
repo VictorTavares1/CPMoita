@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { NewsService, NewsDetail, NewsItem } from '../../services/news';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-news-detail',
@@ -15,7 +16,7 @@ export class NewsDetailComponent implements OnInit {
   loading = true;
   notFound = false;
 
-  readonly uploadsUrl = 'http://localhost/centro-paroquial-moita/uploads/';
+  readonly uploadsUrl = environment.uploadsUrl + '/';
 
   constructor(
     private newsService: NewsService,

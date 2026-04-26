@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 import { PageContentsService, PageContents } from '../../services/page-contents';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-instituicao',
@@ -42,6 +43,6 @@ export class Instituicao implements OnInit {
   getImageUrl(url: string | null): string {
     if (!url) return 'images/cpm.png';
     if (url.startsWith('http')) return url;
-    return 'http://localhost/centro-paroquial-moita/uploads/' + url;
+    return `${environment.uploadsUrl}/${url}`;
   }
 }

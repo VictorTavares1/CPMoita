@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 import { Subscription } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-news-list',
@@ -20,7 +21,7 @@ export class NewsList implements OnInit, OnDestroy {
   loading = true;
 
   readonly limit = 9;
-  readonly uploadsUrl = 'http://localhost/centro-paroquial-moita/uploads/';
+  readonly uploadsUrl = environment.uploadsUrl + '/';
 
   constructor(
     private newsService: NewsService,
