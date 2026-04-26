@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ServicesListService, Service } from '../../../services/services-list';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -9,10 +8,10 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './ninho.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Ninho implements OnInit {
-  readonly uploadsUrl = environment.uploadsUrl + '/';
-  service: Service | null = null;
+export class Ninho {
   currentImages: string[] = [];
+
+  private readonly uploadsUrl = environment.uploadsUrl + '/';
 
   private readonly corImagens: Record<string, string[]> = {
     verde: ['sala_ terapia.jpg', 'sala_ terapia.jpg'],
@@ -21,17 +20,7 @@ export class Ninho implements OnInit {
     vermelho: ['Arcos.jpg'],
   };
 
-  constructor(private servicesListService: ServicesListService, private cdr: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-    this.servicesListService.getServices().subscribe({
-      next: (list) => {
-        this.service = list.find(s => s.titulo.toLowerCase().includes('ninho')) ?? null;
-        this.cdr.markForCheck();
-      },
-      error: (err) => console.error('Erro ao carregar serviço:', err),
-    });
-  }
+  constructor(private cdr: ChangeDetectorRef) {}
 
   selectCor(cor: string): void {
     this.currentImages = (this.corImagens[cor] ?? []).map(f => this.uploadsUrl + f);
