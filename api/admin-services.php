@@ -2,6 +2,13 @@
 require_once 'db.php';
 require_once 'auth-check.php';
 
+$user = validateToken($conn);
+if (!$user) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Não autorizado']);
+    exit();
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
