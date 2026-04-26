@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,18 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Navbar {
-  constructor(private router: Router) {}
+  scrolled = false;
+
+  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    const next = window.scrollY > 10;
+    if (next !== this.scrolled) {
+      this.scrolled = next;
+      this.cdr.markForCheck();
+    }
+  }
 
   onSearch(query: string): void {
     if (query.trim()) {
