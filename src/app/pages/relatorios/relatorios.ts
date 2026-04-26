@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-relatorios',
@@ -10,12 +11,12 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Relatorios implements OnInit {
   years: number[] = [];
-  readonly downloadBase = 'http://localhost/centro-paroquial-moita/db/downloadDocs.php?year=';
+  readonly downloadBase = `${environment.apiUrl}/reports-download.php?year=`;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.http.get<number[]>('http://localhost/CPMoita/api/reports.php').subscribe({
+    this.http.get<number[]>(`${environment.apiUrl}/reports.php`).subscribe({
       next: (res) => { this.years = res; this.cdr.markForCheck(); },
     });
   }

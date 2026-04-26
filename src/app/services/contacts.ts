@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Contact {
   id: number;
@@ -11,7 +12,7 @@ export interface Contact {
 
 @Injectable({ providedIn: 'root' })
 export class ContactsService {
-  private apiUrl = 'http://localhost/CPMoita/api/contacts.php';
+  private readonly apiUrl = `${environment.apiUrl}/contacts.php`;
 
   constructor(private http: HttpClient) {}
 

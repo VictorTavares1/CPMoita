@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
+import { environment } from '../../environments/environment';
 
 export interface AdminNewsItem {
   id: number;
@@ -21,8 +22,8 @@ export interface AdminNewsDetail {
 
 @Injectable({ providedIn: 'root' })
 export class AdminNewsService {
-  private readonly api = 'http://localhost/CPMoita/api/admin-news.php';
-  private readonly imgApi = 'http://localhost/CPMoita/api/admin-news-image.php';
+  private readonly api = `${environment.apiUrl}/admin-news.php`;
+  private readonly imgApi = `${environment.apiUrl}/admin-news-image.php`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

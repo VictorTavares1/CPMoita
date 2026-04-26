@@ -29,14 +29,14 @@ create table page_contents(
 );
 
 insert into page_contents(nomePagina, chaveSecção, tipoConteudo, conteudoPagina) values
-    ('inicio', 'hero_titulo', 'text', 'Centro Social Paroquial de São Lourenço'),
-    ('inicio', 'hero_subtitulo', 'text', 'Ao serviço da comunidade de Alhos Vedros'),
+    ('inicio', 'hero_titulo', 'text', 'Centro Paroquial da Moita'),
+    ('inicio', 'hero_subtitulo', 'text', 'Ao serviço da comunidade da Moita'),
     ('inicio', 'missao_titulo', 'text', 'A Nossa Missão'),
     ('inicio', 'missao_texto', 'html', 'Prestar assistência, educação e acompanhamento a pessoas de diferentes idades, promovendo a inclusão e o bem-estar social.'),
     ('sobre_nos', 'historia_titulo', 'text', 'A Nossa História'),
-    ('sobre_nos', 'historia_texto', 'html', 'O Centro Social Paroquial de São Lourenço de Alhos Vedros é uma instituição particular de solidariedade social da Igreja Católica, canonicamente erecta, com personalidade jurídica no foro canónico e civil.'),
+    ('sobre_nos', 'historia_texto', 'html', 'O Centro Paroquial da Moita é uma instituição particular de solidariedade social da Igreja Católica, canonicamente erecta, com personalidade jurídica no foro canónico e civil, pertencente à Paróquia da Moita.'),
     ('sobre_nos', 'valores_titulo', 'text', 'Os Nossos Valores'),
-    ('contactos', 'mapa_url', 'text', 'https://maps.google.com/?q=Largo+da+Igreja,+Alhos+Vedros');
+    ('contactos', 'mapa_url', 'text', 'https://maps.google.com/?q=Rua+Bartolomeu+Dias+11,+Moita');
 
 -- ------------------------------------------------------------
 --  Tabela: services
@@ -73,7 +73,7 @@ create table contacts(
 );
 
 insert into contacts(tipo, valor, icone) values
-    ('telefone', '+351 212 159 200', 'fa-solid fa-phone'),
-    ('email', 'geral@cpslaalhosvedros.pt', 'fa-solid fa-envelope'),
-    ('morada', 'Largo da Igreja, Alhos Vedros, 2860-012 Moita', 'fa-solid fa-location-dot'),
-    ('facebook', 'https://www.facebook.com/centroparoquialsaolourenco', 'fa-brands fa-facebook');
+    ('telefone', '+351 265 539 941', 'fa-solid fa-phone'),
+    ('email', 'geral@diocese-setubal.pt', 'fa-solid fa-envelope'),
+    ('morada', 'Rua Bartolomeu Dias, nºs 11-13, 2860-438 Moita', 'fa-solid fa-location-dot'),
+    ('facebook', 'https://www.facebook.com/centroparoquialmoita', 'fa-brands fa-facebook');

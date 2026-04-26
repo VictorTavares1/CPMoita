@@ -7,20 +7,39 @@
       <p>Entre em contacto connosco através dos meios abaixo.</p>
 
       <div class="row">
-        <!-- Informações -->
+        <!-- Informações dinâmicas -->
         <div class="col-lg-4 mb-4 d-flex">
           <div class="card flex-fill">
             <div class="card-header" style="background-color: #2e6f9e; color: white;">
               Informações
             </div>
             <div class="card-body">
-              <p><strong><i class="fas fa-phone"></i> Telefone:</strong><br>+351 265 539 941</p>
-              <p><strong><i class="fas fa-envelope"></i> E-mail:</strong><br>geral&#64;diocese-setubal.pt</p>
-              <p><strong><i class="fas fa-map-marker-alt"></i> Morada:</strong><br>
-                Rua Bartolomeu Dias, nºs 11-13<br>
-                2860-438 Moita
-              </p>
-              <p><strong><i class="fas fa-clock"></i> Horário:</strong><br>
+              @if (getContact('telefone'); as tel) {
+                <p>
+                  <strong><i [class]="tel.icone"></i> Telefone:</strong><br>
+                  <a [href]="'tel:' + tel.valor" style="color:inherit; text-decoration:none;">{{ tel.valor }}</a>
+                </p>
+              }
+              @if (getContact('email'); as mail) {
+                <p>
+                  <strong><i [class]="mail.icone"></i> E-mail:</strong><br>
+                  <a [href]="'mailto:' + mail.valor" style="color:inherit; text-decoration:none;">{{ mail.valor }}</a>
+                </p>
+              }
+              @if (getContact('morada'); as morada) {
+                <p>
+                  <strong><i [class]="morada.icone"></i> Morada:</strong><br>
+                  {{ morada.valor }}
+                </p>
+              }
+              @if (getContact('facebook'); as fb) {
+                <p>
+                  <strong><i [class]="fb.icone"></i> Facebook:</strong><br>
+                  <a [href]="fb.valor" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">Facebook</a>
+                </p>
+              }
+              <p>
+                <strong><i class="fas fa-clock"></i> Horário:</strong><br>
                 Segunda a Sexta<br>
                 08:00 - 18:00
               </p>
@@ -82,7 +101,8 @@
       @for (item of sidebarNews; track item.id) {
         <div class="sidebar-news-item mb-3">
           <a [routerLink]="['/noticias', item.id]" style="text-decoration:none; color:inherit;">
-            <img [src]="getImageUrl(item.url)" class="img-fluid mb-1" [alt]="item.title" style="width:100%; height:80px; object-fit:cover; border-radius:4px;">
+            <img [src]="getNewsImageUrl(item.url)" class="img-fluid mb-1" [alt]="item.title"
+              style="width:100%; height:80px; object-fit:cover; border-radius:4px;">
             <p class="mb-0" style="font-size:0.85rem; font-weight:600; color:#2e6f9e;">{{ item.title }}</p>
             <small class="text-muted">{{ formatDate(item.dateHour) }}</small>
           </a>

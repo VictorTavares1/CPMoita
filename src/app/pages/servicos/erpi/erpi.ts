@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ServicesListService, Service } from '../../../services/services-list';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-erpi',
@@ -9,7 +10,7 @@ import { ServicesListService, Service } from '../../../services/services-list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Erpi implements OnInit {
-  readonly downloadBase = 'http://localhost/centro-paroquial-moita/db/download.php?file=';
+  readonly downloadBase = `${environment.uploadsUrl}/download.php?file=`;
   service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private cdr: ChangeDetectorRef) {}

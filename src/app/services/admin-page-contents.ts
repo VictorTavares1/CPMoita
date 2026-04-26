@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
+import { environment } from '../../environments/environment';
 
 export interface AdminPageContent {
   id: number;
@@ -14,7 +15,7 @@ export interface AdminPageContent {
 
 @Injectable({ providedIn: 'root' })
 export class AdminPageContentsService {
-  private readonly api = 'http://localhost/CPMoita/api/admin-page-contents.php';
+  private readonly api = `${environment.apiUrl}/admin-page-contents.php`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

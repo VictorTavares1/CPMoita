@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetect
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdminNewsService, AdminNewsDetail } from '../../../services/admin-news';
+import { environment } from '../../../../environments/environment';
 
 declare const Quill: any;
 
@@ -108,6 +109,6 @@ export class AdminNoticiasEdit implements OnInit, AfterViewInit {
   }
 
   imageUrl(url: string): string {
-    return `http://localhost/centro-paroquial-moita/uploads/${url}`;
+    return `${environment.uploadsUrl}/${url}`;
   }
 }

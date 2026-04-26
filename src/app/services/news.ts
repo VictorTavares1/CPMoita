@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface NewsItem {
   id: number;
@@ -27,7 +28,7 @@ export interface NewsResponse {
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
-  private baseUrl = 'http://localhost/CPMoita/api';
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

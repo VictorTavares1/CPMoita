@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
 import { PageContentsService, PageContents } from '../../services/page-contents';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,12 @@ export class Home implements OnInit {
 
   get(key: string): string {
     return this.contents[key]?.valor ?? '';
+  }
+
+  getImageUrl(url: string | null): string {
+    if (!url) return 'images/CPMLogo.png';
+    if (url.startsWith('http')) return url;
+    return `${environment.uploadsUrl}/${url}`;
   }
 
   stripHtml(html: string): string {
