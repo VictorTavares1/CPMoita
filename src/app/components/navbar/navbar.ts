@@ -12,12 +12,15 @@ import { Router } from '@angular/router';
 export class Navbar implements AfterViewInit {
   scrolled = false;
   brandHeight = 0;
+  menuHeight = 0;
 
   constructor(private router: Router, private cdr: ChangeDetectorRef, private el: ElementRef) {}
 
   ngAfterViewInit(): void {
     const brand = this.el.nativeElement.querySelector('.sticky-top-brand') as HTMLElement;
+    const menu = this.el.nativeElement.querySelector('.sticky-top-menu') as HTMLElement;
     if (brand) this.brandHeight = brand.offsetHeight;
+    if (menu) this.menuHeight = menu.offsetHeight;
     this.cdr.markForCheck();
   }
 
