@@ -27,5 +27,11 @@ if ($method === 'GET') {
     $stmt = $conn->prepare("UPDATE page_contents SET conteudoPagina=?, atualizadoEm=NOW() WHERE id=?");
     $stmt->bind_param('si', $valor, $id);
     $stmt->execute();
+
+    $uid = $user['user_id']; $opId = 14;
+    $stmt2 = $conn->prepare("INSERT INTO logs (idUser, idOperation) VALUES (?, ?)");
+    $stmt2->bind_param('ii', $uid, $opId);
+    $stmt2->execute();
+
     echo json_encode(['success' => true]);
 }

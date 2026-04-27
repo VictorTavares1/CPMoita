@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
+import { PageContentsService, PageContents } from '../../services/page-contents';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -12,9 +13,11 @@ import { environment } from '../../../environments/environment';
 })
 export class Home implements OnInit {
   latestNews: NewsItem[] = [];
+  page: PageContents = {};
 
   constructor(
     private newsService: NewsService,
+    private pageContentsService: PageContentsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -23,6 +26,14 @@ export class Home implements OnInit {
       next: (res) => { this.latestNews = res.data; this.cdr.markForCheck(); },
       error: (err) => console.error('Erro ao carregar notícias:', err),
     });
+
+    this.pageContentsService.getContents('inicio').subscribe({
+      next: (data) => { this.page = data; this.cdr.markForCheck(); },
+    });
+  }
+
+  get(key: string): string {
+    return this.page[key]?.valor ?? '';
   }
 
   getImageUrl(url: string | null): string {
