@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { ServicesListService, Service } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
 
@@ -13,15 +14,16 @@ export class Creche implements OnInit {
   readonly uploadsUrl = environment.uploadsUrl + '/';
   service: Service | null = null;
 
-  constructor(private servicesListService: ServicesListService, private cdr: ChangeDetectorRef) {}
+  constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.servicesListService.getServices().subscribe({
       next: (list) => {
         this.service = list.find(s => s.titulo.toLowerCase().includes('regaço')) ?? null;
+        if (!this.service) this.router.navigate(['/']);
         this.cdr.markForCheck();
       },
-      error: (err) => console.error('Erro ao carregar serviço:', err),
+      error: () => this.router.navigate(['/']),
     });
   }
 }

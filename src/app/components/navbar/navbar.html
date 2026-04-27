@@ -41,10 +41,9 @@
             <li class="nav-item dropdown">
               <button class="btn nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">SERVIÇOS</button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" routerLink="/servicos/creche">CRECHE</a></li>
-                <li><a class="dropdown-item" routerLink="/servicos/ninho">NINHO</a></li>
-                <li><a class="dropdown-item" routerLink="/servicos/catl">CATL</a></li>
-                <li><a class="dropdown-item" routerLink="/servicos/erpi">ERPI</a></li>
+                @for (s of activeServices; track s.id) {
+                  <li><a class="dropdown-item" [routerLink]="s.route">{{ s.titulo.toUpperCase() }}</a></li>
+                }
               </ul>
             </li>
             <li class="nav-item">
@@ -94,10 +93,9 @@
           <li class="nav-item dropdown">
             <button class="btn nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">SERVIÇOS</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" routerLink="/servicos/creche">CRECHE</a></li>
-              <li><a class="dropdown-item" routerLink="/servicos/ninho">NINHO</a></li>
-              <li><a class="dropdown-item" routerLink="/servicos/catl">CATL</a></li>
-              <li><a class="dropdown-item" routerLink="/servicos/erpi">ERPI</a></li>
+              @for (s of activeServices; track s.id) {
+                <li><a class="dropdown-item" [routerLink]="s.route">{{ s.titulo.toUpperCase() }}</a></li>
+              }
             </ul>
           </li>
           <li class="nav-item">

@@ -1,4 +1,6 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { ServicesListService } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -8,7 +10,7 @@ import { environment } from '../../../../environments/environment';
   styleUrl: './ninho.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Ninho {
+export class Ninho implements OnInit {
   currentImages: string[] = [];
 
   private readonly uploadsUrl = environment.uploadsUrl + '/';
@@ -20,7 +22,17 @@ export class Ninho {
     vermelho: ['Arcos.jpg'],
   };
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.servicesListService.getServices().subscribe({
+      next: (list) => {
+        const s = list.find(s => s.titulo.toLowerCase().includes('ninho'));
+        if (!s) this.router.navigate(['/']);
+      },
+      error: () => this.router.navigate(['/']),
+    });
+  }
 
   selectCor(cor: string): void {
     this.currentImages = (this.corImagens[cor] ?? []).map(f => this.uploadsUrl + f);
