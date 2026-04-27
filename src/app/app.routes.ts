@@ -25,6 +25,8 @@ import { AdminServicosAdd } from './pages/admin/servicos/servicos-add';
 import { AdminServicosEdit } from './pages/admin/servicos/servicos-edit';
 import { AdminPaginas } from './pages/admin/paginas/paginas-list';
 import { AdminPaginasEdit } from './pages/admin/paginas/paginas-edit';
+import { AdminRelatorios } from './pages/admin/relatorios/relatorios-list';
+import { AdminRelatoriosAdd } from './pages/admin/relatorios/relatorios-add';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -63,6 +65,8 @@ export const routes: Routes = [
       { path: 'servicos/edit/:id', component: AdminServicosEdit },
       { path: 'paginas', component: AdminPaginas },
       { path: 'paginas/edit/:id', component: AdminPaginasEdit },
+      { path: 'relatorios', component: AdminRelatorios },
+      { path: 'relatorios/add', component: AdminRelatoriosAdd },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
