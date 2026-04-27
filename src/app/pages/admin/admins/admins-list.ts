@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AdminAdminsService, AdminItem } from '../../../services/admin-admins';
 
 @Component({
   selector: 'app-admin-admins',
   templateUrl: './admins-list.html',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminAdmins implements OnInit {
@@ -19,12 +19,6 @@ export class AdminAdmins implements OnInit {
   loading = signal(true);
   toast = signal('');
   toastType = signal('success');
-
-  email = '';
-  password = '';
-  showPassword = false;
-  addError = signal('');
-  addLoading = signal(false);
 
   constructor(private svc: AdminAdminsService, private cdr: ChangeDetectorRef, private router: Router) {
     const state = this.router.getCurrentNavigation()?.extras?.state as { toast?: string } | undefined;
@@ -79,30 +73,6 @@ export class AdminAdmins implements OnInit {
     this.search = '';
     this.applyFilters();
     this.cdr.markForCheck();
-  }
-
-  addAdmin(): void {
-    this.addError.set('');
-    if (!this.email.trim() || !this.password) {
-      this.addError.set('Email e password são obrigatórios.');
-      this.cdr.markForCheck();
-      return;
-    }
-    this.addLoading.set(true);
-    this.svc.add(this.email.trim(), this.password).subscribe({
-      next: () => {
-        this.email = '';
-        this.password = '';
-        this.addLoading.set(false);
-        this.showToast('Administrador adicionado com sucesso.', 'success');
-        this.load();
-      },
-      error: (err) => {
-        this.addLoading.set(false);
-        this.addError.set(err.error?.error ?? 'Erro ao adicionar administrador.');
-        this.cdr.markForCheck();
-      }
-    });
   }
 
   toggleState(admin: AdminItem): void {

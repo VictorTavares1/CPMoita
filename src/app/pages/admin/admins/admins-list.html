@@ -4,45 +4,14 @@
       <h4 class="mb-0 fw-semibold">Gerir Administradores</h4>
       <p class="text-muted small mb-0">{{ allAdmins.length }} administradores no total</p>
     </div>
+    <a routerLink="/admin/administradores/add" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-plus me-1"></i> Novo Administrador
+    </a>
   </div>
 
   @if (toast()) {
     <div class="alert alert-{{ toastType() }} py-2 small">{{ toast() }}</div>
   }
-
-  <!-- Adicionar novo admin -->
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-body p-4">
-      <h6 class="fw-semibold mb-3">Adicionar Administrador</h6>
-      @if (addError()) {
-        <div class="alert alert-danger py-2 small">{{ addError() }}</div>
-      }
-      <div class="row g-3 align-items-end">
-        <div class="col-md-5">
-          <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
-          <input type="email" class="form-control" [(ngModel)]="email" placeholder="email@exemplo.com">
-        </div>
-        <div class="col-md-5">
-          <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
-          <div class="input-group">
-            <input [type]="showPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="password"
-              placeholder="Mín. 8 chars, 1 maiúscula, 1 dígito, 1 especial">
-            <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
-              <i class="fa-solid" [class]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary w-100" (click)="addAdmin()" [disabled]="addLoading()">
-            @if (addLoading()) {
-              <span class="spinner-border spinner-border-sm me-1"></span>
-            }
-            Adicionar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Filtros -->
   <div class="card border-0 shadow-sm mb-4">
