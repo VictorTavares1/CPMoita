@@ -106,7 +106,7 @@ export class AdminAdmins implements OnInit {
   }
 
   toggleState(admin: AdminItem): void {
-    if (admin.email === 'admin@cpm.com') return;
+    if (admin.email === 'victortavares649@gmail.com') return;
     const action = admin.idState === 1 ? 'desativar' : 'reativar';
     if (!confirm(`Tem a certeza que deseja ${action} este administrador?`)) return;
     this.svc.toggleState(admin.id).subscribe({

@@ -89,7 +89,7 @@ if ($method === 'DELETE') {
     $row = $stmt->get_result()->fetch_assoc();
 
     if (!$row) { http_response_code(404); echo json_encode(['error' => 'Administrador não encontrado']); exit(); }
-    if ($row['email'] === 'admin@cpm.com') {
+    if ($row['email'] === 'victortavares649@gmail.com') {
         http_response_code(403);
         echo json_encode(['error' => 'Não pode eliminar o administrador principal']);
         exit();

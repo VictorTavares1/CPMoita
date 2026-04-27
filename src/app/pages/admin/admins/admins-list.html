@@ -86,7 +86,7 @@
               <tr [class.table-secondary]="admin.idState === 2">
                 <td>
                   <strong>{{ admin.email }}</strong>
-                  @if (admin.email === 'admin@cpm.com') {
+                  @if (admin.email === 'victortavares649@gmail.com') {
                     <span class="badge bg-primary ms-2">Principal</span>
                   }
                   @if (admin.idState === 2) {
@@ -101,7 +101,7 @@
                   }
                 </td>
                 <td class="text-center">
-                  @if (admin.email !== 'admin@cpm.com') {
+                  @if (admin.email !== 'victortavares649@gmail.com') {
                     <button class="btn btn-sm"
                       [class]="admin.idState === 1 ? 'btn-outline-danger' : 'btn-outline-success'"
                       (click)="toggleState(admin)"
