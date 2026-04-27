@@ -341,6 +341,21 @@ img {
   height: auto;
 }
 
+#editor {
+  height: 300px;
+}
+
+.ql-container {
+  height: calc(300px - 42px) !important;
+  overflow-y: auto !important;
+}
+
+.ql-editor {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
 .table {
   font-size: 0.9rem;
 }
