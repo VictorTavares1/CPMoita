@@ -14,7 +14,11 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'GET') {
     $result = $conn->query("SELECT id, tipo, valor, icone, idState FROM contacts ORDER BY id ASC");
     $rows = [];
-    while ($row = $result->fetch_assoc()) $rows[] = $row;
+    while ($row = $result->fetch_assoc()) {
+        $row['id']      = (int)$row['id'];
+        $row['idState'] = (int)$row['idState'];
+        $rows[] = $row;
+    }
     echo json_encode($rows);
 
 } elseif ($method === 'POST') {
