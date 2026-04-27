@@ -6,12 +6,10 @@ $limit  = isset($_GET['limit']) ? (int)$_GET['limit'] : 9;
 $offset = ($page - 1) * $limit;
 
 $stmt = $conn->prepare("
-    SELECT n.id, n.title, n.content, n.dateHour, i.url
-    FROM news n
-    LEFT JOIN images i ON i.idNews = n.id
-    WHERE n.idState = 1
-    GROUP BY n.id
-    ORDER BY n.dateHour DESC
+    SELECT id, title, content, dateHour
+    FROM news
+    WHERE idState = 1
+    ORDER BY dateHour DESC
     LIMIT ? OFFSET ?
 ");
 $stmt->bind_param('ii', $limit, $offset);
@@ -23,6 +21,12 @@ $total = $countResult->fetch_assoc()['total'];
 
 $news = [];
 while ($row = $result->fetch_assoc()) {
+    $row['id'] = (int)$row['id'];
+    $imgStmt = $conn->prepare("SELECT url FROM images WHERE idNews = ? LIMIT 1");
+    $imgStmt->bind_param('i', $row['id']);
+    $imgStmt->execute();
+    $imgRow = $imgStmt->get_result()->fetch_assoc();
+    $row['url'] = $imgRow ? $imgRow['url'] : null;
     $news[] = $row;
 }
 

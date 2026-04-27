@@ -9,39 +9,28 @@ if ($id <= 0) {
     exit();
 }
 
-$stmt = $conn->prepare("
-    SELECT n.id, n.title, n.content, n.dateHour, i.url
-    FROM news n
-    LEFT JOIN images i ON i.idNews = n.id
-    WHERE n.id = ? AND n.idState = 1
-");
+$stmt = $conn->prepare("SELECT id, title, content, dateHour FROM news WHERE id = ? AND idState = 1");
 $stmt->bind_param('i', $id);
 $stmt->execute();
-$result = $stmt->get_result();
+$news = $stmt->get_result()->fetch_assoc();
 
-if ($result->num_rows === 0) {
+if (!$news) {
     http_response_code(404);
     echo json_encode(['error' => 'Notícia não encontrada']);
     exit();
 }
 
-$news = null;
+$news['id'] = (int)$news['id'];
+
+$imgStmt = $conn->prepare("SELECT url FROM images WHERE idNews = ?");
+$imgStmt->bind_param('i', $id);
+$imgStmt->execute();
+$imgResult = $imgStmt->get_result();
+
 $images = [];
-
-while ($row = $result->fetch_assoc()) {
-    if ($news === null) {
-        $news = [
-            'id' => $row['id'],
-            'title' => $row['title'],
-            'content' => $row['content'],
-            'dateHour' => $row['dateHour'],
-        ];
-    }
-    if (!empty($row['url']) && !in_array($row['url'], $images)) {
-        $images[] = $row['url'];
-    }
+while ($img = $imgResult->fetch_assoc()) {
+    $images[] = $img['url'];
 }
-
 $news['images'] = $images;
 
 echo json_encode($news);

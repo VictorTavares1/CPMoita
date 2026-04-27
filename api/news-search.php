@@ -11,12 +11,11 @@ if (empty($search)) {
 $like = '%' . $conn->real_escape_string($search) . '%';
 
 $stmt = $conn->prepare("
-    SELECT n.id, n.title, n.content, n.dateHour, i.url
-    FROM news n
-    LEFT JOIN images i ON i.idNews = n.id
-    WHERE n.idState = 1 AND (n.title LIKE ? OR n.content LIKE ?)
-    GROUP BY n.id
-    ORDER BY n.dateHour DESC
+    SELECT id, title, content, dateHour
+    FROM news
+    WHERE idState = 1 AND (title LIKE ? OR content LIKE ?)
+    ORDER BY dateHour DESC
+    LIMIT 20
 ");
 $stmt->bind_param('ss', $like, $like);
 $stmt->execute();
@@ -24,6 +23,12 @@ $result = $stmt->get_result();
 
 $news = [];
 while ($row = $result->fetch_assoc()) {
+    $row['id'] = (int)$row['id'];
+    $imgStmt = $conn->prepare("SELECT url FROM images WHERE idNews = ? LIMIT 1");
+    $imgStmt->bind_param('i', $row['id']);
+    $imgStmt->execute();
+    $imgRow = $imgStmt->get_result()->fetch_assoc();
+    $row['url'] = $imgRow ? $imgRow['url'] : null;
     $news[] = $row;
 }
 
