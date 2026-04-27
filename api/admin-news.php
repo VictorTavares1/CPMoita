@@ -15,7 +15,11 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'GET' && !isset($_GET['id'])) {
     $result = $conn->query("SELECT id, title, dateHour, idState FROM news ORDER BY dateHour DESC");
     $news = [];
-    while ($row = $result->fetch_assoc()) $news[] = $row;
+    while ($row = $result->fetch_assoc()) {
+        $row['id']      = (int)$row['id'];
+        $row['idState'] = (int)$row['idState'];
+        $news[] = $row;
+    }
     echo json_encode($news);
     exit();
 }
@@ -54,16 +58,19 @@ if ($method === 'POST') {
 
     // Handle images
     if (!empty($_FILES['img']['name'][0])) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         $uploadDir = __DIR__ . '/../uploads/';
         $totalFiles = count($_FILES['img']['name']);
         for ($i = 0; $i < $totalFiles; $i++) {
-            if ($_FILES['img']['error'][$i] === 0) {
-                $nome = basename($_FILES['img']['name'][$i]);
-                move_uploaded_file($_FILES['img']['tmp_name'][$i], $uploadDir . $nome);
-                $stmt2 = $conn->prepare("INSERT INTO images (url, idNews) VALUES (?, ?)");
-                $stmt2->bind_param('si', $nome, $newsId);
-                $stmt2->execute();
-            }
+            if ($_FILES['img']['error'][$i] !== 0) continue;
+            $mime = mime_content_type($_FILES['img']['tmp_name'][$i]);
+            if (!in_array($mime, $allowedTypes)) continue;
+            $ext  = pathinfo($_FILES['img']['name'][$i], PATHINFO_EXTENSION);
+            $nome = uniqid('img_', true) . '.' . strtolower($ext);
+            move_uploaded_file($_FILES['img']['tmp_name'][$i], $uploadDir . $nome);
+            $stmt2 = $conn->prepare("INSERT INTO images (url, idNews) VALUES (?, ?)");
+            $stmt2->bind_param('si', $nome, $newsId);
+            $stmt2->execute();
         }
     }
 
@@ -104,7 +111,9 @@ if ($method === 'DELETE') {
     $id = (int)($_GET['id'] ?? 0);
     if (!$id) { http_response_code(400); echo json_encode(['error' => 'ID inválido']); exit(); }
 
-    $conn->query("UPDATE news SET idState = CASE WHEN idState = 1 THEN 2 ELSE 1 END WHERE id = $id");
+    $stmt = $conn->prepare("UPDATE news SET idState = CASE WHEN idState = 1 THEN 2 ELSE 1 END WHERE id = ?");
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
 
     $opId = 3; $uid = $user['user_id'];
     $stmt = $conn->prepare("INSERT INTO logs (idUser, idOperation, idNews) VALUES (?, ?, ?)");

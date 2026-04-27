@@ -17,18 +17,21 @@ if ($method === 'POST') {
     if (!$newsId || empty($_FILES['img']['name'][0])) {
         http_response_code(400); echo json_encode(['error' => 'Dados inválidos']); exit();
     }
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     $uploadDir = __DIR__ . '/../uploads/';
     $inserted = [];
     $totalFiles = count($_FILES['img']['name']);
     for ($i = 0; $i < $totalFiles; $i++) {
-        if ($_FILES['img']['error'][$i] === 0) {
-            $nome = basename($_FILES['img']['name'][$i]);
-            move_uploaded_file($_FILES['img']['tmp_name'][$i], $uploadDir . $nome);
-            $stmt = $conn->prepare("INSERT INTO images (url, idNews) VALUES (?, ?)");
-            $stmt->bind_param('si', $nome, $newsId);
-            $stmt->execute();
-            $inserted[] = ['id' => $conn->insert_id, 'url' => $nome];
-        }
+        if ($_FILES['img']['error'][$i] !== 0) continue;
+        $mime = mime_content_type($_FILES['img']['tmp_name'][$i]);
+        if (!in_array($mime, $allowedTypes)) continue;
+        $ext  = pathinfo($_FILES['img']['name'][$i], PATHINFO_EXTENSION);
+        $nome = uniqid('img_', true) . '.' . strtolower($ext);
+        move_uploaded_file($_FILES['img']['tmp_name'][$i], $uploadDir . $nome);
+        $stmt = $conn->prepare("INSERT INTO images (url, idNews) VALUES (?, ?)");
+        $stmt->bind_param('si', $nome, $newsId);
+        $stmt->execute();
+        $inserted[] = ['id' => $conn->insert_id, 'url' => $nome];
     }
     echo json_encode(['success' => true, 'images' => $inserted]);
     exit();
