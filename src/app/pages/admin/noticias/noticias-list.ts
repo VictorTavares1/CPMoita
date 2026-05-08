@@ -13,6 +13,7 @@ export class AdminNoticias implements OnInit {
   allNews: AdminNewsItem[] = [];
   filtered: AdminNewsItem[] = [];
   paged: AdminNewsItem[] = [];
+  tab: 'active' | 'inactive' = 'active';
   search = '';
   dateFrom = '';
   dateTo = '';
@@ -63,6 +64,14 @@ export class AdminNoticias implements OnInit {
     this.filtered = result;
     this.currentPage = 1;
     this.updatePaged();
+  }
+
+  get activeNews(): AdminNewsItem[] {
+    return this.filtered.filter(n => n.idState === 1);
+  }
+
+  get inactiveNews(): AdminNewsItem[] {
+    return this.filtered.filter(n => n.idState === 2);
   }
 
   updatePaged(): void {

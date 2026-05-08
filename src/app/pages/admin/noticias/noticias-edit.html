@@ -68,10 +68,7 @@
         </div>
 
         <div class="d-flex gap-2 align-items-center">
-          <input type="file" class="form-control form-control-sm" id="imgInput" multiple accept="image/*" style="max-width:320px;">
-          <button class="btn btn-outline-primary btn-sm" (click)="uploadImages()">
-            <i class="fa-solid fa-upload me-1"></i> Adicionar
-          </button>
+          <input type="file" class="form-control form-control-sm" id="imgInput" multiple accept="image/*" style="max-width:320px;" (change)="uploadImages()">
         </div>
 
       </div>

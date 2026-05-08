@@ -11,11 +11,13 @@
       <div class="section-underline"></div>
       <div [innerHTML]="get('valores_texto') || ''"></div>
 
-      <p>
-        <a href="/docs/2015/Estatutos_2015.pdf" target="_blank" rel="noopener">
-          Consulte aqui os estatutos da instituição
-        </a>
-      </p>
+      @for (link of links; track link.filename) {
+        <p>
+          <a [href]="docsUrl + link.filename" target="_blank" rel="noopener">
+            {{ link.label }}
+          </a>
+        </p>
+      }
 
     </div>
 

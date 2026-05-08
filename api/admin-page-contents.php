@@ -14,15 +14,26 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'GET') {
     $result = $conn->query("SELECT id, nomePagina, chaveSecção, tipoConteudo, conteudoPagina, atualizadoEm FROM page_contents ORDER BY nomePagina, id ASC");
     $rows = [];
-    while ($row = $result->fetch_assoc()) $rows[] = $row;
+    while ($row = $result->fetch_assoc()) {
+        $row['id'] = (int)$row['id'];
+        $rows[] = $row;
+    }
     echo json_encode($rows);
 
 } elseif ($method === 'PUT') {
     $data   = json_decode(file_get_contents('php://input'), true);
     $id     = intval($data['id']     ?? 0);
-    $valor  = trim($data['conteudoPagina'] ?? '');
+    $tipo   = trim($data['tipoConteudo'] ?? '');
 
     if (!$id) { http_response_code(400); echo json_encode(['error' => 'ID inválido']); exit(); }
+
+    if ($tipo === 'link') {
+        $label    = trim($data['label']    ?? '');
+        $filename = trim($data['filename'] ?? '');
+        $valor    = json_encode(['label' => $label, 'filename' => $filename], JSON_UNESCAPED_UNICODE);
+    } else {
+        $valor = trim($data['conteudoPagina'] ?? '');
+    }
 
     $stmt = $conn->prepare("UPDATE page_contents SET conteudoPagina=?, atualizadoEm=NOW() WHERE id=?");
     $stmt->bind_param('si', $valor, $id);

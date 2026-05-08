@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal }
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AdminAdminsService, AdminItem } from '../../../services/admin-admins';
+import { AuthService } from '../../../services/auth';
 
 @Component({
   selector: 'app-admin-admins',
@@ -13,6 +14,7 @@ export class AdminAdmins implements OnInit {
   allAdmins: AdminItem[] = [];
   filtered: AdminItem[] = [];
   paged: AdminItem[] = [];
+  tab: 'active' | 'inactive' = 'active';
   search = '';
   currentPage = 1;
   readonly pageSize = 10;
@@ -20,7 +22,7 @@ export class AdminAdmins implements OnInit {
   toast = signal('');
   toastType = signal('success');
 
-  constructor(private svc: AdminAdminsService, private cdr: ChangeDetectorRef, private router: Router) {
+  constructor(private svc: AdminAdminsService, private cdr: ChangeDetectorRef, private router: Router, private auth: AuthService) {
     const state = this.router.getCurrentNavigation()?.extras?.state as { toast?: string } | undefined;
     if (state?.toast) this.showToast(state.toast, 'success');
   }
@@ -75,8 +77,20 @@ export class AdminAdmins implements OnInit {
     this.cdr.markForCheck();
   }
 
+  isCurrentUser(admin: AdminItem): boolean {
+    return admin.email === this.auth.getEmail();
+  }
+
+  get activeAdmins(): AdminItem[] {
+    return this.filtered.filter(a => a.idState === 1);
+  }
+
+  get inactiveAdmins(): AdminItem[] {
+    return this.filtered.filter(a => a.idState === 2);
+  }
+
   toggleState(admin: AdminItem): void {
-    if (admin.email === 'victortavares649@gmail.com') return;
+    if (this.isCurrentUser(admin)) return;
     const action = admin.idState === 1 ? 'desativar' : 'reativar';
     if (!confirm(`Tem a certeza que deseja ${action} este administrador?`)) return;
     this.svc.toggleState(admin.id).subscribe({

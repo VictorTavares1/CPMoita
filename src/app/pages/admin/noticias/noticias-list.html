@@ -10,9 +10,7 @@
   </div>
 
   @if (toast()) {
-    <div class="alert alert-{{ toastType() }} alert-dismissible py-2 small">
-      {{ toast() }}
-    </div>
+    <div class="alert alert-{{ toastType() }} alert-dismissible py-2 small">{{ toast() }}</div>
   }
 
   <!-- Filtros -->
@@ -39,79 +37,76 @@
     </div>
   </div>
 
-  <!-- Tabela -->
-  <div class="card border-0 shadow-sm">
-    <div class="card-body p-0">
-      @if (loading()) {
-        <div class="text-center py-5 text-muted">
-          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
-        </div>
-      } @else {
+  <!-- Tabs -->
+  <div class="btn-group mb-3">
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'">
+      Ativas <span class="badge bg-white text-success ms-1">{{ activeNews.length }}</span>
+    </button>
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'">
+      Inativas <span class="badge bg-white text-secondary ms-1">{{ inactiveNews.length }}</span>
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5 text-muted">
+      <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+    </div>
+  } @else {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
-              <th style="width:55%">Título</th>
-              <th style="width:20%">Data</th>
-              <th style="width:10%" class="text-center">Estado</th>
+              <th style="width:60%">Título</th>
+              <th style="width:25%">Data</th>
               <th style="width:15%" class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
-            @if (filtered.length === 0) {
-              <tr>
-                <td colspan="4" class="text-center text-muted py-4">Nenhuma notícia encontrada.</td>
-              </tr>
-            }
-            @for (n of paged; track n.id) {
-              <tr [class.table-secondary]="n.idState === 2">
-                <td>
-                  <strong>{{ n.title }}</strong>
-                  @if (n.idState === 2) {
-                    <span class="badge bg-secondary ms-2">Inativa</span>
-                  }
-                </td>
-                <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
-                <td class="text-center">
-                  @if (n.idState === 1) {
-                    <span class="badge bg-success">Ativa</span>
-                  } @else {
-                    <span class="badge bg-secondary">Inativa</span>
-                  }
-                </td>
-                <td class="text-center">
-                  <div class="d-flex justify-content-center gap-2">
-                    <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
-                      <i class="fa-solid fa-pen"></i>
-                    </a>
-                    <button class="btn btn-sm" [class]="n.idState === 1 ? 'btn-outline-danger' : 'btn-outline-success'"
-                      (click)="toggleState(n)" [title]="n.idState === 1 ? 'Desativar' : 'Reativar'">
-                      <i class="fa-solid" [class]="n.idState === 1 ? 'fa-eye-slash' : 'fa-eye'"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+            @if (tab === 'active') {
+              @if (activeNews.length === 0) {
+                <tr><td colspan="3" class="text-center text-muted py-4">Nenhuma notícia ativa.</td></tr>
+              }
+              @for (n of activeNews; track n.id) {
+                <tr>
+                  <td><strong>{{ n.title }}</strong></td>
+                  <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </a>
+                      <button class="btn btn-outline-danger btn-sm" (click)="toggleState(n)" title="Desativar">
+                        <i class="fa-solid fa-eye-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @else {
+              @if (inactiveNews.length === 0) {
+                <tr><td colspan="3" class="text-center text-muted py-4">Nenhuma notícia inativa.</td></tr>
+              }
+              @for (n of inactiveNews; track n.id) {
+                <tr class="table-secondary">
+                  <td><strong>{{ n.title }}</strong></td>
+                  <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </a>
+                      <button class="btn btn-outline-success btn-sm" (click)="toggleState(n)" title="Reativar">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>
-      }
+      </div>
     </div>
-  </div>
-
-  @if (totalPages > 1) {
-    <nav class="mt-4">
-      <ul class="pagination justify-content-center">
-        <li class="page-item" [class.disabled]="currentPage === 1">
-          <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor:pointer;">Anterior</a>
-        </li>
-        @for (p of [].constructor(totalPages); track $index) {
-          <li class="page-item" [class.active]="currentPage === $index + 1">
-            <a class="page-link" (click)="goToPage($index + 1)" style="cursor:pointer;">{{ $index + 1 }}</a>
-          </li>
-        }
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
-          <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor:pointer;">Próxima</a>
-        </li>
-      </ul>
-    </nav>
   }
 </div>

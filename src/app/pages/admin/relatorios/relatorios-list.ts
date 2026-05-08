@@ -13,6 +13,7 @@ export class AdminRelatorios implements OnInit {
   allDocs: AdminReportItem[] = [];
   filtered: AdminReportItem[] = [];
   paged: AdminReportItem[] = [];
+  tab: 'active' | 'inactive' = 'active';
   search = '';
   currentPage = 1;
   readonly pageSize = 10;
@@ -72,6 +73,14 @@ export class AdminRelatorios implements OnInit {
   clearFilters(): void {
     this.search = '';
     this.applyFilters();
+  }
+
+  get activeDocs(): AdminReportItem[] {
+    return this.filtered.filter(d => d.idState === 1);
+  }
+
+  get inactiveDocs(): AdminReportItem[] {
+    return this.filtered.filter(d => d.idState === 2);
   }
 
   toggleState(doc: AdminReportItem): void {

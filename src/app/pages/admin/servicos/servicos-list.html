@@ -4,71 +4,86 @@
       <h4 class="mb-0 fw-semibold">Gerir Serviços</h4>
       <p class="text-muted small mb-0">{{ services.length }} serviços no total</p>
     </div>
-    <a routerLink="/admin/servicos/add" class="btn btn-primary btn-sm">
-      <i class="fa-solid fa-plus me-1"></i> Novo Serviço
-    </a>
+    <div></div>
   </div>
 
   @if (toast()) {
     <div class="alert alert-{{ toastType() }} alert-dismissible py-2 small">{{ toast() }}</div>
   }
 
-  <div class="card border-0 shadow-sm">
-    <div class="card-body p-0">
-      @if (loading()) {
-        <div class="text-center py-5 text-muted">
-          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
-        </div>
-      } @else {
+  <!-- Tabs -->
+  <div class="btn-group mb-3">
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'">
+      Ativos <span class="badge bg-white text-success ms-1">{{ activeServices.length }}</span>
+    </button>
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'">
+      Inativos <span class="badge bg-white text-secondary ms-1">{{ inactiveServices.length }}</span>
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5 text-muted">
+      <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+    </div>
+  } @else {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
         <table class="table table-hover align-middle mb-0">
           <thead class="table-light">
             <tr>
               <th style="width:30%">Título</th>
-              <th style="width:35%">Descrição</th>
+              <th style="width:40%">Descrição</th>
               <th style="width:15%">Ícone/Imagem</th>
-              <th style="width:10%" class="text-center">Estado</th>
-              <th style="width:10%" class="text-center">Ações</th>
+              <th style="width:15%" class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
-            @if (services.length === 0) {
-              <tr><td colspan="5" class="text-center text-muted py-4">Nenhum serviço encontrado.</td></tr>
-            }
-            @for (s of services; track s.id) {
-              <tr [class.table-secondary]="s.idState === 2">
-                <td>
-                  <strong>{{ s.titulo }}</strong>
-                  @if (s.idState === 2) {
-                    <span class="badge bg-secondary ms-2">Inativo</span>
-                  }
-                </td>
-                <td class="text-muted small">{{ s.descricao.substring(0, 80) }}...</td>
-                <td class="text-muted small">
-                  <i [class]="s.iconeOuImagem + ' me-1'"></i>
-                </td>
-                <td class="text-center">
-                  @if (s.idState === 1) {
-                    <span class="badge bg-success">Ativo</span>
-                  } @else {
-                    <span class="badge bg-secondary">Inativo</span>
-                  }
-                </td>
-                <td class="text-center">
-                  <div class="d-flex justify-content-center gap-2">
-                    <a [routerLink]="['/admin/servicos/edit', s.id]" class="btn btn-outline-primary btn-sm" title="Editar">
-                      <i class="fa-solid fa-pen"></i>
-                    </a>
-                    <button class="btn btn-sm" [class]="s.idState === 1 ? 'btn-outline-danger' : 'btn-outline-success'"
-                      (click)="toggleState(s)" [title]="s.idState === 1 ? 'Desativar' : 'Reativar'">
-                      <i class="fa-solid" [class]="s.idState === 1 ? 'fa-eye-slash' : 'fa-eye'"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+            @if (tab === 'active') {
+              @if (activeServices.length === 0) {
+                <tr><td colspan="4" class="text-center text-muted py-4">Nenhum serviço ativo.</td></tr>
+              }
+              @for (s of activeServices; track s.id) {
+                <tr>
+                  <td><strong>{{ s.titulo }}</strong></td>
+                  <td class="text-muted small">{{ stripHtml(s.descricao) }}...</td>
+                  <td class="text-muted small"><i [class]="s.iconeOuImagem + ' me-1'"></i></td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a [routerLink]="['/admin/servicos/edit', s.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </a>
+                      <button class="btn btn-outline-danger btn-sm" (click)="toggleState(s)" title="Desativar">
+                        <i class="fa-solid fa-eye-slash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            } @else {
+              @if (inactiveServices.length === 0) {
+                <tr><td colspan="4" class="text-center text-muted py-4">Nenhum serviço inativo.</td></tr>
+              }
+              @for (s of inactiveServices; track s.id) {
+                <tr class="table-secondary">
+                  <td><strong>{{ s.titulo }}</strong></td>
+                  <td class="text-muted small">{{ stripHtml(s.descricao) }}...</td>
+                  <td class="text-muted small"><i [class]="s.iconeOuImagem + ' me-1'"></i></td>
+                  <td class="text-center">
+                    <div class="d-flex justify-content-center gap-2">
+                      <a [routerLink]="['/admin/servicos/edit', s.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </a>
+                      <button class="btn btn-outline-success btn-sm" (click)="toggleState(s)" title="Reativar">
+                        <i class="fa-solid fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
             }
           </tbody>
         </table>
-      }
+      </div>
     </div>
-  </div>
+  }
 </div>

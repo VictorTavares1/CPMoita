@@ -28,6 +28,16 @@ export class AdminPageContentsService {
   }
 
   update(id: number, conteudoPagina: string): Observable<{ success: boolean }> {
-    return this.http.put<any>(this.api, { id, conteudoPagina }, { headers: this.headers() });
+    return this.http.put<any>(this.api, { id, tipoConteudo: 'html', conteudoPagina }, { headers: this.headers() });
+  }
+
+  updateLink(id: number, label: string, filename: string): Observable<{ success: boolean }> {
+    return this.http.put<any>(this.api, { id, tipoConteudo: 'link', label, filename }, { headers: this.headers() });
+  }
+
+  uploadDoc(file: File): Observable<{ success: boolean; filename: string; name: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${environment.apiUrl}/admin-upload-doc.php`, formData, { headers: new HttpHeaders(this.auth.getAuthHeaders()) });
   }
 }

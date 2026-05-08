@@ -3,10 +3,21 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface ServiceLink {
+  label: string;
+  filename: string;
+}
+
 export interface Service {
   id: number;
   titulo: string;
   descricao: string;
+  coordenador: string | null;
+  capacidade: string | null;
+  funcionamento: string | null;
+  servicosPrestados: string[];
+  descricaoCentroDia: string | null;
+  links: ServiceLink[];
   iconeOuImagem: string;
 }
 

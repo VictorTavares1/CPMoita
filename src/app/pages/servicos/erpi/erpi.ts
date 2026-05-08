@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServicesListService } from '../../../services/services-list';
+import { ServicesListService, Service } from '../../../services/services-list';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-erpi',
@@ -10,15 +11,17 @@ import { ServicesListService } from '../../../services/services-list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Erpi implements OnInit {
-  readonly downloadBase = '/docs/';
+  readonly docsUrl = environment.apiUrl + '/docs.php?file=';
+  service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.servicesListService.getServices().subscribe({
       next: (list) => {
-        const s = list.find(s => s.titulo.toLowerCase().includes('erpi'));
-        if (!s) this.router.navigate(['/']);
+        this.service = list.find(s => s.titulo.toLowerCase().includes('erpi')) ?? null;
+        if (!this.service) this.router.navigate(['/']);
+        this.cdr.markForCheck();
       },
       error: () => this.router.navigate(['/']),
     });

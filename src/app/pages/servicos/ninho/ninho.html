@@ -1,21 +1,44 @@
 <div class="container py-4">
-  <h1 class="section-heading text-center" style="margin: 30px 0;">Pré-Escolar "O Ninho"</h1>
+  <h1 class="section-heading text-center" style="margin: 30px 0;">{{ service?.titulo || 'Pré-Escolar "O Ninho"' }}</h1>
   <div class="section-underline"></div>
 
-  <p class="descricao" style="text-align: left; margin: 30px 0;">
-    Uma casa de gerações que gera ações, onde os valores familiares prevalecem.
-    Com várias décadas de funcionamento, o nosso Ninho é conhecido por ser casa de várias gerações da mesma família.
+  <div class="descricao mt-3" style="margin: 30px 0;" [innerHTML]="service?.descricao || ''"></div>
 
-    <br><br>
+  @if (service?.coordenador) {
+    <p><strong>Coordenação:</strong> {{ service?.coordenador }}</p>
+  }
 
-    Na nossa instituição, acreditamos que a Educação Pré-Escolar é uma etapa fundamental no desenvolvimento da criança.
-    Num ambiente acolhedor, familiar, seguro e estimulante, promovemos aprendizagens significativas através do brincar, da descoberta e da interação com os outros.
+  @if (service?.funcionamento) {
+    <p><strong>Funcionamento:</strong> {{ service?.funcionamento }}</p>
+  }
 
-    <br><br>
+  @if (service?.capacidade) {
+    <p><strong>Capacidade:</strong> {{ service?.capacidade }}</p>
+  }
 
-    Valorizamos a curiosidade natural das crianças, incentivando a autonomia, a criatividade e o respeito pelas diferenças.
-    Valorizar a educação é acreditar no poder de cada aprendizado para inspirar novas gerações.
-  </p>
+  @if (service?.servicosPrestados?.length) {
+    <h3 class="section-heading">Serviços Prestados</h3>
+    <div class="section-underline"></div>
+    <ul>
+      @for (item of service?.servicosPrestados; track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+  }
+
+  @if (service?.links?.length) {
+    <h3 class="section-heading">Documentos</h3>
+    <div class="section-underline"></div>
+    <div style="text-align: left; margin: 30px 0;">
+      @for (link of service?.links; track link.filename) {
+        <p>
+          <a [href]="docsUrl + link.filename" target="_blank" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
+            ⇩ {{ link.label }}
+          </a>
+        </p>
+      }
+    </div>
+  }
 
   <div class="cores">
     <h2 class="section-heading text-center" style="margin: 30px 0;">Ninho por Cores</h2>

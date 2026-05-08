@@ -21,9 +21,14 @@ $result = $stmt->get_result();
 
 $contents = [];
 while ($row = $result->fetch_assoc()) {
+    $valor = $row['conteudoPagina'];
+    if ($row['tipoConteudo'] === 'link') {
+        $decoded = json_decode($valor, true);
+        $valor = is_array($decoded) ? $decoded : $valor;
+    }
     $contents[$row['chaveSecção']] = [
-        'tipo' => $row['tipoConteudo'],
-        'valor' => $row['conteudoPagina'],
+        'tipo'  => $row['tipoConteudo'],
+        'valor' => $valor,
     ];
 }
 

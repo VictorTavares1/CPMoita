@@ -1,50 +1,51 @@
 <div class="container py-4">
-  <h1 class="section-heading">ERPI</h1>
+  <h1 class="section-heading">{{ service?.titulo || 'ERPI' }}</h1>
   <div class="section-underline"></div>
 
   <h2 class="section-heading">Estrutura Residencial para Pessoas Idosas</h2>
   <div class="section-underline"></div>
 
-  <p class="descricao" style="text-align: left; margin: 30px 0;">
-    Constitui uma resposta social desenvolvida em alojamento coletivo para seniores e tem como objetivo atender e acolher pessoas idosas cuja situação social, familiar, económica ou de saúde, não permita uma resposta alternativa. Procura-se fomentar a auto estima a alegria de viver e proporcionar serviços adequados à satisfação dos utentes.
-  </p>
+  <div class="descricao" style="margin: 30px 0;" [innerHTML]="service?.descricao || ''"></div>
 
-  <p style="text-align: center; font-weight: bold; color: #2e6f9e; font-size: 18px; margin: 30px 0;">Funcionamento: 24 horas por dia</p>
+  @if (service?.coordenador) {
+    <p><strong>Coordenação:</strong> {{ service?.coordenador }}</p>
+  }
 
-  <h3 class="section-heading">Serviços Prestados</h3>
-  <div class="section-underline"></div>
-
-  <div class="servicos-list" style="text-align: left;">
-    <ul style="list-style-position: inside; text-align: left;">
-      <li>Alojamento e alimentação</li>
-      <li>Cuidados médicos e de enfermagem</li>
-      <li>Cuidados de higiene e conforto pessoal do utente</li>
-      <li>Cuidados de higiene e tratamento de roupas</li>
-      <li>Vigilância 24 horas</li>
-      <li>Animação Social, recriação e ocupação de tempos livres</li>
-    </ul>
-  </div>
-
-  <h4 class="section-heading" style="margin-top: 50px;">Centro de Dia</h4>
-  <div class="section-underline"></div>
-
-  <p class="descricao" style="text-align: left; margin: 30px 0;">
-    O Centro de Dia que funciona na ERPI de Nossa Senhora da Boa Viagem e está ao serviço de toda a população, tem como objetivo a prestação de um conjunto de serviços em horário diurno, mantendo os seniores no seu seio familiar, ajudando a melhorar a vida do idoso e da sua família e a conservar as competências sociais, psíquicas e físicas, promovendo a sua auto estima.
-  </p>
-
-  <h5 class="section-heading" style="margin-top: 50px;">Regulamentos</h5>
-  <div class="section-underline"></div>
-
-  <div style="text-align: left; margin: 30px 0;">
-    <p>
-      <a [href]="downloadBase + 'Regulamento_Centro_de_Dia.pdf'" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
-        ⇩ Regulamento Centro de Dia (PDF)
-      </a>
+  @if (service?.funcionamento) {
+    <p style="text-align: center; font-weight: bold; color: #2e6f9e; font-size: 18px; margin: 30px 0;">
+      Funcionamento: {{ service?.funcionamento }}
     </p>
-    <p>
-      <a [href]="downloadBase + 'Regulamento_ERPI.pdf'" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
-        ⇩ Regulamento ERPI (PDF)
-      </a>
-    </p>
-  </div>
+  }
+
+  @if (service?.servicosPrestados?.length) {
+    <h3 class="section-heading">Serviços Prestados</h3>
+    <div class="section-underline"></div>
+    <div class="servicos-list" style="text-align: left;">
+      <ul style="list-style-position: inside; text-align: left;">
+        @for (item of service?.servicosPrestados; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    </div>
+  }
+
+  @if (service?.descricaoCentroDia) {
+    <h4 class="section-heading" style="margin-top: 50px;">Centro de Dia</h4>
+    <div class="section-underline"></div>
+    <div class="descricao" style="margin: 30px 0;" [innerHTML]="service?.descricaoCentroDia"></div>
+  }
+
+  @if (service?.links?.length) {
+    <h5 class="section-heading" style="margin-top: 50px;">Regulamentos</h5>
+    <div class="section-underline"></div>
+    <div style="text-align: left; margin: 30px 0;">
+      @for (link of service?.links; track link.filename) {
+        <p>
+          <a [href]="docsUrl + link.filename" target="_blank" style="color: #2e6f9e; font-weight: bold; text-decoration: none; margin: 10px 20px;">
+            ⇩ {{ link.label }}
+          </a>
+        </p>
+      }
+    </div>
+  }
 </div>

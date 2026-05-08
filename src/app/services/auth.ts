@@ -13,16 +13,18 @@ interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = environment.apiUrl;
-  private readonly tokenKey = 'admin_token';
-  private readonly emailKey = 'admin_email';
+  private readonly tokenKey   = 'admin_token';
+  private readonly emailKey   = 'admin_email';
+  private readonly expiresKey = 'admin_expires';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/auth-login.php`, { email, password }).pipe(
       tap(res => {
-        localStorage.setItem(this.tokenKey, res.token);
-        localStorage.setItem(this.emailKey, res.email);
+        localStorage.setItem(this.tokenKey,   res.token);
+        localStorage.setItem(this.emailKey,   res.email);
+        localStorage.setItem(this.expiresKey, res.expires);
       })
     );
   }
@@ -36,7 +38,8 @@ export class AuthService {
     }
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.emailKey);
-    this.router.navigate(['/admin/login']);
+    localStorage.removeItem(this.expiresKey);
+    this.router.navigate(['/']);
   }
 
   getToken(): string | null {
@@ -48,7 +51,10 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    const token   = this.getToken();
+    const expires = localStorage.getItem(this.expiresKey);
+    if (!token || !expires) return false;
+    return new Date(expires) > new Date();
   }
 
   getAuthHeaders(): { Authorization: string } {

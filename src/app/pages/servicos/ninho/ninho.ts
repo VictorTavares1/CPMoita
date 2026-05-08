@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServicesListService } from '../../../services/services-list';
+import { ServicesListService, Service } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -11,7 +11,9 @@ import { environment } from '../../../../environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Ninho implements OnInit {
+  service: Service | null = null;
   currentImages: string[] = [];
+  readonly docsUrl = environment.apiUrl + '/docs.php?file=';
 
   private readonly uploadsUrl = environment.uploadsUrl + '/';
 
@@ -27,8 +29,9 @@ export class Ninho implements OnInit {
   ngOnInit(): void {
     this.servicesListService.getServices().subscribe({
       next: (list) => {
-        const s = list.find(s => s.titulo.toLowerCase().includes('ninho'));
-        if (!s) this.router.navigate(['/']);
+        this.service = list.find(s => s.titulo.toLowerCase().includes('ninho')) ?? null;
+        if (!this.service) this.router.navigate(['/']);
+        this.cdr.markForCheck();
       },
       error: () => this.router.navigate(['/']),
     });

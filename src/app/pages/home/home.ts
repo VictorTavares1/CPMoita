@@ -33,7 +33,8 @@ export class Home implements OnInit {
   }
 
   get(key: string): string {
-    return this.page[key]?.valor ?? '';
+    const v = this.page[key]?.valor;
+    return typeof v === 'string' ? v : '';
   }
 
   getImageUrl(url: string | null): string {

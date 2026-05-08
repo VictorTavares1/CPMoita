@@ -12,6 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class Creche implements OnInit {
   readonly uploadsUrl = environment.uploadsUrl + '/';
+  readonly docsUrl    = environment.apiUrl + '/docs.php?file=';
   service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}

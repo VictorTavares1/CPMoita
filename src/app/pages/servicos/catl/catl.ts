@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServicesListService } from '../../../services/services-list';
+import { ServicesListService, Service } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -12,14 +12,17 @@ import { environment } from '../../../../environments/environment';
 })
 export class Catl implements OnInit {
   readonly uploadsUrl = environment.uploadsUrl + '/';
+  readonly docsUrl    = environment.apiUrl + '/docs.php?file=';
+  service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.servicesListService.getServices().subscribe({
       next: (list) => {
-        const s = list.find(s => s.titulo.toLowerCase().includes('catl') || s.titulo.toLowerCase().includes('barco'));
-        if (!s) this.router.navigate(['/']);
+        this.service = list.find(s => s.titulo.toLowerCase().includes('catl') || s.titulo.toLowerCase().includes('barco')) ?? null;
+        if (!this.service) this.router.navigate(['/']);
+        this.cdr.markForCheck();
       },
       error: () => this.router.navigate(['/']),
     });

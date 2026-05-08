@@ -3,6 +3,17 @@
   min-height: 60vh;
 }
 
+.descricao {
+  overflow-wrap: break-word;
+}
+
+::ng-deep .descricao p {
+  text-align: left !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
 .blocos {
   display: flex;
   gap: 20px;

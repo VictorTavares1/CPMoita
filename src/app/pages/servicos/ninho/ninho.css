@@ -3,6 +3,15 @@
   min-height: 60vh;
 }
 
+.descricao {
+  overflow-wrap: break-word;
+}
+
+::ng-deep .descricao p {
+  text-align: left !important;
+}
+
+
 .cores {
   margin-top: 50px;
   text-align: center;

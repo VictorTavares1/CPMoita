@@ -3,9 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface PageLink {
+  label: string;
+  filename: string;
+}
+
 export interface PageContent {
   tipo: string;
-  valor: string;
+  valor: string | PageLink;
 }
 
 export type PageContents = Record<string, PageContent>;

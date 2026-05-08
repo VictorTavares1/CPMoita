@@ -10,6 +10,7 @@ import { AdminServicesService, AdminService } from '../../../services/admin-serv
 })
 export class AdminServicos implements OnInit {
   services: AdminService[] = [];
+  tab: 'active' | 'inactive' = 'active';
   loading = signal(true);
   toast = signal('');
   toastType = signal('success');
@@ -37,6 +38,18 @@ export class AdminServicos implements OnInit {
       },
       error: () => this.showToast('Erro ao alterar estado.', 'danger')
     });
+  }
+
+  get activeServices(): AdminService[] {
+    return this.services.filter(s => s.idState === 1);
+  }
+
+  get inactiveServices(): AdminService[] {
+    return this.services.filter(s => s.idState === 2);
+  }
+
+  stripHtml(html: string): string {
+    return html.replace(/<[^>]*>/g, '').substring(0, 80);
   }
 
   showToast(msg: string, type: string): void {

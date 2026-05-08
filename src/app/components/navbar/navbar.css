@@ -2,6 +2,16 @@
   background-color: #e3e6ea !important;
 }
 
+.navbar-logo {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .navbar-logo {
+    display: flex;
+  }
+}
+
 .navbar-menu {
   position: relative;
 }

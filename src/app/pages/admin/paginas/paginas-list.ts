@@ -27,6 +27,16 @@ export class AdminPaginas implements OnInit {
     return new Date(d).toLocaleString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
+  previewContent(c: AdminPageContent): string {
+    if (c.tipoConteudo === 'link') {
+      try {
+        const p = JSON.parse(c.conteudoPagina);
+        return `🔗 ${p.label ?? ''}`;
+      } catch { return c.conteudoPagina; }
+    }
+    return c.conteudoPagina.replace(/<[^>]*>/g, '').substring(0, 80);
+  }
+
   pageLabel(nomePagina: string): string {
     const labels: Record<string, string> = {
       inicio: 'Início', sobre_nos: 'Sobre Nós', contactos: 'Contactos'

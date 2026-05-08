@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NewsService, NewsItem } from '../../services/news';
-import { PageContentsService, PageContents } from '../../services/page-contents';
+import { PageContentsService, PageContents, PageLink } from '../../services/page-contents';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -14,6 +14,8 @@ import { environment } from '../../../environments/environment';
 export class Instituicao implements OnInit {
   sidebarNews: NewsItem[] = [];
   page: PageContents = {};
+  links: PageLink[] = [];
+  docsUrl = environment.apiUrl + '/docs.php?file=';
 
   constructor(
     private newsService: NewsService,
@@ -27,12 +29,19 @@ export class Instituicao implements OnInit {
     });
 
     this.pageContentsService.getContents('sobre_nos').subscribe({
-      next: (data) => { this.page = data; this.cdr.markForCheck(); },
+      next: (data) => {
+        this.page = data;
+        this.links = Object.values(data)
+          .filter(c => c.tipo === 'link' && typeof c.valor === 'object')
+          .map(c => c.valor as PageLink);
+        this.cdr.markForCheck();
+      },
     });
   }
 
   get(key: string): string {
-    return this.page[key]?.valor ?? '';
+    const v = this.page[key]?.valor;
+    return typeof v === 'string' ? v : '';
   }
 
   formatDate(dateStr: string): string {

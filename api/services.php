@@ -1,10 +1,12 @@
 <?php
 require_once 'db.php';
 
-$result = $conn->query("SELECT id, titulo, descricao, iconeOuImagem FROM services WHERE idState = 1 ORDER BY id ASC");
+$result = $conn->query("SELECT id, titulo, descricao, coordenador, capacidade, funcionamento, servicosPrestados, descricaoCentroDia, links, iconeOuImagem FROM services WHERE idState = 1 ORDER BY id ASC");
 
 $services = [];
 while ($row = $result->fetch_assoc()) {
+    $row['servicosPrestados'] = $row['servicosPrestados'] ? json_decode($row['servicosPrestados']) : [];
+    $row['links']             = $row['links']             ? json_decode($row['links'])             : [];
     $services[] = $row;
 }
 

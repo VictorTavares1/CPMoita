@@ -3,11 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth';
 import { environment } from '../../environments/environment';
+import { ServiceLink } from './services-list';
 
 export interface AdminService {
   id: number;
   titulo: string;
   descricao: string;
+  coordenador: string | null;
+  capacidade: string | null;
+  funcionamento: string | null;
+  servicosPrestados: string[];
+  descricaoCentroDia: string | null;
+  links: ServiceLink[];
   iconeOuImagem: string;
   idState: number;
 }
@@ -30,11 +37,17 @@ export class AdminServicesService {
     return this.http.post<any>(this.api, data, { headers: this.headers() });
   }
 
-  update(data: { id: number; titulo: string; descricao: string; iconeOuImagem: string }): Observable<{ success: boolean }> {
+  update(data: { id: number; titulo: string; descricao: string; coordenador: string | null; capacidade: string | null; funcionamento: string | null; servicosPrestados: string[]; descricaoCentroDia: string | null; links: ServiceLink[]; iconeOuImagem: string }): Observable<{ success: boolean }> {
     return this.http.put<any>(this.api, data, { headers: this.headers() });
   }
 
   toggleState(id: number): Observable<{ success: boolean }> {
     return this.http.delete<any>(`${this.api}?id=${id}`, { headers: this.headers() });
+  }
+
+  uploadDoc(file: File): Observable<{ success: boolean; filename: string; name: string }> {
+    const form = new FormData();
+    form.append('doc', file);
+    return this.http.post<any>(`${environment.apiUrl}/admin-upload-doc.php`, form, { headers: this.auth.getAuthHeaders() });
   }
 }

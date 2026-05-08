@@ -34,18 +34,31 @@
 
         <hr>
 
-        <div class="mb-4">
-          <label class="form-label">Conteúdo</label>
-          @if (tipo === 'html') {
-            <textarea class="form-control font-monospace" [(ngModel)]="conteudoPagina" rows="6"></textarea>
-            <div class="mt-2 p-3 border rounded bg-light small">
-              <strong>Pré-visualização:</strong>
-              <div class="mt-1" [innerHTML]="conteudoPagina"></div>
-            </div>
-          } @else {
-            <input type="text" class="form-control" [(ngModel)]="conteudoPagina">
-          }
-        </div>
+        @if (tipo === 'link') {
+          <div class="mb-3">
+            <label class="form-label">Texto do Link</label>
+            <input type="text" class="form-control" [(ngModel)]="linkLabel" placeholder="ex: Consulte aqui os estatutos">
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Ficheiro</label>
+            @if (linkFilename) {
+              <div class="mb-2">
+                <a [href]="docsUrl + linkFilename" target="_blank" class="small text-primary">
+                  <i class="fa-solid fa-file me-1"></i>{{ linkFilename }}
+                </a>
+              </div>
+            }
+            <label class="btn btn-outline-secondary btn-sm">
+              <i class="fa-solid fa-upload me-1"></i>Escolher ficheiro
+              <input type="file" class="d-none" accept=".pdf,.doc,.docx" (change)="uploadDoc($event)">
+            </label>
+          </div>
+        } @else {
+          <div class="mb-4">
+            <label class="form-label">Conteúdo</label>
+            <div id="pagina-editor" style="min-height: 150px;"></div>
+          </div>
+        }
 
         <div class="d-flex gap-2">
           <button class="btn btn-primary" (click)="save()" [disabled]="saving()">
