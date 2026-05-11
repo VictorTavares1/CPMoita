@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ContactsService, Contact } from '../../services/contacts';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-footer',
@@ -20,7 +21,7 @@ export class Footer implements OnInit {
   ngOnInit(): void {
     this.contactsService.getContacts().subscribe({
       next: (data) => { this.contacts = data; this.cdr.markForCheck(); },
-      error: (err) => console.error('Erro ao carregar contactos:', err),
+      error: (err) => { if (!environment.production) console.error('Erro ao carregar contactos:', err); },
     });
   }
 

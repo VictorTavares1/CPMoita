@@ -24,7 +24,7 @@ export class Home implements OnInit {
   ngOnInit(): void {
     this.newsService.getNews(1, 3).subscribe({
       next: (res) => { this.latestNews = res.data; this.cdr.markForCheck(); },
-      error: (err) => console.error('Erro ao carregar notícias:', err),
+      error: (err) => { if (!environment.production) console.error('Erro ao carregar notícias:', err); },
     });
 
     this.pageContentsService.getContents('inicio').subscribe({

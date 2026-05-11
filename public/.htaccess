@@ -29,7 +29,7 @@ RewriteEngine On
     # HSTS — activar após obter certificado SSL (descomentar)
     # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     # Content-Security-Policy — restringe origens de scripts, estilos e outros recursos
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://www.centroparoquialdamoita.pt https://centroparoquialdamoita.pt http://localhost http://localhost:4200; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://www.centroparoquialdamoita.pt https://centroparoquialdamoita.pt; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
 
 # Angular SPA routing — rewrite all non-file, non-directory requests to index.html

@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', '0');
+ini_set('display_startup_errors', '0');
+error_reporting(E_ALL);
+ini_set('log_errors', '1');
+
 header('Content-Type: application/json; charset=utf-8');
 
 $allowedOrigins = [
@@ -29,7 +34,7 @@ $conn = new mysqli(
     $config['server'],
     $config['user'],
     $config['password'],
-    'centro-paroquial-moita'
+    $config['db']
 );
 
 if ($conn->connect_error) {
