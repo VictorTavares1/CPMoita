@@ -16,19 +16,32 @@ while ($row = $result->fetch_assoc()) {
 
 if (empty($docs)) { http_response_code(404); exit(); }
 
+$docsBase = realpath(__DIR__ . '/../docs');
+if ($docsBase === false) { http_response_code(500); exit(); }
+$yearBase = $docsBase . DIRECTORY_SEPARATOR . $year;
+
+function resolveDocPath(string $base, string $url): string|false {
+    $candidate = realpath($base . DIRECTORY_SEPARATOR . basename($url));
+    if ($candidate === false) return false;
+    if (strpos($candidate, $base . DIRECTORY_SEPARATOR) !== 0) return false;
+    return $candidate;
+}
+
 // If single file, serve directly
 if (count($docs) === 1) {
-    $file = __DIR__ . '/../docs/' . $year . '/' . $docs[0]['url'];
-    if (!file_exists($file)) { http_response_code(404); exit(); }
+    $resolved = resolveDocPath($yearBase, $docs[0]['url']);
+    if ($resolved === false || !is_file($resolved)) { http_response_code(404); exit(); }
+    $safeName = preg_replace('/[^\w.\-]/', '_', basename($resolved));
     header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="' . basename($file) . '"');
-    readfile($file);
+    header('Content-Disposition: inline; filename="' . $safeName . '"');
+    header('Content-Length: ' . filesize($resolved));
+    readfile($resolved);
     exit();
 }
 
 // Multiple files — create ZIP on the fly
 $zipName = 'Relatorios_' . $year . '.zip';
-$tmpZip  = sys_get_temp_dir() . '/' . $zipName;
+$tmpZip  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $zipName;
 
 $zip = new ZipArchive();
 if ($zip->open($tmpZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
@@ -36,9 +49,10 @@ if ($zip->open($tmpZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
 }
 
 foreach ($docs as $doc) {
-    $file = __DIR__ . '/../docs/' . $year . '/' . $doc['url'];
-    if (file_exists($file)) {
-        $zip->addFile($file, $doc['title'] . '.' . pathinfo($file, PATHINFO_EXTENSION));
+    $resolved = resolveDocPath($yearBase, $doc['url']);
+    if ($resolved !== false && file_exists($resolved)) {
+        $entryName = preg_replace('/[^\w.\-]/', '_', $doc['title']) . '.' . pathinfo($resolved, PATHINFO_EXTENSION);
+        $zip->addFile($resolved, $entryName);
     }
 }
 $zip->close();

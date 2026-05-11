@@ -40,32 +40,31 @@ $stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows === 0) {
-    $ins = $conn->prepare("INSERT INTO login_attempts (ip) VALUES (?)");
-    $ins->bind_param('s', $ip);
-    $ins->execute();
-    http_response_code(401);
-    echo json_encode(['error' => 'Credenciais inválidas']);
-    exit();
-}
-
 $user = $result->fetch_assoc();
-$storedHash = $user['password'];
+
+// Hash sentinela: impede timing side-channel quando o email não existe
+// (password_verify num hash válido tem custo fixo; sem isto, email inexistente responde ~100ms mais rápido)
+$storedHash = $user ? $user['password'] : '$2y$12$invalidhashsentinelxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAA';
 
 // Suporte a migração: verificar bcrypt primeiro, depois MD5 legado
 $configFull = json_decode(file_get_contents(__DIR__ . '/../db/info.json'), true);
 $prefixo = $configFull['prefixo'] ?? '';
 $sufixo  = $configFull['sufixo'] ?? '';
 
+$authenticated = false;
+
 if (password_verify($pwd, $storedHash)) {
-    // bcrypt — ok
-} elseif ($storedHash === md5($prefixo . $pwd . $sufixo) || $storedHash === md5($pwd)) {
+    $authenticated = $user !== null;
+} elseif ($user !== null && ($storedHash === md5($prefixo . $pwd . $sufixo) || $storedHash === md5($pwd))) {
     // Password MD5 legada — migrar para bcrypt automaticamente
     $newHash = password_hash($pwd, PASSWORD_BCRYPT);
     $stmtUpd = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
     $stmtUpd->bind_param('si', $newHash, $user['id']);
     $stmtUpd->execute();
-} else {
+    $authenticated = true;
+}
+
+if (!$authenticated) {
     $ins = $conn->prepare("INSERT INTO login_attempts (ip) VALUES (?)");
     $ins->bind_param('s', $ip);
     $ins->execute();
