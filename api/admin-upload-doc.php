@@ -21,9 +21,25 @@ if (empty($_FILES['doc']['name'])) {
     exit();
 }
 
-$allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-$mime = mime_content_type($_FILES['doc']['tmp_name']);
-if (!in_array($mime, $allowedTypes)) {
+// Limite de tamanho: 20 MB
+$maxBytes = 20 * 1024 * 1024;
+if ($_FILES['doc']['size'] > $maxBytes) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Ficheiro demasiado grande. Máximo 20 MB.']);
+    exit();
+}
+
+$allowedMimes = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+$allowedExts = ['pdf', 'doc', 'docx'];
+$ext   = strtolower(pathinfo($_FILES['doc']['name'], PATHINFO_EXTENSION));
+$finfo = new finfo(FILEINFO_MIME_TYPE);
+$mime  = $finfo->file($_FILES['doc']['tmp_name']);
+
+if (!in_array($ext, $allowedExts, true) || !in_array($mime, $allowedMimes, true)) {
     http_response_code(400);
     echo json_encode(['error' => 'Tipo de ficheiro não permitido. Use PDF ou Word.']);
     exit();

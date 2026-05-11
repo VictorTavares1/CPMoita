@@ -25,9 +25,10 @@ $conn->query("CREATE TABLE IF NOT EXISTS login_attempts (
     attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )");
 $conn->query("DELETE FROM login_attempts WHERE attempted_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
-$ipEscaped = $conn->real_escape_string($ip);
-$rateRes = $conn->query("SELECT COUNT(*) as cnt FROM login_attempts WHERE ip = '$ipEscaped'");
-$rateRow = $rateRes->fetch_assoc();
+$rateStmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM login_attempts WHERE ip = ?");
+$rateStmt->bind_param('s', $ip);
+$rateStmt->execute();
+$rateRow = $rateStmt->get_result()->fetch_assoc();
 if ((int)$rateRow['cnt'] >= 10) {
     http_response_code(429);
     echo json_encode(['error' => 'Demasiadas tentativas. Tente novamente em 15 minutos.']);
@@ -40,7 +41,9 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    $conn->query("INSERT INTO login_attempts (ip) VALUES ('$ipEscaped')");
+    $ins = $conn->prepare("INSERT INTO login_attempts (ip) VALUES (?)");
+    $ins->bind_param('s', $ip);
+    $ins->execute();
     http_response_code(401);
     echo json_encode(['error' => 'Credenciais inválidas']);
     exit();
@@ -63,7 +66,9 @@ if (password_verify($pwd, $storedHash)) {
     $stmtUpd->bind_param('si', $newHash, $user['id']);
     $stmtUpd->execute();
 } else {
-    $conn->query("INSERT INTO login_attempts (ip) VALUES ('$ipEscaped')");
+    $ins = $conn->prepare("INSERT INTO login_attempts (ip) VALUES (?)");
+    $ins->bind_param('s', $ip);
+    $ins->execute();
     http_response_code(401);
     echo json_encode(['error' => 'Credenciais inválidas']);
     exit();

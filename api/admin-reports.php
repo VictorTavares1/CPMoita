@@ -29,12 +29,18 @@ if ($method === 'GET') {
 // POST - upload new doc
 if ($method === 'POST') {
     $titulo = trim($_POST['titulo'] ?? '');
-    $ano    = $_POST['ano'] ?? '';
+    $ano    = (int)($_POST['ano'] ?? 0);
     $idType = (int)($_POST['idType'] ?? 1);
 
-    if (!$titulo || !$ano) {
+    if (!$titulo) {
         http_response_code(400);
-        echo json_encode(['error' => 'Título e ano são obrigatórios']);
+        echo json_encode(['error' => 'Título é obrigatório']);
+        exit();
+    }
+    // Ano válido: 1900–2100 apenas (impede path traversal via valor numérico)
+    if ($ano < 1900 || $ano > 2100) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Ano inválido']);
         exit();
     }
 
@@ -44,24 +50,57 @@ if ($method === 'POST') {
         exit();
     }
 
-    $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    $allowedExts  = ['pdf', 'doc', 'docx'];
-    $ext  = strtolower(pathinfo($_FILES['doc']['name'], PATHINFO_EXTENSION));
-    $mime = mime_content_type($_FILES['doc']['tmp_name']);
+    // Limite de tamanho: 20 MB
+    $maxBytes = 20 * 1024 * 1024;
+    if ($_FILES['doc']['size'] > $maxBytes) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Ficheiro demasiado grande. Máximo 20 MB.']);
+        exit();
+    }
 
-    if (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
+    // Validação de tipo via finfo (mais fiável que mime_content_type)
+    $allowedMimes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
+    $allowedExts = ['pdf', 'doc', 'docx'];
+    $ext  = strtolower(pathinfo($_FILES['doc']['name'], PATHINFO_EXTENSION));
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime  = $finfo->file($_FILES['doc']['tmp_name']);
+
+    if (!in_array($ext, $allowedExts, true) || !in_array($mime, $allowedMimes, true)) {
         http_response_code(400);
         echo json_encode(['error' => 'Tipo de ficheiro não permitido. Use PDF ou Word.']);
         exit();
     }
 
-    $yearDir = __DIR__ . '/../docs/' . $ano;
-    if (!is_dir($yearDir)) {
-        mkdir($yearDir, 0777, true);
+    // Construir path seguro: usar apenas o ano já validado como inteiro
+    $docsBase = realpath(__DIR__ . '/../docs');
+    if ($docsBase === false) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Diretoria de documentos não encontrada']);
+        exit();
+    }
+    $yearDir = $docsBase . DIRECTORY_SEPARATOR . $ano;
+
+    // Confirmar que yearDir é filho direto de docsBase
+    if (strpos($yearDir . DIRECTORY_SEPARATOR, $docsBase . DIRECTORY_SEPARATOR) !== 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Caminho inválido']);
+        exit();
     }
 
-    $nome = time() . '_' . basename($_FILES['doc']['name']);
-    if (!move_uploaded_file($_FILES['doc']['tmp_name'], $yearDir . '/' . $nome)) {
+    if (!is_dir($yearDir)) {
+        mkdir($yearDir, 0755, true);
+    }
+
+    // Nome do ficheiro: apenas caracteres seguros + extensão validada
+    $safeName = preg_replace('/[^a-zA-Z0-9_\-]/', '_', pathinfo($_FILES['doc']['name'], PATHINFO_FILENAME));
+    $safeName = substr($safeName, 0, 80);
+    $nome     = time() . '_' . $safeName . '.' . $ext;
+
+    if (!move_uploaded_file($_FILES['doc']['tmp_name'], $yearDir . DIRECTORY_SEPARATOR . $nome)) {
         http_response_code(500);
         echo json_encode(['error' => 'Erro ao guardar o ficheiro']);
         exit();

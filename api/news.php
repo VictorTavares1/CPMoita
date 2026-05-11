@@ -1,8 +1,8 @@
 <?php
 require_once 'db.php';
 
-$page   = isset($_GET['page'])  ? (int)$_GET['page']  : 1;
-$limit  = isset($_GET['limit']) ? (int)$_GET['limit'] : 9;
+$page   = max(1, (int)($_GET['page']  ?? 1));
+$limit  = min(50, max(1, (int)($_GET['limit'] ?? 9)));
 $offset = ($page - 1) * $limit;
 
 $stmt = $conn->prepare("

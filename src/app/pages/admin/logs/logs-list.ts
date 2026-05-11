@@ -9,21 +9,26 @@ import { AdminLogsService, LogItem } from '../../../services/admin-logs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLogs implements OnInit {
-  allLogs: LogItem[] = [];
-  filtered: LogItem[] = [];
-  paged: LogItem[] = [];
-  search = '';
+  logs: LogItem[] = [];
+  total = 0;
   currentPage = 1;
-  readonly pageSize = 10;
+  readonly pageSize = 50;
   loading = signal(true);
 
   constructor(private svc: AdminLogsService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.svc.getAll().subscribe({
-      next: (data) => {
-        this.allLogs = data;
-        this.applyFilters();
+    this.loadPage(1);
+  }
+
+  loadPage(page: number): void {
+    this.loading.set(true);
+    this.cdr.markForCheck();
+    this.svc.getPage(page, this.pageSize).subscribe({
+      next: (res) => {
+        this.logs = res.data;
+        this.total = res.total;
+        this.currentPage = res.page;
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -31,35 +36,13 @@ export class AdminLogs implements OnInit {
     });
   }
 
-  applyFilters(): void {
-    const q = this.search.trim().toLowerCase();
-    this.filtered = q
-      ? this.allLogs.filter(l => l.userEmail.toLowerCase().includes(q))
-      : [...this.allLogs];
-    this.currentPage = 1;
-    this.updatePaged();
-  }
-
-  updatePaged(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.paged = this.filtered.slice(start, start + this.pageSize);
-  }
-
   get totalPages(): number {
-    return Math.ceil(this.filtered.length / this.pageSize);
+    return Math.ceil(this.total / this.pageSize);
   }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.updatePaged();
-    this.cdr.markForCheck();
-  }
-
-  clearFilters(): void {
-    this.search = '';
-    this.applyFilters();
-    this.cdr.markForCheck();
+    this.loadPage(page);
   }
 
   formatDate(dateHour: string): string {

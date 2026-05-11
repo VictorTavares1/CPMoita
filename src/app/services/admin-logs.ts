@@ -12,14 +12,21 @@ export interface LogItem {
   name: string;
 }
 
+export interface LogsPage {
+  data: LogItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminLogsService {
   private readonly api = `${environment.apiUrl}/admin-logs.php`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
-  getAll(): Observable<LogItem[]> {
-    return this.http.get<LogItem[]>(this.api, {
+  getPage(page: number, limit: number = 50): Observable<LogsPage> {
+    return this.http.get<LogsPage>(`${this.api}?page=${page}&limit=${limit}`, {
       headers: new HttpHeaders(this.auth.getAuthHeaders()),
     });
   }

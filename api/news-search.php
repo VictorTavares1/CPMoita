@@ -8,7 +8,7 @@ if (empty($search)) {
     exit();
 }
 
-$like = '%' . $conn->real_escape_string($search) . '%';
+$like = '%' . $search . '%';
 
 $stmt = $conn->prepare("
     SELECT id, title, content, dateHour

@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 $allowedOrigins = [
     'http://localhost:4200',
@@ -10,12 +10,12 @@ $allowedOrigins = [
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins, true)) {
     header('Access-Control-Allow-Origin: ' . $origin);
+    header('Vary: Origin');
 }
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
-header('X-XSS-Protection: 1; mode=block');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

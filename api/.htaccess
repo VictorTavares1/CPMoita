@@ -1,0 +1,4 @@
+# Bloquear acesso web ao script de migração de passwords
+<Files "migrate-passwords.php">
+    Require all denied
+</Files>

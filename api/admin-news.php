@@ -58,15 +58,20 @@ if ($method === 'POST') {
 
     // Handle images
     if (!empty($_FILES['img']['name'][0])) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        $uploadDir = __DIR__ . '/../uploads/';
-        $totalFiles = count($_FILES['img']['name']);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $allowedExts  = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $maxImgBytes  = 5 * 1024 * 1024; // 5 MB por imagem
+        $uploadDir    = __DIR__ . '/../uploads/';
+        $finfo        = new finfo(FILEINFO_MIME_TYPE);
+        $totalFiles   = count($_FILES['img']['name']);
         for ($i = 0; $i < $totalFiles; $i++) {
             if ($_FILES['img']['error'][$i] !== 0) continue;
-            $mime = mime_content_type($_FILES['img']['tmp_name'][$i]);
-            if (!in_array($mime, $allowedTypes)) continue;
-            $ext  = pathinfo($_FILES['img']['name'][$i], PATHINFO_EXTENSION);
-            $nome = uniqid('img_', true) . '.' . strtolower($ext);
+            if ($_FILES['img']['size'][$i] > $maxImgBytes) continue;
+            $mime = $finfo->file($_FILES['img']['tmp_name'][$i]);
+            if (!in_array($mime, $allowedMimes, true)) continue;
+            $ext = strtolower(pathinfo($_FILES['img']['name'][$i], PATHINFO_EXTENSION));
+            if (!in_array($ext, $allowedExts, true)) continue;
+            $nome = uniqid('img_', true) . '.' . $ext;
             move_uploaded_file($_FILES['img']['tmp_name'][$i], $uploadDir . $nome);
             $stmt2 = $conn->prepare("INSERT INTO images (url, idNews) VALUES (?, ?)");
             $stmt2->bind_param('si', $nome, $newsId);
