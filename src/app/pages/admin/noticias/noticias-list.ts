@@ -48,17 +48,18 @@ export class AdminNoticias implements OnInit {
   }
 
   applyFilters(): void {
-    let result = [...this.allNews];
-    if (this.search.trim()) {
-      const q = this.search.toLowerCase();
+    let result = this.allNews;
+    const q = this.search.trim().toLowerCase();
+    if (q) {
       result = result.filter(n => n.title.toLowerCase().includes(q));
     }
     if (this.dateFrom && this.dateTo) {
-      const from = new Date(this.dateFrom);
-      const to = new Date(this.dateTo);
+      // Datas calculadas UMA vez fora do filter() — não em cada iteração
+      const from = new Date(this.dateFrom).getTime();
+      const to   = new Date(this.dateTo).getTime() + 86_400_000; // inclui o dia final
       result = result.filter(n => {
-        const d = new Date(n.dateHour);
-        return d >= from && d <= to;
+        const t = new Date(n.dateHour).getTime();
+        return t >= from && t <= to;
       });
     }
     this.filtered = result;

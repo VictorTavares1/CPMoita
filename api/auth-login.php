@@ -18,12 +18,8 @@ if (!$email || !$pwd) {
 }
 
 // Rate limiting: max 10 tentativas por IP em 15 minutos
+// Tabela criada em db/schema.sql — não usar CREATE TABLE IF NOT EXISTS aqui
 $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-$conn->query("CREATE TABLE IF NOT EXISTS login_attempts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    ip VARCHAR(45) NOT NULL,
-    attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)");
 $conn->query("DELETE FROM login_attempts WHERE attempted_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
 $rateStmt = $conn->prepare("SELECT COUNT(*) AS cnt FROM login_attempts WHERE ip = ?");
 $rateStmt->bind_param('s', $ip);
@@ -78,14 +74,6 @@ $conn->query("DELETE FROM admin_tokens WHERE expires_at < NOW()");
 
 $token = bin2hex(random_bytes(32));
 $expiresAt = date('Y-m-d H:i:s', strtotime('+8 hours'));
-
-$conn->query("CREATE TABLE IF NOT EXISTS admin_tokens (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    token VARCHAR(64) NOT NULL UNIQUE,
-    expires_at DATETIME NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)");
 
 $stmt2 = $conn->prepare("INSERT INTO admin_tokens (user_id, token, expires_at) VALUES (?, ?, ?)");
 $stmt2->bind_param('iss', $user['id'], $token, $expiresAt);

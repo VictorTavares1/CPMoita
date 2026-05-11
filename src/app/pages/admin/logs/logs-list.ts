@@ -40,6 +40,10 @@ export class AdminLogs implements OnInit {
     return Math.ceil(this.total / this.pageSize);
   }
 
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
     this.loadPage(page);

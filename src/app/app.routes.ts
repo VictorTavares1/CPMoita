@@ -11,29 +11,10 @@ import { Creche } from './pages/servicos/creche/creche';
 import { Ninho } from './pages/servicos/ninho/ninho';
 import { Catl } from './pages/servicos/catl/catl';
 import { Erpi } from './pages/servicos/erpi/erpi';
-import { AdminLogin } from './pages/admin/login/login';
-import { AdminLayout } from './pages/admin/layout/admin-layout';
-import { AdminDashboard } from './pages/admin/dashboard/dashboard';
-import { AdminNoticias } from './pages/admin/noticias/noticias-list';
-import { AdminNoticiasAdd } from './pages/admin/noticias/noticias-add';
-import { AdminNoticiasEdit } from './pages/admin/noticias/noticias-edit';
-import { AdminContactos } from './pages/admin/contactos/contactos-list';
-import { AdminContactosAdd } from './pages/admin/contactos/contactos-add';
-import { AdminContactosEdit } from './pages/admin/contactos/contactos-edit';
-import { AdminServicos } from './pages/admin/servicos/servicos-list';
-import { AdminServicosAdd } from './pages/admin/servicos/servicos-add';
-import { AdminServicosEdit } from './pages/admin/servicos/servicos-edit';
-import { AdminPaginas } from './pages/admin/paginas/paginas-list';
-import { AdminPaginasEdit } from './pages/admin/paginas/paginas-edit';
-import { AdminRelatorios } from './pages/admin/relatorios/relatorios-list';
-import { AdminRelatoriosAdd } from './pages/admin/relatorios/relatorios-add';
-import { AdminAdmins } from './pages/admin/admins/admins-list';
-import { AdminAdminsAdd } from './pages/admin/admins/admins-add';
-import { AdminLogs } from './pages/admin/logs/logs-list';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // Public routes
+  // Public routes — eager (utilizadores públicos precisam destes componentes imediatamente)
   { path: '', component: Home },
   { path: 'noticias', component: NewsList },
   { path: 'noticias/:id', component: NewsDetailComponent },
@@ -47,32 +28,35 @@ export const routes: Routes = [
   { path: 'servicos/catl', component: Catl },
   { path: 'servicos/erpi', component: Erpi },
 
-  // Admin login (no guard)
-  { path: 'admin/login', component: AdminLogin },
+  // Admin login — lazy (só carregado quando necessário)
+  {
+    path: 'admin/login',
+    loadComponent: () => import('./pages/admin/login/login').then(m => m.AdminLogin),
+  },
 
-  // Admin protected routes
+  // Admin protected routes — todos lazy (não carregados para utilizadores públicos)
   {
     path: 'admin',
-    component: AdminLayout,
+    loadComponent: () => import('./pages/admin/layout/admin-layout').then(m => m.AdminLayout),
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: AdminDashboard },
-      { path: 'noticias', component: AdminNoticias },
-      { path: 'noticias/add', component: AdminNoticiasAdd },
-      { path: 'noticias/edit/:id', component: AdminNoticiasEdit },
-      { path: 'contactos', component: AdminContactos },
-      { path: 'contactos/add', component: AdminContactosAdd },
-      { path: 'contactos/edit/:id', component: AdminContactosEdit },
-      { path: 'servicos', component: AdminServicos },
-      { path: 'servicos/add', component: AdminServicosAdd },
-      { path: 'servicos/edit/:id', component: AdminServicosEdit },
-      { path: 'paginas', component: AdminPaginas },
-      { path: 'paginas/edit/:id', component: AdminPaginasEdit },
-      { path: 'relatorios', component: AdminRelatorios },
-      { path: 'relatorios/add', component: AdminRelatoriosAdd },
-      { path: 'administradores', component: AdminAdmins },
-      { path: 'administradores/add', component: AdminAdminsAdd },
-      { path: 'logs', component: AdminLogs },
+      { path: 'dashboard',           loadComponent: () => import('./pages/admin/dashboard/dashboard').then(m => m.AdminDashboard) },
+      { path: 'noticias',            loadComponent: () => import('./pages/admin/noticias/noticias-list').then(m => m.AdminNoticias) },
+      { path: 'noticias/add',        loadComponent: () => import('./pages/admin/noticias/noticias-add').then(m => m.AdminNoticiasAdd) },
+      { path: 'noticias/edit/:id',   loadComponent: () => import('./pages/admin/noticias/noticias-edit').then(m => m.AdminNoticiasEdit) },
+      { path: 'contactos',           loadComponent: () => import('./pages/admin/contactos/contactos-list').then(m => m.AdminContactos) },
+      { path: 'contactos/add',       loadComponent: () => import('./pages/admin/contactos/contactos-add').then(m => m.AdminContactosAdd) },
+      { path: 'contactos/edit/:id',  loadComponent: () => import('./pages/admin/contactos/contactos-edit').then(m => m.AdminContactosEdit) },
+      { path: 'servicos',            loadComponent: () => import('./pages/admin/servicos/servicos-list').then(m => m.AdminServicos) },
+      { path: 'servicos/add',        loadComponent: () => import('./pages/admin/servicos/servicos-add').then(m => m.AdminServicosAdd) },
+      { path: 'servicos/edit/:id',   loadComponent: () => import('./pages/admin/servicos/servicos-edit').then(m => m.AdminServicosEdit) },
+      { path: 'paginas',             loadComponent: () => import('./pages/admin/paginas/paginas-list').then(m => m.AdminPaginas) },
+      { path: 'paginas/edit/:id',    loadComponent: () => import('./pages/admin/paginas/paginas-edit').then(m => m.AdminPaginasEdit) },
+      { path: 'relatorios',          loadComponent: () => import('./pages/admin/relatorios/relatorios-list').then(m => m.AdminRelatorios) },
+      { path: 'relatorios/add',      loadComponent: () => import('./pages/admin/relatorios/relatorios-add').then(m => m.AdminRelatoriosAdd) },
+      { path: 'administradores',     loadComponent: () => import('./pages/admin/admins/admins-list').then(m => m.AdminAdmins) },
+      { path: 'administradores/add', loadComponent: () => import('./pages/admin/admins/admins-add').then(m => m.AdminAdminsAdd) },
+      { path: 'logs',                loadComponent: () => import('./pages/admin/logs/logs-list').then(m => m.AdminLogs) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

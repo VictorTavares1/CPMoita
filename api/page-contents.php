@@ -1,6 +1,9 @@
 <?php
 require_once 'db.php';
 
+// Conteúdo de página muda raramente — cache de 5 minutos no browser
+header('Cache-Control: public, max-age=300');
+
 $pagina = isset($_GET['pagina']) ? trim($_GET['pagina']) : '';
 
 if (empty($pagina)) {

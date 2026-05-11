@@ -10,11 +10,13 @@ if (empty($search)) {
 
 $like = '%' . $search . '%';
 
+// Subquery elimina N+1: imagem principal incluída na query principal
 $stmt = $conn->prepare("
-    SELECT id, title, content, dateHour
-    FROM news
-    WHERE idState = 1 AND (title LIKE ? OR content LIKE ?)
-    ORDER BY dateHour DESC
+    SELECT n.id, n.title, n.dateHour,
+           (SELECT i.url FROM images i WHERE i.idNews = n.id ORDER BY i.id ASC LIMIT 1) AS url
+    FROM news n
+    WHERE n.idState = 1 AND (n.title LIKE ? OR n.content LIKE ?)
+    ORDER BY n.dateHour DESC
     LIMIT 20
 ");
 $stmt->bind_param('ss', $like, $like);
@@ -24,11 +26,6 @@ $result = $stmt->get_result();
 $news = [];
 while ($row = $result->fetch_assoc()) {
     $row['id'] = (int)$row['id'];
-    $imgStmt = $conn->prepare("SELECT url FROM images WHERE idNews = ? LIMIT 1");
-    $imgStmt->bind_param('i', $row['id']);
-    $imgStmt->execute();
-    $imgRow = $imgStmt->get_result()->fetch_assoc();
-    $row['url'] = $imgRow ? $imgRow['url'] : null;
     $news[] = $row;
 }
 

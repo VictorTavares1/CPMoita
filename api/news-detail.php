@@ -1,6 +1,9 @@
 <?php
 require_once 'db.php';
 
+// Detalhe de notícia — cache de 5 minutos
+header('Cache-Control: public, max-age=300');
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id <= 0) {
