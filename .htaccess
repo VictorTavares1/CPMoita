@@ -1,36 +1,45 @@
-Options -MultiViews
+Options -MultiViews -Indexes
 RewriteEngine On
 
-# HTTPS redirect (descomentar em produção)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Forçar HTTPS em produção (ignorar em localhost/127.0.0.1)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# Gzip compression
+# Bloquear acesso a ficheiros e pastas sensíveis
+RedirectMatch 404 "(?i)^/(\.git|\.angular|\.vscode|src|node_modules|db|scripts)(/|$)"
+RedirectMatch 404 "(?i)\.(sql|lock|md|ts|map|mjs)$"
+
+# Compressão Gzip
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
 </IfModule>
 
-# Cache headers for static assets
+# Cache de assets estáticos
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresByType text/css "access plus 1 year"
-    ExpiresByType application/javascript "access plus 1 year"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType image/jpeg "access plus 1 month"
-    ExpiresByType image/svg+xml "access plus 1 month"
-    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType text/css                "access plus 1 year"
+    ExpiresByType application/javascript  "access plus 1 year"
+    ExpiresByType image/png               "access plus 1 month"
+    ExpiresByType image/jpeg              "access plus 1 month"
+    ExpiresByType image/webp              "access plus 1 month"
+    ExpiresByType image/svg+xml           "access plus 1 month"
+    ExpiresByType image/x-icon            "access plus 1 year"
+    ExpiresByType application/pdf         "access plus 1 month"
 </IfModule>
 
-# Security headers
+# Headers de segurança
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "DENY"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://www.centroparoquialdamoita.pt https://centroparoquialdamoita.pt; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google.com https://maps.gstatic.com; connect-src 'self' https://www.centroparoquialdamoita.pt https://centroparoquialdamoita.pt; frame-src https://www.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
 </IfModule>
 
-# Angular SPA routing — rewrite all non-file, non-directory requests to index.html
+# SPA Angular — redirecionar para index.html (exceto /api/ e ficheiros reais)
+RewriteCond %{REQUEST_URI} !^/api/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.html [L]

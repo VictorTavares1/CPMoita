@@ -23,11 +23,14 @@ if ($token) {
     $stmt->execute();
 }
 
-// Expirar o cookie no browser
-$isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+// Expirar o cookie no browser — mesmo path usado no login
+$isSecure   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+$scriptDir  = dirname($_SERVER['SCRIPT_NAME']);
+$cookiePath = rtrim($scriptDir, '/') . '/';
 setcookie('admin_token', '', [
     'expires'  => time() - 3600,
-    'path'     => '/CPMoita/api/',
+    'path'     => $cookiePath,
     'domain'   => '',
     'secure'   => $isSecure,
     'httponly' => true,

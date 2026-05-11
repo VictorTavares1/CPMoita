@@ -76,7 +76,7 @@ if ($method === 'POST') {
     }
 
     // Construir path seguro: usar apenas o ano já validado como inteiro
-    $docsBase = realpath(__DIR__ . '/../docs');
+    $docsBase = realpath(__DIR__ . '/../public/docs');
     if ($docsBase === false) {
         http_response_code(500);
         echo json_encode(['error' => 'Diretoria de documentos não encontrada']);

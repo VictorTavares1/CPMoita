@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NewsService, NewsDetail, NewsItem } from '../../services/news';
 import { environment } from '../../../environments/environment';
 
@@ -13,7 +12,7 @@ import { environment } from '../../../environments/environment';
 })
 export class NewsDetailComponent implements OnInit {
   news: NewsDetail | null = null;
-  safeContent: SafeHtml = '';
+  safeContent = '';
   sidebarNews: NewsItem[] = [];
   loading = true;
   notFound = false;
@@ -23,7 +22,6 @@ export class NewsDetailComponent implements OnInit {
   constructor(
     private newsService: NewsService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -44,7 +42,7 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsDetail(id).subscribe({
       next: (res) => {
         this.news = res;
-        this.safeContent = this.sanitizer.bypassSecurityTrustHtml(res.content ?? '');
+        this.safeContent = res.content ?? '';
         this.loading = false;
         this.cdr.markForCheck();
       },

@@ -74,15 +74,21 @@ $stmt2->bind_param('iss', $user['id'], $token, $expiresAt);
 $stmt2->execute();
 
 // Cookie HttpOnly: JavaScript nunca consegue ler — imune a XSS
-$isSecure  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-$cookieTtl = 8 * 3600; // 8 horas (igual ao token na BD)
+// Detectar HTTPS incluindo proxies reversos (X-Forwarded-Proto)
+$isSecure  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+           || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+// Derivar o path da API a partir do URL actual em vez de hardcodar
+// Em dev:  /CPMoita/api/   Em produção: /api/
+$scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+$cookiePath = rtrim($scriptDir, '/') . '/';
+$cookieTtl  = 8 * 3600; // 8 horas (igual ao token na BD)
 setcookie('admin_token', $token, [
     'expires'  => time() + $cookieTtl,
-    'path'     => '/CPMoita/api/',   // restringir ao path da API
-    'domain'   => '',                // domínio corrente apenas
-    'secure'   => $isSecure,         // HTTPS em produção, HTTP em dev
-    'httponly' => true,              // inacessível via JavaScript
-    'samesite' => 'Strict',          // protege contra CSRF
+    'path'     => $cookiePath,
+    'domain'   => '',
+    'secure'   => $isSecure,
+    'httponly' => true,
+    'samesite' => 'Strict',
 ]);
 
 // Devolver apenas email e expiração — o token não sai no body

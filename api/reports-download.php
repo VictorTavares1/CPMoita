@@ -16,7 +16,7 @@ while ($row = $result->fetch_assoc()) {
 
 if (empty($docs)) { http_response_code(404); exit(); }
 
-$docsBase = realpath(__DIR__ . '/../docs');
+$docsBase = realpath(__DIR__ . '/../public/docs');
 if ($docsBase === false) { http_response_code(500); exit(); }
 $yearBase = $docsBase . DIRECTORY_SEPARATOR . $year;
 

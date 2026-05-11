@@ -47,30 +47,24 @@
           </div>
         </div>
 
-        <!-- Formulário -->
+        <!-- Enviar mensagem por email -->
         <div class="col-lg-8 mb-4 d-flex">
           <div class="card flex-fill">
             <div class="card-header" style="background-color: #2e6f9e; color: white;">
               Enviar Mensagem
             </div>
-            <div class="card-body">
-              <form>
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">Nome</label>
-                    <input type="text" class="form-control" name="nome" required>
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label class="form-label">E-mail</label>
-                    <input type="email" class="form-control" name="email" required>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Mensagem</label>
-                  <textarea class="form-control" name="mensagem" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
-              </form>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center text-center py-5">
+              <i class="fas fa-envelope fa-3x mb-3" style="color: #2e6f9e;"></i>
+              <p class="mb-4 text-muted">Para entrar em contacto connosco, envie um email diretamente para a nossa caixa de correio.</p>
+              @if (getContact('email'); as mail) {
+                <a [href]="'mailto:' + mail.valor" class="btn btn-primary btn-lg">
+                  <i class="fas fa-paper-plane me-2"></i>Enviar email
+                </a>
+              } @else {
+                <a href="mailto:geral@centroparoquialdamoita.pt" class="btn btn-primary btn-lg">
+                  <i class="fas fa-paper-plane me-2"></i>Enviar email
+                </a>
+              }
             </div>
           </div>
         </div>

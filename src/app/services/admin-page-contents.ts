@@ -32,7 +32,7 @@ export class AdminPageContentsService {
 
   uploadDoc(file: File): Observable<{ success: boolean; filename: string; name: string }> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('doc', file);
     return this.http.post<{ success: boolean; filename: string; name: string }>(
       `${environment.apiUrl}/admin-upload-doc.php`, formData
     );
