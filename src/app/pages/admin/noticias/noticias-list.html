@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h4 class="mb-0 fw-semibold">Gerir Notícias</h4>
-      <p class="text-muted small mb-0">{{ allNews.length }} notícias no total</p>
+      <p class="text-muted small mb-0">{{ total }} notícias no total</p>
     </div>
     <a routerLink="/admin/noticias/add" class="btn btn-primary btn-sm">
       <i class="fa-solid fa-plus me-1"></i> Nova Notícia
@@ -17,20 +17,12 @@
   <div class="card border-0 shadow-sm mb-4">
     <div class="card-body p-3">
       <div class="row g-2 align-items-end">
-        <div class="col-md-4">
+        <div class="col-md-8">
           <label class="form-label small mb-1">Pesquisar por título</label>
           <input type="text" class="form-control form-control-sm" [(ngModel)]="search"
-            (input)="applyFilters()" placeholder="Título...">
+            (input)="onSearchChange()" placeholder="Título...">
         </div>
-        <div class="col-md-3">
-          <label class="form-label small mb-1">De</label>
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="dateFrom" (change)="applyFilters()">
-        </div>
-        <div class="col-md-3">
-          <label class="form-label small mb-1">Até</label>
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="dateTo" (change)="applyFilters()">
-        </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
           <button class="btn btn-outline-secondary btn-sm w-100" (click)="clearFilters()">Limpar</button>
         </div>
       </div>
@@ -39,11 +31,11 @@
 
   <!-- Tabs -->
   <div class="btn-group mb-3">
-    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'">
-      Ativas <span class="badge bg-white text-success ms-1">{{ activeNews.length }}</span>
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="onTabChange('active')">
+      Ativas
     </button>
-    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'">
-      Inativas <span class="badge bg-white text-secondary ms-1">{{ inactiveNews.length }}</span>
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="onTabChange('inactive')">
+      Inativas
     </button>
   </div>
 
@@ -63,50 +55,52 @@
             </tr>
           </thead>
           <tbody>
-            @if (tab === 'active') {
-              @if (activeNews.length === 0) {
-                <tr><td colspan="3" class="text-center text-muted py-4">Nenhuma notícia ativa.</td></tr>
-              }
-              @for (n of activeNews; track n.id) {
-                <tr>
-                  <td><strong>{{ n.title }}</strong></td>
-                  <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
-                  <td class="text-center">
-                    <div class="d-flex justify-content-center gap-2">
-                      <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
-                        <i class="fa-solid fa-pen"></i>
-                      </a>
+            @if (news.length === 0) {
+              <tr><td colspan="3" class="text-center text-muted py-4">Nenhuma notícia encontrada.</td></tr>
+            }
+            @for (n of news; track n.id) {
+              <tr [class.table-secondary]="n.idState === 2">
+                <td><strong>{{ n.title }}</strong></td>
+                <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                    @if (n.idState === 1) {
                       <button class="btn btn-outline-danger btn-sm" (click)="toggleState(n)" title="Desativar">
                         <i class="fa-solid fa-eye-slash"></i>
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              }
-            } @else {
-              @if (inactiveNews.length === 0) {
-                <tr><td colspan="3" class="text-center text-muted py-4">Nenhuma notícia inativa.</td></tr>
-              }
-              @for (n of inactiveNews; track n.id) {
-                <tr class="table-secondary">
-                  <td><strong>{{ n.title }}</strong></td>
-                  <td class="text-muted small">{{ formatDate(n.dateHour) }}</td>
-                  <td class="text-center">
-                    <div class="d-flex justify-content-center gap-2">
-                      <a [routerLink]="['/admin/noticias/edit', n.id]" class="btn btn-outline-primary btn-sm" title="Editar">
-                        <i class="fa-solid fa-pen"></i>
-                      </a>
+                    } @else {
                       <button class="btn btn-outline-success btn-sm" (click)="toggleState(n)" title="Reativar">
                         <i class="fa-solid fa-eye"></i>
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              }
+                    }
+                  </div>
+                </td>
+              </tr>
             }
           </tbody>
         </table>
       </div>
     </div>
+
+    @if (totalPages > 1) {
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor:pointer;">Anterior</a>
+          </li>
+          @for (p of pageNumbers; track p) {
+            <li class="page-item" [class.active]="currentPage === p">
+              <a class="page-link" (click)="goToPage(p)" style="cursor:pointer;">{{ p }}</a>
+            </li>
+          }
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor:pointer;">Próxima</a>
+          </li>
+        </ul>
+      </nav>
+    }
   }
 </div>

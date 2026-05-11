@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 require_once 'auth-check.php';
+require_once 'html-sanitize.php';
 
 $user = validateToken($conn);
 if (!$user) {
@@ -11,16 +12,51 @@ if (!$user) {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// GET - list all news (active + inactive for admin)
+// GET - list news with server-side pagination and search
 if ($method === 'GET' && !isset($_GET['id'])) {
-    $result = $conn->query("SELECT id, title, dateHour, idState FROM news ORDER BY dateHour DESC");
+    $page   = max(1, (int)($_GET['page']   ?? 1));
+    $limit  = min(100, max(1, (int)($_GET['limit'] ?? 20)));
+    $search = trim($_GET['search'] ?? '');
+    $state  = isset($_GET['state']) ? (int)$_GET['state'] : null; // 1=ativas, 2=inativas, null=todas
+    $offset = ($page - 1) * $limit;
+
+    $where  = '1=1';
+    $params = [];
+    $types  = '';
+
+    if ($search !== '') {
+        $where   .= ' AND title LIKE ?';
+        $params[] = '%' . $search . '%';
+        $types   .= 's';
+    }
+    if ($state !== null) {
+        $where   .= ' AND idState = ?';
+        $params[] = $state;
+        $types   .= 'i';
+    }
+
+    // Total para paginação
+    $countStmt = $conn->prepare("SELECT COUNT(*) AS total FROM news WHERE $where");
+    if ($types) $countStmt->bind_param($types, ...$params);
+    $countStmt->execute();
+    $total = (int)$countStmt->get_result()->fetch_assoc()['total'];
+
+    // Dados paginados
+    $dataStmt = $conn->prepare("SELECT id, title, dateHour, idState FROM news WHERE $where ORDER BY dateHour DESC LIMIT ? OFFSET ?");
+    $params[] = $limit;
+    $params[] = $offset;
+    $types   .= 'ii';
+    $dataStmt->bind_param($types, ...$params);
+    $dataStmt->execute();
+
     $news = [];
-    while ($row = $result->fetch_assoc()) {
+    $r = $dataStmt->get_result();
+    while ($row = $r->fetch_assoc()) {
         $row['id']      = (int)$row['id'];
         $row['idState'] = (int)$row['idState'];
         $news[] = $row;
     }
-    echo json_encode($news);
+    echo json_encode(['data' => $news, 'total' => $total, 'page' => $page, 'limit' => $limit]);
     exit();
 }
 
@@ -46,8 +82,8 @@ if ($method === 'GET' && isset($_GET['id'])) {
 
 // POST - create news
 if ($method === 'POST') {
-    $titulo   = $_POST['titulo'] ?? '';
-    $conteudo = $_POST['conteudo'] ?? '';
+    $titulo   = trim($_POST['titulo'] ?? '');
+    $conteudo = sanitizeHtml($_POST['conteudo'] ?? '');
     if (!$titulo || !$conteudo) {
         http_response_code(400); echo json_encode(['error' => 'Campos obrigatórios em falta']); exit();
     }
@@ -93,8 +129,8 @@ if ($method === 'POST') {
 if ($method === 'PUT') {
     $body = json_decode(file_get_contents('php://input'), true);
     $id       = (int)($body['id'] ?? 0);
-    $titulo   = $body['titulo'] ?? '';
-    $conteudo = $body['conteudo'] ?? '';
+    $titulo   = trim($body['titulo'] ?? '');
+    $conteudo = sanitizeHtml($body['conteudo'] ?? '');
     if (!$id || !$titulo || !$conteudo) {
         http_response_code(400); echo json_encode(['error' => 'Campos obrigatórios em falta']); exit();
     }

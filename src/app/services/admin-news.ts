@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth';
 import { environment } from '../../environments/environment';
 
 export interface AdminNewsItem {
@@ -20,45 +19,51 @@ export interface AdminNewsDetail {
   images: { id: number; url: string }[];
 }
 
+export interface AdminNewsPage {
+  data: AdminNewsItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminNewsService {
   private readonly api = `${environment.apiUrl}/admin-news.php`;
   private readonly imgApi = `${environment.apiUrl}/admin-news-image.php`;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-  private headers(): HttpHeaders {
-    return new HttpHeaders(this.auth.getAuthHeaders());
-  }
-
-  getAll(): Observable<AdminNewsItem[]> {
-    return this.http.get<AdminNewsItem[]>(this.api, { headers: this.headers() });
+  getPage(page: number, limit: number, search = '', state?: number): Observable<AdminNewsPage> {
+    let url = `${this.api}?page=${page}&limit=${limit}`;
+    if (search) url += `&search=${encodeURIComponent(search)}`;
+    if (state !== undefined) url += `&state=${state}`;
+    return this.http.get<AdminNewsPage>(url);
   }
 
   getById(id: number): Observable<AdminNewsDetail> {
-    return this.http.get<AdminNewsDetail>(`${this.api}?id=${id}`, { headers: this.headers() });
+    return this.http.get<AdminNewsDetail>(`${this.api}?id=${id}`);
   }
 
   create(formData: FormData): Observable<{ success: boolean; id: number }> {
-    return this.http.post<{ success: boolean; id: number }>(this.api, formData, { headers: this.headers() });
+    return this.http.post<{ success: boolean; id: number }>(this.api, formData);
   }
 
   update(id: number, titulo: string, conteudo: string): Observable<{ success: boolean }> {
-    return this.http.put<{ success: boolean }>(this.api, { id, titulo, conteudo }, { headers: this.headers() });
+    return this.http.put<{ success: boolean }>(this.api, { id, titulo, conteudo });
   }
 
   toggleState(id: number): Observable<{ success: boolean }> {
-    return this.http.delete<{ success: boolean }>(`${this.api}?id=${id}`, { headers: this.headers() });
+    return this.http.delete<{ success: boolean }>(`${this.api}?id=${id}`);
   }
 
   uploadImages(newsId: number, files: FileList): Observable<{ success: boolean; images: { id: number; url: string }[] }> {
     const fd = new FormData();
     fd.append('newsId', String(newsId));
     for (let i = 0; i < files.length; i++) fd.append('img[]', files[i]);
-    return this.http.post<any>(this.imgApi, fd, { headers: this.headers() });
+    return this.http.post<{ success: boolean; images: { id: number; url: string }[] }>(this.imgApi, fd);
   }
 
   deleteImage(imageId: number): Observable<{ success: boolean }> {
-    return this.http.delete<{ success: boolean }>(`${this.imgApi}?id=${imageId}`, { headers: this.headers() });
+    return this.http.delete<{ success: boolean }>(`${this.imgApi}?id=${imageId}`);
   }
 }

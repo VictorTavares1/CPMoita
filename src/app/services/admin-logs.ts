@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth';
 import { environment } from '../../environments/environment';
 
 export interface LogItem {
@@ -23,11 +22,9 @@ export interface LogsPage {
 export class AdminLogsService {
   private readonly api = `${environment.apiUrl}/admin-logs.php`;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
+  constructor(private http: HttpClient) {}
 
   getPage(page: number, limit: number = 50): Observable<LogsPage> {
-    return this.http.get<LogsPage>(`${this.api}?page=${page}&limit=${limit}`, {
-      headers: new HttpHeaders(this.auth.getAuthHeaders()),
-    });
+    return this.http.get<LogsPage>(`${this.api}?page=${page}&limit=${limit}`);
   }
 }

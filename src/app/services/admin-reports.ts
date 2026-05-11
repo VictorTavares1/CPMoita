@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth';
 import { environment } from '../../environments/environment';
 
 export interface AdminReportItem {
@@ -17,21 +16,17 @@ export interface AdminReportItem {
 export class AdminReportsService {
   private readonly api = `${environment.apiUrl}/admin-reports.php`;
 
-  constructor(private http: HttpClient, private auth: AuthService) {}
-
-  private headers(): HttpHeaders {
-    return new HttpHeaders(this.auth.getAuthHeaders());
-  }
+  constructor(private http: HttpClient) {}
 
   getAll(): Observable<AdminReportItem[]> {
-    return this.http.get<AdminReportItem[]>(this.api, { headers: this.headers() });
+    return this.http.get<AdminReportItem[]>(this.api);
   }
 
   upload(formData: FormData): Observable<{ success: boolean; id: number }> {
-    return this.http.post<{ success: boolean; id: number }>(this.api, formData, { headers: this.headers() });
+    return this.http.post<{ success: boolean; id: number }>(this.api, formData);
   }
 
   toggleState(id: number): Observable<{ success: boolean }> {
-    return this.http.delete<{ success: boolean }>(`${this.api}?id=${id}`, { headers: this.headers() });
+    return this.http.delete<{ success: boolean }>(`${this.api}?id=${id}`);
   }
 }

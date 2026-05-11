@@ -10,36 +10,33 @@ import { AdminNewsService, AdminNewsItem } from '../../../services/admin-news';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminNoticias implements OnInit {
-  allNews: AdminNewsItem[] = [];
-  filtered: AdminNewsItem[] = [];
-  paged: AdminNewsItem[] = [];
+  news: AdminNewsItem[] = [];
+  total = 0;
+  currentPage = 1;
+  readonly pageSize = 20;
   tab: 'active' | 'inactive' = 'active';
   search = '';
-  dateFrom = '';
-  dateTo = '';
-  currentPage = 1;
-  readonly pageSize = 10;
   loading = signal(true);
   toast = signal('');
   toastType = signal('success');
 
   constructor(private svc: AdminNewsService, private cdr: ChangeDetectorRef, private router: Router) {
     const state = this.router.getCurrentNavigation()?.extras?.state as { toast?: string } | undefined;
-    if (state?.toast) {
-      this.showToast(state.toast, 'success');
-    }
+    if (state?.toast) this.showToast(state.toast, 'success');
   }
 
   ngOnInit(): void {
-    this.load();
+    this.loadPage(1);
   }
 
-  load(): void {
+  loadPage(page: number): void {
     this.loading.set(true);
-    this.svc.getAll().subscribe({
-      next: (data) => {
-        this.allNews = data;
-        this.applyFilters(); // already calls updatePaged
+    const stateFilter = this.tab === 'active' ? 1 : 2;
+    this.svc.getPage(page, this.pageSize, this.search, stateFilter).subscribe({
+      next: (res) => {
+        this.news = res.data;
+        this.total = res.total;
+        this.currentPage = res.page;
         this.loading.set(false);
         this.cdr.markForCheck();
       },
@@ -47,55 +44,31 @@ export class AdminNoticias implements OnInit {
     });
   }
 
-  applyFilters(): void {
-    let result = this.allNews;
-    const q = this.search.trim().toLowerCase();
-    if (q) {
-      result = result.filter(n => n.title.toLowerCase().includes(q));
-    }
-    if (this.dateFrom && this.dateTo) {
-      // Datas calculadas UMA vez fora do filter() — não em cada iteração
-      const from = new Date(this.dateFrom).getTime();
-      const to   = new Date(this.dateTo).getTime() + 86_400_000; // inclui o dia final
-      result = result.filter(n => {
-        const t = new Date(n.dateHour).getTime();
-        return t >= from && t <= to;
-      });
-    }
-    this.filtered = result;
-    this.currentPage = 1;
-    this.updatePaged();
+  onSearchChange(): void {
+    this.loadPage(1);
   }
 
-  get activeNews(): AdminNewsItem[] {
-    return this.filtered.filter(n => n.idState === 1);
-  }
-
-  get inactiveNews(): AdminNewsItem[] {
-    return this.filtered.filter(n => n.idState === 2);
-  }
-
-  updatePaged(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    this.paged = this.filtered.slice(start, start + this.pageSize);
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filtered.length / this.pageSize);
-  }
-
-  goToPage(page: number): void {
-    if (page < 1 || page > this.totalPages) return;
-    this.currentPage = page;
-    this.updatePaged();
-    this.cdr.markForCheck();
+  onTabChange(tab: 'active' | 'inactive'): void {
+    this.tab = tab;
+    this.loadPage(1);
   }
 
   clearFilters(): void {
     this.search = '';
-    this.dateFrom = '';
-    this.dateTo = '';
-    this.applyFilters();
+    this.loadPage(1);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.total / this.pageSize);
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.loadPage(page);
   }
 
   toggleState(news: AdminNewsItem): void {
@@ -103,10 +76,9 @@ export class AdminNoticias implements OnInit {
     if (!confirm(`Tem a certeza que deseja ${action} esta notícia?`)) return;
     this.svc.toggleState(news.id).subscribe({
       next: () => {
-        news.idState = news.idState === 1 ? 2 : 1;
-        this.applyFilters(); // already calls updatePaged
-        this.showToast(news.idState === 2 ? 'Notícia desativada.' : 'Notícia reativada.', 'success');
-        this.cdr.markForCheck();
+        const msg = news.idState === 1 ? 'Notícia desativada.' : 'Notícia reativada.';
+        this.showToast(msg, 'success');
+        this.loadPage(this.currentPage); // recarregar a página actual
       },
       error: () => this.showToast('Erro ao alterar estado.', 'danger')
     });

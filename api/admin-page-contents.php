@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 require_once 'auth-check.php';
+require_once 'html-sanitize.php';
 
 $user = validateToken($conn);
 if (!$user) {
@@ -32,7 +33,7 @@ if ($method === 'GET') {
         $filename = trim($data['filename'] ?? '');
         $valor    = json_encode(['label' => $label, 'filename' => $filename], JSON_UNESCAPED_UNICODE);
     } else {
-        $valor = trim($data['conteudoPagina'] ?? '');
+        $valor = sanitizeHtml($data['conteudoPagina'] ?? '');
     }
 
     $stmt = $conn->prepare("UPDATE page_contents SET conteudoPagina=?, atualizadoEm=NOW() WHERE id=?");
