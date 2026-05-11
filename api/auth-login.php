@@ -17,23 +17,60 @@ if (!$email || !$pwd) {
     exit();
 }
 
-$configFull = json_decode(file_get_contents(__DIR__ . '/../db/info.json'), true);
-$prefixo = $configFull['prefixo'];
-$sufixo  = $configFull['sufixo'];
-$hash    = md5($prefixo . $pwd . $sufixo);
+// Rate limiting: max 10 tentativas por IP em 15 minutos
+$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+$conn->query("CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    attempted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)");
+$conn->query("DELETE FROM login_attempts WHERE attempted_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
+$ipEscaped = $conn->real_escape_string($ip);
+$rateRes = $conn->query("SELECT COUNT(*) as cnt FROM login_attempts WHERE ip = '$ipEscaped'");
+$rateRow = $rateRes->fetch_assoc();
+if ((int)$rateRow['cnt'] >= 10) {
+    http_response_code(429);
+    echo json_encode(['error' => 'Demasiadas tentativas. Tente novamente em 15 minutos.']);
+    exit();
+}
 
-$stmt = $conn->prepare("SELECT id, email FROM users WHERE email = ? AND password = ? AND idState = 1");
-$stmt->bind_param('ss', $email, $hash);
+$stmt = $conn->prepare("SELECT id, email, password FROM users WHERE email = ? AND idState = 1");
+$stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
+    $conn->query("INSERT INTO login_attempts (ip) VALUES ('$ipEscaped')");
     http_response_code(401);
     echo json_encode(['error' => 'Credenciais inválidas']);
     exit();
 }
 
 $user = $result->fetch_assoc();
+$storedHash = $user['password'];
+
+// Suporte a migração: verificar bcrypt primeiro, depois MD5 legado
+$configFull = json_decode(file_get_contents(__DIR__ . '/../db/info.json'), true);
+$prefixo = $configFull['prefixo'] ?? '';
+$sufixo  = $configFull['sufixo'] ?? '';
+
+if (password_verify($pwd, $storedHash)) {
+    // bcrypt — ok
+} elseif ($storedHash === md5($prefixo . $pwd . $sufixo) || $storedHash === md5($pwd)) {
+    // Password MD5 legada — migrar para bcrypt automaticamente
+    $newHash = password_hash($pwd, PASSWORD_BCRYPT);
+    $stmtUpd = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmtUpd->bind_param('si', $newHash, $user['id']);
+    $stmtUpd->execute();
+} else {
+    $conn->query("INSERT INTO login_attempts (ip) VALUES ('$ipEscaped')");
+    http_response_code(401);
+    echo json_encode(['error' => 'Credenciais inválidas']);
+    exit();
+}
+
+// Login bem-sucedido — limpar tokens expirados deste utilizador
+$conn->query("DELETE FROM admin_tokens WHERE expires_at < NOW()");
 
 $token = bin2hex(random_bytes(32));
 $expiresAt = date('Y-m-d H:i:s', strtotime('+8 hours'));

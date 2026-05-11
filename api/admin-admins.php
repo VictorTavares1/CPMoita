@@ -63,7 +63,7 @@ if ($method === 'POST') {
         exit();
     }
 
-    $hash = md5($password);
+    $hash = password_hash($password, PASSWORD_BCRYPT);
     $stmt = $conn->prepare("INSERT INTO users (email, password, idState) VALUES (?, ?, 1)");
     $stmt->bind_param('ss', $email, $hash);
     $stmt->execute();

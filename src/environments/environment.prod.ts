@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost/CPMoita/api',
-  uploadsUrl: 'http://localhost/CPMoita/uploads',
+  apiUrl: 'https://www.centroparoquialdamoita.pt/api',
+  uploadsUrl: 'https://www.centroparoquialdamoita.pt/uploads',
 };

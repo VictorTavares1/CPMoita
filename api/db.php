@@ -1,8 +1,22 @@
 <?php
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: http://localhost:4200');
+
+$allowedOrigins = [
+    'http://localhost:4200',
+    'http://localhost',
+    'https://www.centroparoquialdamoita.pt',
+    'https://centroparoquialdamoita.pt',
+];
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins, true)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -24,4 +38,4 @@ if ($conn->connect_error) {
     exit();
 }
 
-$conn->set_charset('utf8');
+$conn->set_charset('utf8mb4');
