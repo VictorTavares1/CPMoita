@@ -16,6 +16,7 @@ export class AdminLogin {
   error = signal('');
   loading = signal(false);
   sessionExpired = signal(false);
+  showPassword = signal(false);
 
   constructor(private auth: AuthService, private router: Router, private cdr: ChangeDetectorRef) {
     // Detectar redirecionamento por sessão expirada (vem do authErrorInterceptor)

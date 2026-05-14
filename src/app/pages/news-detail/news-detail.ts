@@ -59,8 +59,12 @@ export class NewsDetailComponent implements OnInit {
   }
 
   getImageUrl(url: string): string {
-    if (!url) return 'images/cpm.png';
+    if (!url) return '/images/cpm.png';
     if (url.startsWith('http')) return url;
     return this.uploadsUrl + url;
+  }
+
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/images/cpm.png';
   }
 }

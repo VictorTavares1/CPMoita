@@ -12,7 +12,7 @@ $like = '%' . $search . '%';
 
 // Subquery elimina N+1: imagem principal incluída na query principal
 $stmt = $conn->prepare("
-    SELECT n.id, n.title, n.dateHour,
+    SELECT n.id, n.title, n.content, n.dateHour,
            (SELECT i.url FROM images i WHERE i.idNews = n.id ORDER BY i.id ASC LIMIT 1) AS url
     FROM news n
     WHERE n.idState = 1 AND (n.title LIKE ? OR n.content LIKE ?)

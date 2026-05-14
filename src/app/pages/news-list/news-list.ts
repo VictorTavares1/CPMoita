@@ -95,8 +95,8 @@ export class NewsList implements OnInit, OnDestroy {
     this.pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
-  stripHtml(html: string): string {
-    return html.replace(/<[^>]*>/g, '');
+  stripHtml(html: string | null | undefined): string {
+    return (html ?? '').replace(/<[^>]*>/g, '');
   }
 
   formatDate(dateStr: string): string {
@@ -104,8 +104,12 @@ export class NewsList implements OnInit, OnDestroy {
   }
 
   getImageUrl(url: string | null): string {
-    if (!url) return 'images/cpm.png';
+    if (!url) return '/images/cpm.png';
     if (url.startsWith('http')) return url;
     return this.uploadsUrl + url;
+  }
+
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/images/cpm.png';
   }
 }

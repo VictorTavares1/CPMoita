@@ -10,7 +10,7 @@ $offset = ($page - 1) * $limit;
 
 // LEFT JOIN traz a imagem principal em 1 query em vez de N queries separadas
 $stmt = $conn->prepare("
-    SELECT n.id, n.title, n.dateHour,
+    SELECT n.id, n.title, n.content, n.dateHour,
            (SELECT i.url FROM images i WHERE i.idNews = n.id ORDER BY i.id ASC LIMIT 1) AS url
     FROM news n
     WHERE n.idState = 1

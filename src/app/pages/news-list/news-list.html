@@ -36,7 +36,7 @@
           <a [routerLink]="['/noticias', item.id]" style="text-decoration: none; color: inherit;">
             <div class="card border-0 h-100">
               <div class="news-image-container">
-                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title">
+                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title" (error)="onImgError($event)">
               </div>
               <div class="card-body" style="background-color: #ffffff;">
                 <h4 class="card-title" style="color: #2e6f9e; font-weight: bold;">{{ item.title }}</h4>

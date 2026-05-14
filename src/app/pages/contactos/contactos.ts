@@ -44,4 +44,8 @@ export class Contactos implements OnInit {
     if (url.startsWith('http')) return url;
     return `${environment.uploadsUrl}/${url}`;
   }
+
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/images/cpm.png';
+  }
 }

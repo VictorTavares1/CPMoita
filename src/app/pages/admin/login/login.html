@@ -36,14 +36,25 @@
             <label class="form-label fw-semibold">
               Password <span class="text-danger">*</span>
             </label>
-            <input
-              type="password"
-              class="form-control"
-              [(ngModel)]="password"
-              name="password"
-              required
-              autocomplete="current-password"
-            >
+            <div class="input-group">
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                class="form-control"
+                [(ngModel)]="password"
+                name="password"
+                required
+                autocomplete="current-password"
+              >
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="showPassword.set(!showPassword())"
+                tabindex="-1"
+                [attr.aria-label]="showPassword() ? 'Ocultar password' : 'Mostrar password'"
+              >
+                <i class="fa-regular" [class.fa-eye]="!showPassword()" [class.fa-eye-slash]="showPassword()"></i>
+              </button>
+            </div>
           </div>
 
           <div class="d-grid">

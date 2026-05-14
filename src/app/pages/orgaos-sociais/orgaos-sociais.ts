@@ -26,7 +26,7 @@ export class OrgaosSociais implements OnInit {
   }
 
   getImageUrl(url: string | null): string {
-    if (!url) return 'images/cpm.png';
+    if (!url) return '/images/cpm.png';
     if (url.startsWith('http')) return url;
     return `${environment.uploadsUrl}/${url}`;
   }

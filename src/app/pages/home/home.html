@@ -17,7 +17,7 @@
 
           <div class="carousel-inner">
             <div class="carousel-item active">
-              <img src="images/cpm.png" class="d-block w-100" alt="Centro Paroquial">
+              <img src="/images/cpm.png" class="d-block w-100" alt="Centro Paroquial">
               <div class="carousel-caption">
                 <div class="col-9">
                   <h1>{{ get('hero_titulo') || 'Centro Paroquial da Moita' }}</h1>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="carousel-item">
-              <img src="images/cpm2.png" class="d-block w-100" alt="Ao Serviço da Comunidade">
+              <img src="/images/cpm2.png" class="d-block w-100" alt="Ao Serviço da Comunidade">
               <div class="carousel-caption text-start">
                 <div class="col-9">
                   <h1>{{ get('missao_titulo') || 'A Nossa Missão' }}</h1>
@@ -57,16 +57,16 @@
     <div class="col-12 col-lg-4">
       <div class="container px-0 d-flex flex-column gap-2">
         <a class="text-center" routerLink="/servicos/creche">
-          <img src="images/creche.png" class="w-100 d-block" alt="Creche">
+          <img src="/images/creche.png" class="w-100 d-block" alt="Creche">
         </a>
         <a class="text-center" routerLink="/servicos/ninho">
-          <img src="images/ninho.png" class="w-100 d-block" alt="Ninho">
+          <img src="/images/ninho.png" class="w-100 d-block" alt="Ninho">
         </a>
         <a class="text-center" routerLink="/servicos/catl">
-          <img src="images/catl.png" class="w-100 d-block" alt="CATL">
+          <img src="/images/catl.png" class="w-100 d-block" alt="CATL">
         </a>
         <a class="text-center" routerLink="/servicos/erpi">
-          <img src="images/erpi.png" class="w-100 d-block" alt="ERPI">
+          <img src="/images/erpi.png" class="w-100 d-block" alt="ERPI">
         </a>
       </div>
     </div>
@@ -92,7 +92,7 @@
           <a [routerLink]="['/noticias', item.id]" style="text-decoration: none; color: inherit;">
             <div class="card border-0">
               <div class="news-image-container">
-                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title">
+                <img [src]="getImageUrl(item.url)" class="news-image" [alt]="item.title" (error)="onImgError($event)">
               </div>
               <div class="card-body" style="background-color: #ffffff;">
                 <h4 class="card-title" style="color: #2e6f9e; font-weight: bold;">{{ item.title }}</h4>

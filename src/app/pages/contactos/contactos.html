@@ -95,7 +95,7 @@
       @for (item of sidebarNews; track item.id) {
         <a [routerLink]="['/noticias', item.id]" class="sidebar-news-item">
           <div class="sidebar-news-image">
-            <img [src]="getNewsImageUrl(item.url)" [alt]="item.title">
+            <img [src]="getNewsImageUrl(item.url)" [alt]="item.title" (error)="onImgError($event)">
           </div>
           <div class="sidebar-news-content">
             <h5>{{ item.title }}</h5>

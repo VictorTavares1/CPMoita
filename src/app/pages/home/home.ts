@@ -38,13 +38,17 @@ export class Home implements OnInit {
   }
 
   getImageUrl(url: string | null): string {
-    if (!url) return 'images/CPMLogo.png';
+    if (!url) return '/images/cpm.png';
     if (url.startsWith('http')) return url;
     return `${environment.uploadsUrl}/${url}`;
   }
 
-  stripHtml(html: string): string {
-    return html.replace(/<[^>]*>/g, '');
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = '/images/cpm.png';
+  }
+
+  stripHtml(html: string | null | undefined): string {
+    return (html ?? '').replace(/<[^>]*>/g, '');
   }
 
   formatDate(dateStr: string): string {
