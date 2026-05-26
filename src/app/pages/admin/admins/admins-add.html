@@ -16,23 +16,46 @@
 
         <div class="col-md-6">
           <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
-          <input type="email" class="form-control" [(ngModel)]="email" placeholder="email@exemplo.com">
+          <input type="email" class="form-control" [(ngModel)]="email" placeholder="email@exemplo.com"
+            [class.is-valid]="email && emailValid"
+            [class.is-invalid]="email && !emailValid">
+          @if (email && !emailValid) {
+            <div class="invalid-feedback">Introduza um email válido.</div>
+          }
         </div>
 
         <div class="col-md-6">
           <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
           <div class="input-group">
             <input [type]="showPassword ? 'text' : 'password'" class="form-control" [(ngModel)]="password"
-              placeholder="Mín. 8 chars, 1 maiúscula, 1 dígito, 1 especial">
+              placeholder="Password"
+              [class.is-valid]="password && pwdValid"
+              [class.is-invalid]="password && !pwdValid">
             <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
               <i class="fa-solid" [class]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
             </button>
           </div>
+          @if (password) {
+            <ul class="list-unstyled mt-2 mb-0 small">
+              <li [class.text-success]="pwdHasLength" [class.text-danger]="!pwdHasLength">
+                <i class="fa-solid me-1" [class]="pwdHasLength ? 'fa-check' : 'fa-xmark'"></i>Entre 8 e 32 caracteres
+              </li>
+              <li [class.text-success]="pwdHasUpper" [class.text-danger]="!pwdHasUpper">
+                <i class="fa-solid me-1" [class]="pwdHasUpper ? 'fa-check' : 'fa-xmark'"></i>Pelo menos 1 letra maiúscula
+              </li>
+              <li [class.text-success]="pwdHasDigit" [class.text-danger]="!pwdHasDigit">
+                <i class="fa-solid me-1" [class]="pwdHasDigit ? 'fa-check' : 'fa-xmark'"></i>Pelo menos 1 dígito
+              </li>
+              <li [class.text-success]="pwdHasSpecial" [class.text-danger]="!pwdHasSpecial">
+                <i class="fa-solid me-1" [class]="pwdHasSpecial ? 'fa-check' : 'fa-xmark'"></i>Pelo menos 1 caractere especial (!@#$%^&*-_+=)
+              </li>
+            </ul>
+          }
         </div>
 
         <div class="col-12 d-flex gap-2 justify-content-end">
           <a routerLink="/admin/administradores" class="btn btn-outline-secondary">Cancelar</a>
-          <button class="btn btn-primary" (click)="submit()" [disabled]="loading()">
+          <button class="btn btn-primary" (click)="submit()" [disabled]="loading() || !emailValid || !pwdValid">
             @if (loading()) {
               <span class="spinner-border spinner-border-sm me-1"></span>
             }

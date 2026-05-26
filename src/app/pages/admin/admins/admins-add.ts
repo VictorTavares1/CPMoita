@@ -18,10 +18,18 @@ export class AdminAdminsAdd {
 
   constructor(private svc: AdminAdminsService, private router: Router, private cdr: ChangeDetectorRef) {}
 
+  get pwdHasLength(): boolean { return this.password.length >= 8 && this.password.length <= 32; }
+  get pwdHasUpper(): boolean  { return /[A-Z]/.test(this.password); }
+  get pwdHasDigit(): boolean  { return /[0-9]/.test(this.password); }
+  get pwdHasSpecial(): boolean { return /[!@#$%^&*()\-_+=]/.test(this.password); }
+  get pwdValid(): boolean { return this.pwdHasLength && this.pwdHasUpper && this.pwdHasDigit && this.pwdHasSpecial; }
+
+  get emailValid(): boolean { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.trim()); }
+
   submit(): void {
     this.error.set('');
-    if (!this.email.trim() || !this.password) {
-      this.error.set('Email e password são obrigatórios.');
+    if (!this.emailValid || !this.pwdValid) {
+      this.error.set('Corrija os erros antes de submeter.');
       this.cdr.markForCheck();
       return;
     }

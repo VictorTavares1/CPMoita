@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { AdminServicesService } from '../../../services/admin-services';
 import { ServiceLink } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
+import { IconPicker } from '../../../components/icon-picker/icon-picker';
 
 declare const Quill: any;
 
 @Component({
   selector: 'app-admin-servicos-edit',
   templateUrl: './servicos-edit.html',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminServicosEdit implements OnInit, AfterViewInit {

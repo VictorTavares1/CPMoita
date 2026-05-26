@@ -25,14 +25,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="form-label">Ícone ou Imagem <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [(ngModel)]="iconeOuImagem"
-          placeholder="Ex: fa-solid fa-house-user ou /uploads/servico.jpg">
-        @if (iconeOuImagem) {
-          <div class="mt-2 text-muted small">
-            Pré-visualização: <i [class]="iconeOuImagem"></i> {{ iconeOuImagem }}
-          </div>
-        }
+        <app-icon-picker [(value)]="iconeOuImagem"></app-icon-picker>
       </div>
 
       <div class="d-flex gap-2">

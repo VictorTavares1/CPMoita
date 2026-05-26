@@ -17,8 +17,8 @@ if ($method === 'GET') {
     while ($row = $result->fetch_assoc()) {
         $row['id']                = (int)$row['id'];
         $row['idState']           = (int)$row['idState'];
-        $row['servicosPrestados'] = $row['servicosPrestados'] ? json_decode($row['servicosPrestados']) : [];
-        $row['links']             = $row['links']             ? json_decode($row['links'])             : [];
+        $row['servicosPrestados'] = $row['servicosPrestados'] ? (json_decode($row['servicosPrestados'], true) ?? []) : [];
+        $row['links']             = $row['links']             ? (json_decode($row['links'],             true) ?? []) : [];
         $rows[] = $row;
     }
     echo json_encode($rows);

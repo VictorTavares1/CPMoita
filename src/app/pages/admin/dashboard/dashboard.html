@@ -2,115 +2,135 @@
   <h4 class="mb-1 fw-semibold">Dashboard</h4>
   <p class="text-muted mb-4">Bem-vindo, {{ auth.getEmail() }}</p>
 
-  <div class="row g-3">
-
-    <div class="col-sm-6 col-xl-4">
-      <a routerLink="/admin/noticias" class="card-link text-decoration-none">
-        <div class="dash-card">
-          <div class="dash-icon" style="background:#2e6f9e1a; color:#2e6f9e;">
+  <!-- Estatísticas -->
+  @if (stats()) {
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#2e6f9e1a; color:#2e6f9e;">
             <i class="fa-solid fa-newspaper fa-lg"></i>
           </div>
-          <div>
-            <div class="dash-label">Notícias</div>
-            <div class="dash-sub">Gerir artigos publicados</div>
-          </div>
+          <div class="stat-value">{{ stats()!.news }}</div>
+          <div class="stat-label">Notícias ativas</div>
         </div>
-      </a>
-    </div>
-
-    <div class="col-sm-6 col-xl-4">
-      <a routerLink="/admin/relatorios" class="text-decoration-none">
-        <div class="dash-card">
-          <div class="dash-icon" style="background:#dc35451a; color:#dc3545;">
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#dc35451a; color:#dc3545;">
             <i class="fa-solid fa-file-pdf fa-lg"></i>
           </div>
-          <div>
-            <div class="dash-label">Relatórios</div>
-            <div class="dash-sub">Ver documentos PDF</div>
-          </div>
+          <div class="stat-value">{{ stats()!.reports }}</div>
+          <div class="stat-label">Relatórios</div>
         </div>
-      </a>
-    </div>
-
-    <div class="col-sm-6 col-xl-4">
-      <a routerLink="/admin/servicos" class="text-decoration-none">
-        <div class="dash-card">
-          <div class="dash-icon" style="background:#1984631a; color:#198463;">
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#1984631a; color:#198463;">
             <i class="fa-solid fa-hand-holding-heart fa-lg"></i>
           </div>
-          <div>
-            <div class="dash-label">Serviços</div>
-            <div class="dash-sub">Valências do centro</div>
-          </div>
+          <div class="stat-value">{{ stats()!.services }}</div>
+          <div class="stat-label">Serviços</div>
         </div>
-      </a>
-    </div>
-
-    <div class="col-sm-6 col-xl-4">
-      <a routerLink="/admin/contactos" class="text-decoration-none">
-        <div class="dash-card">
-          <div class="dash-icon" style="background:#fd7e141a; color:#fd7e14;">
+      </div>
+      <div class="col-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fd7e141a; color:#fd7e14;">
             <i class="fa-solid fa-address-book fa-lg"></i>
           </div>
-          <div>
-            <div class="dash-label">Contactos</div>
-            <div class="dash-sub">Telefones, emails, morada</div>
+          <div class="stat-value">{{ stats()!.contacts }}</div>
+          <div class="stat-label">Contactos</div>
+        </div>
+      </div>
+    </div>
+  } @else if (loading()) {
+    <div class="row g-3 mb-4">
+      @for (_ of [1,2,3,4]; track $index) {
+        <div class="col-6 col-xl-3">
+          <div class="stat-card placeholder-glow">
+            <div class="stat-icon placeholder" style="background:#f0f0f0;"></div>
+            <div class="placeholder col-4 mt-2"></div>
+            <div class="placeholder col-6 mt-1"></div>
           </div>
         </div>
-      </a>
+      }
     </div>
+  }
 
-    <div class="col-sm-6 col-xl-4">
-      <a routerLink="/admin/paginas" class="text-decoration-none">
-        <div class="dash-card">
-          <div class="dash-icon" style="background:#6f42c11a; color:#6f42c1;">
-            <i class="fa-solid fa-file-lines fa-lg"></i>
-          </div>
-          <div>
-            <div class="dash-label">Páginas</div>
-            <div class="dash-sub">Conteúdo dinâmico das páginas</div>
-          </div>
+  <!-- Últimas notícias -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white border-bottom d-flex align-items-center justify-content-between py-3 px-4">
+      <span class="fw-semibold">Últimas notícias</span>
+      <a routerLink="/admin/noticias" class="btn btn-sm btn-outline-secondary">Ver todas</a>
+    </div>
+    <div class="card-body p-0">
+      @if (loading()) {
+        <div class="text-center py-4 text-muted">
+          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
         </div>
-      </a>
+      } @else if (recentNews().length === 0) {
+        <div class="text-center py-4 text-muted small">Nenhuma notícia encontrada.</div>
+      } @else {
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th class="ps-4 py-2 fw-semibold text-muted small">Título</th>
+                <th class="py-2 fw-semibold text-muted small">Data</th>
+                <th class="py-2 fw-semibold text-muted small">Estado</th>
+                <th class="pe-4 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of recentNews(); track item.id) {
+                <tr>
+                  <td class="ps-4 py-3">{{ item.title }}</td>
+                  <td class="py-3 text-muted small">{{ item.dateHour | date:'dd/MM/yyyy' }}</td>
+                  <td class="py-3">
+                    @if (item.idState === 1) {
+                      <span class="badge bg-success-subtle text-success">Ativa</span>
+                    } @else {
+                      <span class="badge bg-secondary-subtle text-secondary">Inativa</span>
+                    }
+                  </td>
+                  <td class="pe-4 py-3 text-end">
+                    <a [routerLink]="['/admin/noticias/edit', item.id]" class="btn btn-sm btn-outline-primary">Editar</a>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     </div>
-
-
   </div>
 </div>
 
 <style>
-.dash-card {
+.stat-card {
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  transition: box-shadow 0.15s, transform 0.15s;
-  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.dash-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  transform: translateY(-2px);
-}
-.dash-icon {
-  width: 48px;
-  height: 48px;
+.stat-icon {
+  width: 44px;
+  height: 44px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
-.dash-label {
-  font-weight: 600;
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
   color: #212529;
-  font-size: 0.95rem;
+  line-height: 1;
 }
-.dash-sub {
-  font-size: 0.78rem;
+.stat-label {
+  font-size: 0.8rem;
   color: #6c757d;
-  margin-top: 2px;
 }
 </style>

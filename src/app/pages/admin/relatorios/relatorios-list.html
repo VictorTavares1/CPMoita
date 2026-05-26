@@ -31,10 +31,10 @@
 
   <!-- Tabs -->
   <div class="btn-group mb-3">
-    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'">
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'; applyFilters()">
       Ativos <span class="badge bg-white text-success ms-1">{{ activeDocs.length }}</span>
     </button>
-    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'">
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'; applyFilters()">
       Inativos <span class="badge bg-white text-secondary ms-1">{{ inactiveDocs.length }}</span>
     </button>
   </div>
@@ -55,40 +55,47 @@
             </tr>
           </thead>
           <tbody>
-            @if (tab === 'active') {
-              @if (activeDocs.length === 0) {
-                <tr><td colspan="3" class="text-center text-muted py-4">Nenhum relatório ativo.</td></tr>
-              }
-              @for (doc of activeDocs; track doc.id) {
-                <tr>
-                  <td><strong>{{ doc.title }}</strong></td>
-                  <td class="text-center text-muted small">{{ doc.year ?? '-' }}</td>
-                  <td class="text-center">
+            @if (paged.length === 0) {
+              <tr><td colspan="3" class="text-center text-muted py-4">Nenhum relatório encontrado.</td></tr>
+            }
+            @for (doc of paged; track doc.id) {
+              <tr [class.table-secondary]="doc.idState === 2">
+                <td><strong>{{ doc.title }}</strong></td>
+                <td class="text-center text-muted small">{{ doc.year ?? '-' }}</td>
+                <td class="text-center">
+                  @if (doc.idState === 1) {
                     <button class="btn btn-outline-danger btn-sm" (click)="toggleState(doc)" title="Desativar">
                       <i class="fa-solid fa-eye-slash"></i>
                     </button>
-                  </td>
-                </tr>
-              }
-            } @else {
-              @if (inactiveDocs.length === 0) {
-                <tr><td colspan="3" class="text-center text-muted py-4">Nenhum relatório inativo.</td></tr>
-              }
-              @for (doc of inactiveDocs; track doc.id) {
-                <tr class="table-secondary">
-                  <td><strong>{{ doc.title }}</strong></td>
-                  <td class="text-center text-muted small">{{ doc.year ?? '-' }}</td>
-                  <td class="text-center">
+                  } @else {
                     <button class="btn btn-outline-success btn-sm" (click)="toggleState(doc)" title="Reativar">
                       <i class="fa-solid fa-eye"></i>
                     </button>
-                  </td>
-                </tr>
-              }
+                  }
+                </td>
+              </tr>
             }
           </tbody>
         </table>
       </div>
     </div>
+
+    @if (totalPages > 1) {
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">Anterior</button>
+          </li>
+          @for (p of pagedNumbers; track p) {
+            <li class="page-item" [class.active]="currentPage === p">
+              <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+            </li>
+          }
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">Próxima</button>
+          </li>
+        </ul>
+      </nav>
+    }
   }
 </div>

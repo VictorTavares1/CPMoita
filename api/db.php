@@ -9,8 +9,8 @@ header('Content-Type: application/json; charset=utf-8');
 $allowedOrigins = [
     'http://localhost:4200',
     'http://localhost',
-    'https://www.centroparoquialdamoita.pt',
-    'https://centroparoquialdamoita.pt',
+    'https://www.cpasmoita.pt',
+    'https://cpasmoita.pt',
 ];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins, true)) {

@@ -2,11 +2,12 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, signal }
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminContactsService } from '../../../services/admin-contacts';
+import { IconPicker } from '../../../components/icon-picker/icon-picker';
 
 @Component({
   selector: 'app-admin-contactos-edit',
   templateUrl: './contactos-edit.html',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, IconPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminContactosEdit implements OnInit {

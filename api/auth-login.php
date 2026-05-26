@@ -8,12 +8,42 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $body = json_decode(file_get_contents('php://input'), true);
-$email = isset($body['email']) ? trim($body['email']) : '';
-$pwd   = isset($body['password']) ? $body['password'] : '';
+$email          = isset($body['email'])          ? trim($body['email'])      : '';
+$pwd            = isset($body['password'])        ? $body['password']         : '';
+$recaptchaToken = isset($body['recaptchaToken'])  ? trim($body['recaptchaToken']) : '';
 
 if (!$email || !$pwd) {
     http_response_code(400);
     echo json_encode(['error' => 'Email e password são obrigatórios']);
+    exit();
+}
+
+// Verificar reCAPTCHA v2
+$configFull2     = json_decode(file_get_contents(__DIR__ . '/../db/info.json'), true);
+$recaptchaSecret = $configFull2['recaptchaSecret'] ?? '';
+if (!$recaptchaToken) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Verificação reCAPTCHA em falta']);
+    exit();
+}
+$ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST           => true,
+    CURLOPT_POSTFIELDS     => http_build_query([
+        'secret'   => $recaptchaSecret,
+        'response' => $recaptchaToken,
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+    ]),
+    CURLOPT_TIMEOUT        => 5,
+    CURLOPT_CONNECTTIMEOUT => 3,
+]);
+$recaptchaResp = curl_exec($ch);
+curl_close($ch);
+$recaptchaData = json_decode($recaptchaResp, true);
+if (!($recaptchaData['success'] ?? false)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Verificação reCAPTCHA falhou']);
     exit();
 }
 

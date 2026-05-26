@@ -44,7 +44,8 @@ export class AdminRelatorios implements OnInit {
   }
 
   applyFilters(): void {
-    let result = [...this.allDocs];
+    const stateFilter = this.tab === 'active' ? 1 : 2;
+    let result = this.allDocs.filter(d => d.idState === stateFilter);
     if (this.search.trim()) {
       const q = this.search.toLowerCase();
       result = result.filter(d => d.title.toLowerCase().includes(q));
@@ -63,6 +64,12 @@ export class AdminRelatorios implements OnInit {
     return Math.ceil(this.filtered.length / this.pageSize);
   }
 
+  get pagedNumbers(): number[] {
+    const start = Math.max(1, this.currentPage - 2);
+    const end = Math.min(this.totalPages, this.currentPage + 2);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages) return;
     this.currentPage = page;
@@ -76,11 +83,11 @@ export class AdminRelatorios implements OnInit {
   }
 
   get activeDocs(): AdminReportItem[] {
-    return this.filtered.filter(d => d.idState === 1);
+    return this.allDocs.filter(d => d.idState === 1);
   }
 
   get inactiveDocs(): AdminReportItem[] {
-    return this.filtered.filter(d => d.idState === 2);
+    return this.allDocs.filter(d => d.idState === 2);
   }
 
   toggleState(doc: AdminReportItem): void {

@@ -19,10 +19,10 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(email: string, password: string): Observable<LoginResponse> {
+  login(email: string, password: string, recaptchaToken: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
       `${this.apiUrl}/auth-login.php`,
-      { email, password },
+      { email, password, recaptchaToken },
       { withCredentials: true }   // browser envia e guarda o cookie HttpOnly
     ).pipe(
       tap(res => {

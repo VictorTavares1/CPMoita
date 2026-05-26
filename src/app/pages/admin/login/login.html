@@ -57,12 +57,16 @@
             </div>
           </div>
 
+          <div class="mb-3 d-flex justify-content-center">
+            <div #recaptchaContainer></div>
+          </div>
+
           <div class="d-grid">
             <button
               type="submit"
               class="btn text-white fw-semibold"
               style="background-color:#2e6f9e;"
-              [disabled]="loading() || !loginForm.valid"
+              [disabled]="loading() || !loginForm.valid || !recaptchaToken()"
             >
               @if (loading()) {
                 <span class="spinner-border spinner-border-sm me-2"></span>A entrar...

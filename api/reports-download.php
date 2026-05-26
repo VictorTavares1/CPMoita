@@ -2,7 +2,11 @@
 require_once 'db.php';
 
 $year = isset($_GET['year']) ? (int)$_GET['year'] : 0;
-if (!$year) { http_response_code(400); exit(); }
+if (!$year) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Ano inválido']);
+    exit();
+}
 
 $stmt = $conn->prepare("SELECT title, url FROM docs WHERE year = ? AND idState = 1 ORDER BY title ASC");
 $stmt->bind_param('i', $year);
@@ -14,10 +18,18 @@ while ($row = $result->fetch_assoc()) {
     $docs[] = $row;
 }
 
-if (empty($docs)) { http_response_code(404); exit(); }
+if (empty($docs)) {
+    http_response_code(404);
+    echo json_encode(['error' => 'Sem documentos para este ano']);
+    exit();
+}
 
 $docsBase = realpath(__DIR__ . '/../public/docs');
-if ($docsBase === false) { http_response_code(500); exit(); }
+if ($docsBase === false) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Erro interno']);
+    exit();
+}
 $yearBase = $docsBase . DIRECTORY_SEPARATOR . $year;
 
 function resolveDocPath(string $base, string $url): string|false {

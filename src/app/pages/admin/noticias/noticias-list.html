@@ -89,15 +89,27 @@
       <nav class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <a class="page-link" (click)="goToPage(currentPage - 1)" style="cursor:pointer;">Anterior</a>
+            <button class="page-link" (click)="goToPage(currentPage - 1)">Anterior</button>
           </li>
+          @if (pageNumbers[0] > 1) {
+            <li class="page-item"><button class="page-link" (click)="goToPage(1)">1</button></li>
+            @if (pageNumbers[0] > 2) {
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+          }
           @for (p of pageNumbers; track p) {
             <li class="page-item" [class.active]="currentPage === p">
-              <a class="page-link" (click)="goToPage(p)" style="cursor:pointer;">{{ p }}</a>
+              <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
             </li>
           }
+          @if (pageNumbers[pageNumbers.length - 1] < totalPages) {
+            @if (pageNumbers[pageNumbers.length - 1] < totalPages - 1) {
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            }
+            <li class="page-item"><button class="page-link" (click)="goToPage(totalPages)">{{ totalPages }}</button></li>
+          }
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <a class="page-link" (click)="goToPage(currentPage + 1)" style="cursor:pointer;">Próxima</a>
+            <button class="page-link" (click)="goToPage(currentPage + 1)">Próxima</button>
           </li>
         </ul>
       </nav>

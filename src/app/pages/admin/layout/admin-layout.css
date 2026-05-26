@@ -93,7 +93,9 @@
   font-size: 0.8rem;
   cursor: pointer;
   transition: background 0.15s;
-  text-align: left;
+  text-align: center;
+  text-decoration: none;
+  flex: 1;
 }
 
 .btn-logout:hover {
