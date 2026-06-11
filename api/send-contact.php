@@ -50,7 +50,7 @@ $destino = $row ? $row['valor'] : 'geral@centroparoquialdamoita.pt';
 $subject = "Contacto via website: $assunto";
 $body_text = "Nome: $nome\nE-mail: $email\n\nMensagem:\n$mensagem";
 
-$headers  = "From: noreply@centroparoquialdamoita.pt\r\n";
+$headers  = "From: noreply@cpasmoita.pt\r\n";
 $headers .= "Reply-To: $email\r\n";
 $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 
