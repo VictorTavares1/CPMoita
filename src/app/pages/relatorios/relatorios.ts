@@ -11,13 +11,15 @@ import { environment } from '../../../environments/environment';
 })
 export class Relatorios implements OnInit {
   years: number[] = [];
+  loading = true;
   readonly downloadBase = `${environment.apiUrl}/reports-download.php?year=`;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.http.get<number[]>(`${environment.apiUrl}/reports.php`).subscribe({
-      next: (res) => { this.years = res; this.cdr.markForCheck(); },
+      next: (res) => { this.years = res; this.loading = false; this.cdr.markForCheck(); },
+      error: () => { this.loading = false; this.cdr.markForCheck(); },
     });
   }
 }
