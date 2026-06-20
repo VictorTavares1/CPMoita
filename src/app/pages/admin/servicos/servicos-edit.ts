@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetect
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminServicesService } from '../../../services/admin-services';
-import { ServiceLink } from '../../../services/services-list';
+import { ServiceLink, ServiceImagem } from '../../../services/services-list';
 import { environment } from '../../../../environments/environment';
 import { IconPicker } from '../../../components/icon-picker/icon-picker';
 
@@ -22,8 +22,87 @@ export class AdminServicosEdit implements OnInit, AfterViewInit {
   funcionamento       = '';
   servicosPrestados   : string[] = [];
   links               : ServiceLink[] = [];
+  imagens             : ServiceImagem[] = [];
   readonly docsUrl    = environment.apiUrl + '/docs.php?file=';
+  readonly uploadsUrl = environment.uploadsUrl + '/';
   iconeOuImagem       = '';
+
+  readonly ninhoSalas = [
+    { cor: 'verde',    label: 'Verde',    hex: '#2ecc71', textColor: '#fff' },
+    { cor: 'azul',     label: 'Azul',     hex: '#3498db', textColor: '#fff' },
+    { cor: 'amarela',  label: 'Amarela',  hex: '#f1c40f', textColor: '#000' },
+    { cor: 'vermelha', label: 'Vermelha', hex: '#e74c3c', textColor: '#fff' },
+  ];
+
+  get isNinho(): boolean {
+    return this.titulo.toLowerCase().includes('ninho');
+  }
+
+  get isCatl(): boolean {
+    return this.titulo.toLowerCase().includes('barco') || this.titulo.toLowerCase().includes('catl');
+  }
+
+  get catlImagemPrincipal(): ServiceImagem | null {
+    return this.imagens[0] ?? null;
+  }
+
+  get catlAtividades(): ServiceImagem[] {
+    return this.imagens.slice(1);
+  }
+
+  setCatlImagemPrincipal(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.svc.uploadImage(file).subscribe({
+      next: (res) => {
+        const rest = this.imagens.slice(1);
+        this.imagens = [{ titulo: 'principal', texto: '', filename: res.filename }, ...rest];
+        input.value = '';
+        this.cdr.markForCheck();
+      },
+      error: () => { this.error.set('Erro ao fazer upload da imagem.'); this.cdr.markForCheck(); }
+    });
+  }
+
+  addCatlAtividade(): void {
+    this.imagens = [...this.imagens, { titulo: '', texto: '', filename: '' }];
+    this.cdr.markForCheck();
+  }
+
+  removeCatlAtividade(index: number): void {
+    // index é relativo às atividades (slice(1)), por isso +1
+    this.imagens = this.imagens.filter((_, i) => i !== index + 1);
+    this.cdr.markForCheck();
+  }
+
+  updateCatlAtividade(index: number, field: keyof ServiceImagem, value: string): void {
+    const realIndex = index + 1;
+    this.imagens = this.imagens.map((img, i) => i === realIndex ? { ...img, [field]: value } : img);
+  }
+
+  imagensDaSala(cor: string): ServiceImagem[] {
+    return this.imagens.filter(img => img.titulo.toLowerCase().trim() === cor);
+  }
+
+  removeImagemDaSala(cor: string, filename: string): void {
+    this.imagens = this.imagens.filter(img => !(img.titulo.toLowerCase().trim() === cor && img.filename === filename));
+    this.cdr.markForCheck();
+  }
+
+  uploadImagemSala(cor: string, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.svc.uploadImage(file).subscribe({
+      next: (res) => {
+        this.imagens = [...this.imagens, { titulo: cor, texto: '', filename: res.filename }];
+        input.value = '';
+        this.cdr.markForCheck();
+      },
+      error: () => { this.error.set('Erro ao fazer upload da imagem.'); this.cdr.markForCheck(); }
+    });
+  }
   loading = signal(true);
   saving  = signal(false);
   error   = signal('');
@@ -54,6 +133,7 @@ export class AdminServicosEdit implements OnInit, AfterViewInit {
           this.funcionamento     = s.funcionamento ?? '';
           this.servicosPrestados = s.servicosPrestados ?? [];
           this.links             = s.links ?? [];
+          this.imagens           = s.imagens ?? [];
           this.iconeOuImagem     = s.iconeOuImagem;
           this.pendingContent    = s.descricao;
           this.pendingCentroDia  = s.descricaoCentroDia ?? '';
@@ -107,6 +187,36 @@ export class AdminServicosEdit implements OnInit, AfterViewInit {
     this.cdr.markForCheck();
   }
 
+  addImagem(): void {
+    this.imagens = [...this.imagens, { titulo: '', texto: '', filename: '' }];
+    this.cdr.markForCheck();
+  }
+
+  removeImagem(index: number): void {
+    this.imagens = this.imagens.filter((_, i) => i !== index);
+    this.cdr.markForCheck();
+  }
+
+  updateImagem(index: number, field: keyof ServiceImagem, value: string): void {
+    this.imagens = this.imagens.map((img, i) => i === index ? { ...img, [field]: value } : img);
+  }
+
+  uploadImagem(index: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.svc.uploadImage(file).subscribe({
+      next: (res) => {
+        const updated = [...this.imagens];
+        updated[index] = { ...updated[index], filename: res.filename };
+        this.imagens = updated;
+        input.value = '';
+        this.cdr.markForCheck();
+      },
+      error: () => { this.error.set('Erro ao fazer upload da imagem.'); this.cdr.markForCheck(); }
+    });
+  }
+
   uploadDoc(index: number, event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -156,6 +266,7 @@ export class AdminServicosEdit implements OnInit, AfterViewInit {
       servicosPrestados:   this.servicosPrestados.filter(s => s.trim()),
       descricaoCentroDia:  descricaoCentroDia === '<p><br></p>' ? null : descricaoCentroDia || null,
       links:               this.links.filter(l => l.label.trim() && l.filename.trim()),
+      imagens:             this.imagens.filter(img => img.filename.trim()),
       iconeOuImagem:       this.iconeOuImagem
     }).subscribe({
       next: () => this.router.navigate(['/admin/servicos']),

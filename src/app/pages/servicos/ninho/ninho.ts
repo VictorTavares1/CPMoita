@@ -14,15 +14,7 @@ export class Ninho implements OnInit {
   service: Service | null = null;
   currentImages: string[] = [];
   readonly docsUrl = environment.apiUrl + '/docs.php?file=';
-
-  private readonly uploadsUrl = environment.uploadsUrl + '/';
-
-  private readonly corImagens: Record<string, string[]> = {
-    verde: ['sala_ terapia.jpg', 'sala_ terapia.jpg'],
-    azul: ['Arcos.jpg', 'Arcos.jpg'],
-    amarelo: ['sala_ terapia.jpg'],
-    vermelho: ['Arcos.jpg'],
-  };
+  readonly uploadsUrl = environment.uploadsUrl + '/';
 
   constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}
 
@@ -38,7 +30,11 @@ export class Ninho implements OnInit {
   }
 
   selectCor(cor: string): void {
-    this.currentImages = (this.corImagens[cor] ?? []).map(f => this.uploadsUrl + f);
+    const cores: Record<string, string[]> = { amarela: ['amarelo'], amarelo: ['amarela'] };
+    const aliases = [cor, ...(cores[cor] ?? [])];
+    this.currentImages = (this.service?.imagens ?? [])
+      .filter(img => aliases.includes(img.titulo.toLowerCase().trim()) && img.filename)
+      .map(img => this.uploadsUrl + img.filename);
     this.cdr.markForCheck();
   }
 }

@@ -53,6 +53,11 @@
               <input type="file" class="d-none" accept=".pdf,.doc,.docx" (change)="uploadDoc($event)">
             </label>
           </div>
+        } @else if (tipo === 'text') {
+          <div class="mb-4">
+            <label class="form-label">Conteúdo</label>
+            <input type="text" class="form-control" [(ngModel)]="conteudoPagina">
+          </div>
         } @else {
           <div class="mb-4">
             <label class="form-label">Conteúdo</label>

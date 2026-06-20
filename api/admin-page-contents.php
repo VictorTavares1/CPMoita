@@ -24,14 +24,22 @@ if ($method === 'GET') {
 } elseif ($method === 'PUT') {
     $data   = json_decode(file_get_contents('php://input'), true);
     $id     = intval($data['id']     ?? 0);
-    $tipo   = trim($data['tipoConteudo'] ?? '');
 
     if (!$id) { http_response_code(400); echo json_encode(['error' => 'ID inválido']); exit(); }
+
+    // Ler o tipo real da BD — não confiar no frontend
+    $stmtTipo = $conn->prepare("SELECT tipoConteudo FROM page_contents WHERE id = ?");
+    $stmtTipo->bind_param('i', $id);
+    $stmtTipo->execute();
+    $tipoRow = $stmtTipo->get_result()->fetch_assoc();
+    $tipo = $tipoRow ? $tipoRow['tipoConteudo'] : 'html';
 
     if ($tipo === 'link') {
         $label    = trim($data['label']    ?? '');
         $filename = trim($data['filename'] ?? '');
         $valor    = json_encode(['label' => $label, 'filename' => $filename], JSON_UNESCAPED_UNICODE);
+    } elseif ($tipo === 'text') {
+        $valor = trim(strip_tags($data['conteudoPagina'] ?? ''));
     } else {
         $valor = sanitizeHtml($data['conteudoPagina'] ?? '');
     }

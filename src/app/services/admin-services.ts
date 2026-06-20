@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { ServiceLink } from './services-list';
+import { ServiceLink, ServiceImagem } from './services-list';
 
 export interface AdminService {
   id: number;
@@ -14,6 +14,7 @@ export interface AdminService {
   servicosPrestados: string[];
   descricaoCentroDia: string | null;
   links: ServiceLink[];
+  imagens: ServiceImagem[];
   iconeOuImagem: string;
   idState: number;
 }
@@ -32,7 +33,7 @@ export class AdminServicesService {
     return this.http.post<{ success: boolean; id: number }>(this.api, data);
   }
 
-  update(data: { id: number; titulo: string; descricao: string; coordenador: string | null; capacidade: string | null; funcionamento: string | null; servicosPrestados: string[]; descricaoCentroDia: string | null; links: ServiceLink[]; iconeOuImagem: string }): Observable<{ success: boolean }> {
+  update(data: { id: number; titulo: string; descricao: string; coordenador: string | null; capacidade: string | null; funcionamento: string | null; servicosPrestados: string[]; descricaoCentroDia: string | null; links: ServiceLink[]; imagens: ServiceImagem[]; iconeOuImagem: string }): Observable<{ success: boolean }> {
     return this.http.put<{ success: boolean }>(this.api, data);
   }
 
@@ -45,6 +46,14 @@ export class AdminServicesService {
     form.append('doc', file);
     return this.http.post<{ success: boolean; filename: string; name: string }>(
       `${environment.apiUrl}/admin-upload-doc.php`, form
+    );
+  }
+
+  uploadImage(file: File): Observable<{ success: boolean; filename: string }> {
+    const form = new FormData();
+    form.append('image', file);
+    return this.http.post<{ success: boolean; filename: string }>(
+      `${environment.apiUrl}/admin-upload-image.php`, form
     );
   }
 }

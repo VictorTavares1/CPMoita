@@ -40,25 +40,26 @@
     </div>
   }
 
-  <div>
-    <img [src]="uploadsUrl + 'Biblioteca.jpg'" alt="CATL O Barco - Biblioteca" class="d-block w-100">
-  </div>
+  @if (service?.imagens?.length) {
+    @if (service!.imagens[0].filename) {
+      <div>
+        <img [src]="uploadsUrl + service!.imagens[0].filename" [alt]="service!.imagens[0].titulo" class="d-block w-100">
+      </div>
+      <br>
+    }
 
-  <br>
-
-  <h2 class="section-heading text-center">Atividades</h2>
-  <div class="section-underline"></div>
-
-  <div class="blocos">
-    <div class="bloco">
-      <h3>Desporto</h3>
-      <p>Atividades físicas como desenvolvimento físico, emocional e social.</p>
-    </div>
-    <div class="bloco">
-      <h3>Arte e Criatividade</h3>
-      <p>Estímulo da expressão artística através da pintura, música, teatro e atividades criativas.</p>
-    </div>
-  </div>
-
-  <br>
+    @if (service!.imagens.length > 1) {
+      <h2 class="section-heading text-center">Atividades</h2>
+      <div class="section-underline"></div>
+      <div class="blocos">
+        @for (img of service!.imagens.slice(1); track img.titulo) {
+          <div class="bloco">
+            @if (img.titulo) { <h3>{{ img.titulo }}</h3> }
+            @if (img.texto) { <p>{{ img.texto }}</p> }
+          </div>
+        }
+      </div>
+      <br>
+    }
+  }
 </div>

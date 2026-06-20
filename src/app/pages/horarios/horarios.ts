@@ -1,10 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { NewsService, NewsItem } from '../../services/news';
 import { environment } from '../../../environments/environment';
 
-interface HorarioEntry { dia: string; horario: string; }
-interface Setor { nome: string; horarios: HorarioEntry[]; }
+interface HorarioEntrada { dia: string; horario: string; }
+interface Horario { id: number; nome: string; entradas: HorarioEntrada[]; }
 
 @Component({
   selector: 'app-horarios',
@@ -15,68 +16,35 @@ interface Setor { nome: string; horarios: HorarioEntry[]; }
 })
 export class Horarios implements OnInit {
   sidebarNews: NewsItem[] = [];
-  selectedSetor = 'secretaria';
-
-  readonly setores: Record<string, Setor> = {
-    secretaria: {
-      nome: 'Secretaria',
-      horarios: [
-        { dia: 'Segunda-feira', horario: '10:00 - 10:00' },
-        { dia: 'Terça-feira', horario: '08:00 - 18:00' },
-        { dia: 'Quarta-feira', horario: '08:00 - 18:00' },
-        { dia: 'Quinta-feira', horario: '08:00 - 18:00' },
-        { dia: 'Sexta-feira', horario: '08:00 - 18:00' },
-      ]
-    },
-    ninho: {
-      nome: 'Ninho',
-      horarios: [
-        { dia: 'Segunda-feira', horario: '09:00 - 17:00' },
-        { dia: 'Terça-feira', horario: '09:00 - 17:00' },
-        { dia: 'Quarta-feira', horario: '09:00 - 17:00' },
-        { dia: 'Quinta-feira', horario: '09:00 - 17:00' },
-        { dia: 'Sexta-feira', horario: '09:00 - 17:00' },
-      ]
-    },
-    coordenadora: {
-      nome: 'Atendimento da Coordenadora Pedagógica',
-      horarios: [
-        { dia: 'Segunda-feira', horario: '17:00 - 18:30' },
-        { dia: 'Quinta-feira', horario: '17:00 - 18:30' },
-      ]
-    },
-    educadoras: {
-      nome: 'Atendimento das Educadoras aos Encarregados de Educação',
-      horarios: [
-        { dia: 'Segunda-feira', horario: '17:00 - 18:30' },
-        { dia: 'Terça-feira', horario: '16:00 - 17:30' },
-        { dia: 'Quarta-feira', horario: '17:00 - 18:30' },
-        { dia: 'Quinta-feira', horario: '17:00 - 18:30' },
-        { dia: 'Sexta-feira', horario: '16:00 - 17:30' },
-      ]
-    },
-  };
-
-  currentHorarios: HorarioEntry[] = this.setores['secretaria'].horarios;
+  horarios: Horario[] = [];
+  selectedId: number | null = null;
   showTable = true;
 
-  constructor(private newsService: NewsService, private cdr: ChangeDetectorRef) {}
+  get currentHorario(): Horario | null {
+    return this.horarios.find(h => h.id === this.selectedId) ?? null;
+  }
+
+  constructor(private http: HttpClient, private newsService: NewsService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.http.get<Horario[]>(`${environment.apiUrl}/horarios.php`).subscribe({
+      next: (data) => {
+        this.horarios = data;
+        if (data.length > 0) this.selectedId = data[0].id;
+        this.cdr.markForCheck();
+      },
+    });
+
     this.newsService.getNews(1, 5).subscribe({
       next: (res) => { this.sidebarNews = res.data; this.cdr.markForCheck(); },
     });
   }
 
   onSetorChange(event: Event): void {
-    this.selectedSetor = (event.target as HTMLSelectElement).value;
+    this.selectedId = Number((event.target as HTMLSelectElement).value);
     this.showTable = false;
     this.cdr.markForCheck();
-    setTimeout(() => {
-      this.currentHorarios = this.setores[this.selectedSetor]?.horarios ?? [];
-      this.showTable = true;
-      this.cdr.markForCheck();
-    }, 10);
+    setTimeout(() => { this.showTable = true; this.cdr.markForCheck(); }, 10);
   }
 
   formatDate(dateStr: string): string {

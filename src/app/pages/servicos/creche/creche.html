@@ -44,41 +44,24 @@
     </div>
   }
 
-  <div class="row g-4 mt-2">
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm">
-        <img [src]="uploadsUrl + 'Bercario.png'" class="card-img-top" alt="Berçário" style="height:200px; object-fit:cover;">
-        <div class="card-body">
-          <h2 class="section-heading">Berçário</h2>
-          <div class="section-underline"></div>
-          <p>Destinado a crianças a partir dos 4 meses, com capacidade para 10 crianças.</p>
-          <p>Um espaço acolhedor e seguro, onde cada bebé é cuidado com carinho e afecto, celebrando diariamente a pureza, a alegria e a esperança no futuro.</p>
+  @if (service?.imagens?.length) {
+    <div class="row g-4 mt-2">
+      @for (img of service?.imagens; track img.filename) {
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <img [src]="uploadsUrl + img.filename" [alt]="img.titulo" class="card-img-top" style="height:200px; object-fit:cover;">
+            <div class="card-body">
+              @if (img.titulo) {
+                <h2 class="section-heading">{{ img.titulo }}</h2>
+                <div class="section-underline"></div>
+              }
+              @if (img.texto) {
+                <p>{{ img.texto }}</p>
+              }
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </div>
-
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm">
-        <img [src]="uploadsUrl + 'Sala de Creche_1_2 anos.png'" class="card-img-top" alt="Sala 1-2 Anos" style="height:200px; object-fit:cover;">
-        <div class="card-body">
-          <h2 class="section-heading">Sala 1-2 Anos</h2>
-          <div class="section-underline"></div>
-          <p>Destinada a crianças entre os 12 e os 24 meses, com capacidade para 16 crianças.</p>
-          <p>Um espaço que estimula o caminhar, o explorar e o crescer, promovendo a autonomia e a segurança desde os primeiros passos.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card h-100 border-0 shadow-sm">
-        <img [src]="uploadsUrl + 'imagem.jpeg'" class="card-img-top" alt="Sala 2-3 Anos" style="height:200px; object-fit:cover;">
-        <div class="card-body">
-          <h2 class="section-heading">Sala 2-3 Anos</h2>
-          <div class="section-underline"></div>
-          <p>Duas salas destinadas a crianças entre os 24 e os 36 meses, com capacidade para 20 crianças cada.</p>
-          <p>Um ambiente que valoriza a autonomia, incentiva o brincar e apoia o desenvolvimento da linguagem e das relações.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  }
 </div>

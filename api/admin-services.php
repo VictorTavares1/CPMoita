@@ -12,13 +12,14 @@ if (!$user) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    $result = $conn->query("SELECT id, titulo, descricao, coordenador, capacidade, funcionamento, servicosPrestados, descricaoCentroDia, links, iconeOuImagem, idState FROM services ORDER BY id ASC");
+    $result = $conn->query("SELECT id, titulo, descricao, coordenador, capacidade, funcionamento, servicosPrestados, descricaoCentroDia, links, imagens, iconeOuImagem, idState FROM services ORDER BY id ASC");
     $rows = [];
     while ($row = $result->fetch_assoc()) {
         $row['id']                = (int)$row['id'];
         $row['idState']           = (int)$row['idState'];
         $row['servicosPrestados'] = $row['servicosPrestados'] ? (json_decode($row['servicosPrestados'], true) ?? []) : [];
         $row['links']             = $row['links']             ? (json_decode($row['links'],             true) ?? []) : [];
+        $row['imagens']           = $row['imagens']           ? (json_decode($row['imagens'],           true) ?? []) : [];
         $rows[] = $row;
     }
     echo json_encode($rows);
@@ -50,7 +51,8 @@ if ($method === 'GET') {
     $funcionamento      = isset($data['funcionamento'])      && $data['funcionamento']      !== '' ? trim($data['funcionamento'])      : null;
     $servicosPrestados  = isset($data['servicosPrestados'])  && is_array($data['servicosPrestados']) ? json_encode($data['servicosPrestados'], JSON_UNESCAPED_UNICODE) : null;
     $descricaoCentroDia = isset($data['descricaoCentroDia']) && $data['descricaoCentroDia'] !== '' ? trim($data['descricaoCentroDia']) : null;
-    $links              = isset($data['links'])              && is_array($data['links'])              ? json_encode($data['links'],             JSON_UNESCAPED_UNICODE) : null;
+    $links              = isset($data['links'])    && is_array($data['links'])    ? json_encode($data['links'],    JSON_UNESCAPED_UNICODE) : null;
+    $imagens            = isset($data['imagens'])  && is_array($data['imagens'])  ? json_encode($data['imagens'],  JSON_UNESCAPED_UNICODE) : null;
     $iconeOuImagem      = trim($data['iconeOuImagem'] ?? '');
 
     if (!$id || !$titulo || !$descricao || !$iconeOuImagem) {
@@ -59,8 +61,8 @@ if ($method === 'GET') {
         exit();
     }
 
-    $stmt = $conn->prepare("UPDATE services SET titulo=?, descricao=?, coordenador=?, capacidade=?, funcionamento=?, servicosPrestados=?, descricaoCentroDia=?, links=?, iconeOuImagem=?, atualizadoEm=NOW() WHERE id=?");
-    $stmt->bind_param('sssssssssi', $titulo, $descricao, $coordenador, $capacidade, $funcionamento, $servicosPrestados, $descricaoCentroDia, $links, $iconeOuImagem, $id);
+    $stmt = $conn->prepare("UPDATE services SET titulo=?, descricao=?, coordenador=?, capacidade=?, funcionamento=?, servicosPrestados=?, descricaoCentroDia=?, links=?, imagens=?, iconeOuImagem=?, atualizadoEm=NOW() WHERE id=?");
+    $stmt->bind_param('ssssssssssi', $titulo, $descricao, $coordenador, $capacidade, $funcionamento, $servicosPrestados, $descricaoCentroDia, $links, $imagens, $iconeOuImagem, $id);
     $stmt->execute();
     echo json_encode(['success' => true]);
 

@@ -1,0 +1,68 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0 fw-semibold">Gerir Horários</h4>
+      <p class="text-muted small mb-0">{{ horarios.length }} setores no total</p>
+    </div>
+    <a routerLink="/admin/horarios/add" class="btn btn-primary btn-sm">
+      <i class="fa-solid fa-plus me-1"></i> Novo Setor
+    </a>
+  </div>
+
+  @if (toast()) {
+    <div class="alert alert-{{ toastType() }} py-2 small">{{ toast() }}</div>
+  }
+
+  <div class="btn-group mb-3">
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'; cdr.markForCheck()">
+      Ativos <span class="badge bg-white text-success ms-1">{{ activeHorarios.length }}</span>
+    </button>
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'; cdr.markForCheck()">
+      Inativos <span class="badge bg-white text-secondary ms-1">{{ inactiveHorarios.length }}</span>
+    </button>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      @if (loading()) {
+        <div class="text-center py-5 text-muted">
+          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+        </div>
+      } @else {
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:5%">Ordem</th>
+              <th style="width:50%">Setor</th>
+              <th style="width:30%">Dias configurados</th>
+              <th style="width:15%" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (filtered.length === 0) {
+              <tr><td colspan="4" class="text-center text-muted py-4">Nenhum horário encontrado.</td></tr>
+            }
+            @for (h of filtered; track h.id) {
+              <tr [class.table-secondary]="h.idState === 2">
+                <td class="text-muted small">{{ h.ordem }}</td>
+                <td><strong>{{ h.nome }}</strong></td>
+                <td class="text-muted small">{{ h.entradas.length }} entrada(s)</td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a [routerLink]="['/admin/horarios/edit', h.id]" class="btn btn-outline-primary btn-sm" title="Editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <button class="btn btn-sm" [class]="h.idState === 1 ? 'btn-outline-danger' : 'btn-outline-success'"
+                      (click)="toggleState(h)" [title]="h.idState === 1 ? 'Desativar' : 'Reativar'">
+                      <i class="fa-solid" [class]="h.idState === 1 ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

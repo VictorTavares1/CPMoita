@@ -22,8 +22,8 @@ export class AdminPageContentsService {
     return this.http.get<AdminPageContent[]>(this.api);
   }
 
-  update(id: number, conteudoPagina: string): Observable<{ success: boolean }> {
-    return this.http.put<{ success: boolean }>(this.api, { id, tipoConteudo: 'html', conteudoPagina });
+  update(id: number, conteudoPagina: string, tipoConteudo = 'html'): Observable<{ success: boolean }> {
+    return this.http.put<{ success: boolean }>(this.api, { id, tipoConteudo, conteudoPagina });
   }
 
   updateLink(id: number, label: string, filename: string): Observable<{ success: boolean }> {

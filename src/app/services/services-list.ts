@@ -8,6 +8,12 @@ export interface ServiceLink {
   filename: string;
 }
 
+export interface ServiceImagem {
+  titulo: string;
+  texto: string;
+  filename: string;
+}
+
 export interface Service {
   id: number;
   titulo: string;
@@ -18,6 +24,7 @@ export interface Service {
   servicosPrestados: string[];
   descricaoCentroDia: string | null;
   links: ServiceLink[];
+  imagens: ServiceImagem[];
   iconeOuImagem: string;
 }
 

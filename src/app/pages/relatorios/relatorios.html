@@ -1,7 +1,7 @@
 <div class="container py-4">
-  <h3 class="section-heading">Relatório de Contas</h3>
+  <h3 class="section-heading">Relatório e Contas</h3>
   <div class="section-underline"></div>
-  <p>Disponibilizamos abaixo os Relatórios de Contas anuais. Cada ano corresponde a um ficheiro ZIP com todos os documentos em formato PDF.</p>
+  <p>Disponibilizamos abaixo os Relatórios e Contas anuais em formato PDF.</p>
 
   @if (loading) {
     <div class="text-center py-4">
@@ -16,7 +16,7 @@
       @for (year of years; track year) {
         <li class="list-group-item">
           <a [href]="downloadBase + year" style="color:#2e6f9e; font-weight:600; text-decoration:none;">
-            <i class="fas fa-file-pdf me-2"></i>Relatório de Contas {{ year }}
+            <i class="fas fa-file-pdf me-2"></i>Relatório e Contas {{ year }}
           </a>
         </li>
       }

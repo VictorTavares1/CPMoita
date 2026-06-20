@@ -12,6 +12,8 @@ import { AdminNewsService, AdminNewsItem } from '../../../services/admin-news';
 export class AdminNoticias implements OnInit {
   news: AdminNewsItem[] = [];
   total = 0;
+  totalAtivos = 0;
+  totalInativos = 0;
   currentPage = 1;
   readonly pageSize = 20;
   tab: 'active' | 'inactive' = 'active';
@@ -27,6 +29,7 @@ export class AdminNoticias implements OnInit {
 
   ngOnInit(): void {
     this.loadPage(1);
+    this.svc.getPage(1, 1, '', 2).subscribe({ next: (res) => { this.totalInativos = res.total; this.cdr.markForCheck(); } });
   }
 
   loadPage(page: number): void {
@@ -37,6 +40,8 @@ export class AdminNoticias implements OnInit {
         this.news = res.data;
         this.total = res.total;
         this.currentPage = res.page;
+        if (this.tab === 'active') this.totalAtivos = res.total;
+        else this.totalInativos = res.total;
         this.loading.set(false);
         this.cdr.markForCheck();
       },

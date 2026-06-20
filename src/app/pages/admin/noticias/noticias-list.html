@@ -32,10 +32,10 @@
   <!-- Tabs -->
   <div class="btn-group mb-3">
     <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="onTabChange('active')">
-      Ativas
+      Ativas <span class="badge bg-white text-success ms-1">{{ totalAtivos }}</span>
     </button>
     <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="onTabChange('inactive')">
-      Inativas
+      Inativas <span class="badge bg-white text-secondary ms-1">{{ totalInativos }}</span>
     </button>
   </div>
 

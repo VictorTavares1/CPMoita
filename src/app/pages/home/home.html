@@ -32,7 +32,7 @@
               <div class="carousel-caption text-start">
                 <div class="col-9">
                   <h1>{{ get('missao_titulo') || 'A Nossa Missão' }}</h1>
-                  <p>{{ get('missao_texto') || '' }}</p>
+                  <p [innerHTML]="get('missao_texto') || ''"></p>
                   <a routerLink="/orgaos-sociais" class="btn btn-primary">Saber mais</a>
                 </div>
               </div>

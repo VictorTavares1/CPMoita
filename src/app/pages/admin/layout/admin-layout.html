@@ -38,6 +38,16 @@
         </a>
       </li>
       <li>
+        <a routerLink="/admin/orgaos-sociais" routerLinkActive="active">
+          <i class="fa-solid fa-users"></i> Órgãos Sociais
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/horarios" routerLinkActive="active">
+          <i class="fa-solid fa-clock"></i> Horários
+        </a>
+      </li>
+      <li>
         <a routerLink="/admin/paginas" routerLinkActive="active">
           <i class="fa-solid fa-file-lines"></i> Páginas
         </a>
@@ -54,12 +64,17 @@
           <i class="fa-solid fa-clock-rotate-left"></i> Logs
         </a>
       </li>
+      <li>
+        <a routerLink="/admin/perfil" routerLinkActive="active">
+          <i class="fa-solid fa-user"></i> O Meu Perfil
+        </a>
+      </li>
     </ul>
 
     <div class="sidebar-footer">
       <span class="user-email">{{ auth.getEmail() }}</span>
       <div class="d-flex gap-2">
-        <a routerLink="/" class="btn-logout" title="Ver site público">
+        <a href="/" target="_blank" class="btn-logout" title="Ver site público">
           <i class="fa-solid fa-house"></i> Ver site
         </a>
         <button class="btn-logout" (click)="logout()">

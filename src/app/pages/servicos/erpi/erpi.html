@@ -48,4 +48,25 @@
       }
     </div>
   }
+
+  @if (service?.imagens?.length) {
+    <div class="row g-4 mt-2">
+      @for (img of service?.imagens; track img.filename) {
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <img [src]="uploadsUrl + img.filename" [alt]="img.titulo" class="card-img-top" style="height:200px; object-fit:cover;">
+            <div class="card-body">
+              @if (img.titulo) {
+                <h2 class="section-heading">{{ img.titulo }}</h2>
+                <div class="section-underline"></div>
+              }
+              @if (img.texto) {
+                <p>{{ img.texto }}</p>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>

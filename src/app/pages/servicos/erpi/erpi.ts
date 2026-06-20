@@ -11,7 +11,8 @@ import { environment } from '../../../../environments/environment';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Erpi implements OnInit {
-  readonly docsUrl = environment.apiUrl + '/docs.php?file=';
+  readonly docsUrl    = environment.apiUrl + '/docs.php?file=';
+  readonly uploadsUrl = environment.uploadsUrl + '/';
   service: Service | null = null;
 
   constructor(private servicesListService: ServicesListService, private router: Router, private cdr: ChangeDetectorRef) {}

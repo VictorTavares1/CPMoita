@@ -124,7 +124,9 @@ export class AdminPaginasEdit implements OnInit, AfterViewInit {
       return;
     }
 
-    const conteudo = this.quill?.root.innerHTML.trim() ?? '';
+    const conteudo = this.tipo === 'text'
+      ? this.conteudoPagina.trim()
+      : (this.quill?.root.innerHTML.trim() ?? '');
     if (!conteudo || conteudo === '<p><br></p>') {
       this.error.set('O conteúdo não pode estar vazio.');
       this.cdr.markForCheck();
@@ -132,7 +134,7 @@ export class AdminPaginasEdit implements OnInit, AfterViewInit {
     }
 
     this.saving.set(true);
-    this.svc.update(this.id, conteudo).subscribe({
+    this.svc.update(this.id, conteudo, this.tipo).subscribe({
       next: () => this.router.navigate(['/admin/paginas']),
       error: () => { this.error.set('Erro ao guardar.'); this.saving.set(false); this.cdr.markForCheck(); }
     });

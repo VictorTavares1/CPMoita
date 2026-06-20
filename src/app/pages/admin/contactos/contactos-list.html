@@ -13,6 +13,15 @@
     <div class="alert alert-{{ toastType() }} alert-dismissible py-2 small">{{ toast() }}</div>
   }
 
+  <div class="btn-group mb-3">
+    <button class="btn btn-sm" [class]="tab === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="tab = 'active'; cdr.markForCheck()">
+      Ativos <span class="badge bg-white text-success ms-1">{{ activeContacts.length }}</span>
+    </button>
+    <button class="btn btn-sm" [class]="tab === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary'" (click)="tab = 'inactive'; cdr.markForCheck()">
+      Inativos <span class="badge bg-white text-secondary ms-1">{{ inactiveContacts.length }}</span>
+    </button>
+  </div>
+
   <div class="card border-0 shadow-sm">
     <div class="card-body p-0">
       @if (loading()) {
@@ -24,36 +33,21 @@
           <thead class="table-light">
             <tr>
               <th style="width:15%">Tipo</th>
-              <th style="width:35%">Valor</th>
+              <th style="width:45%">Valor</th>
               <th style="width:25%">Ícone</th>
-              <th style="width:10%" class="text-center">Estado</th>
               <th style="width:15%" class="text-center">Ações</th>
             </tr>
           </thead>
           <tbody>
-            @if (contacts.length === 0) {
-              <tr><td colspan="5" class="text-center text-muted py-4">Nenhum contacto encontrado.</td></tr>
+            @if (filtered.length === 0) {
+              <tr><td colspan="4" class="text-center text-muted py-4">Nenhum contacto encontrado.</td></tr>
             }
-            @for (c of contacts; track c.id) {
+            @for (c of filtered; track c.id) {
               <tr [class.table-secondary]="c.idState === 2">
-                <td>
-                  <span class="badge bg-primary">{{ c.tipo }}</span>
-                </td>
-                <td>
-                  <strong>{{ c.valor }}</strong>
-                  @if (c.idState === 2) {
-                    <span class="badge bg-secondary ms-2">Inativo</span>
-                  }
-                </td>
+                <td><span class="badge bg-primary">{{ c.tipo }}</span></td>
+                <td><strong>{{ c.valor }}</strong></td>
                 <td class="text-muted small">
                   <i [class]="c.icone + ' me-1'"></i> {{ c.icone }}
-                </td>
-                <td class="text-center">
-                  @if (c.idState === 1) {
-                    <span class="badge bg-success">Ativo</span>
-                  } @else {
-                    <span class="badge bg-secondary">Inativo</span>
-                  }
                 </td>
                 <td class="text-center">
                   <div class="d-flex justify-content-center gap-2">

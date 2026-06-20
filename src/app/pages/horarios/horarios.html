@@ -5,34 +5,39 @@
       <h3 class="section-heading">Horário de Funcionamento</h3>
       <div class="section-underline"></div>
 
-      <div class="mb-4">
-        <select class="form-select" style="max-width: 400px;" (change)="onSetorChange($event)">
-          <option value="secretaria">Secretaria</option>
-          <option value="ninho">Ninho</option>
-          <option value="coordenadora">Atendimento da Coordenadora Pedagógica</option>
-          <option value="educadoras">Atendimento das Educadoras aos Encarregados de Educação</option>
-        </select>
-      </div>
-
-      @if (showTable) {
-      <div class="table-responsive table-fade">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>Dia da Semana</th>
-              <th>Horário</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (entry of currentHorarios; track entry.dia) {
-              <tr>
-                <td>{{ entry.dia }}</td>
-                <td>{{ entry.horario }}</td>
-              </tr>
+      @if (horarios.length === 0) {
+        <div class="text-center py-4 text-muted">
+          <span class="spinner-border spinner-border-sm me-2"></span>A carregar...
+        </div>
+      } @else {
+        <div class="mb-4">
+          <select class="form-select" style="max-width: 400px;" (change)="onSetorChange($event)">
+            @for (h of horarios; track h.id) {
+              <option [value]="h.id">{{ h.nome }}</option>
             }
-          </tbody>
-        </table>
-      </div>
+          </select>
+        </div>
+
+        @if (showTable && currentHorario) {
+          <div class="table-responsive table-fade">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Dia da Semana</th>
+                  <th>Horário</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (entry of currentHorario.entradas; track entry.dia) {
+                  <tr>
+                    <td>{{ entry.dia }}</td>
+                    <td>{{ entry.horario }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       }
     </div>
 

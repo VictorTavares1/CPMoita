@@ -8,23 +8,25 @@
         Os órgãos de gestão do CPASM são constituídos por voluntários que exercem a sua missão de forma gratuita, com espírito de serviço e compromisso com a comunidade.
       </p>
 
-      <h3 class="section-heading">Direção</h3>
-      <div class="section-underline"></div>
-      <ul>
-        <li><strong>Presidente:</strong> Padre Nuno Paulo Isidoro Pacheco</li>
-        <li><strong>Vice-Presidente:</strong> Sara Alexandra Penas Faustino</li>
-        <li><strong>Secretária:</strong> Maria de Fátima Jorge Tavares</li>
-        <li><strong>Tesoureira:</strong> Anabela Birrento da Silva</li>
-        <li><strong>Vogal:</strong> Maria Paula do Rosário Dias Folgado Diogo</li>
-      </ul>
+      @if (direcao.length > 0) {
+        <h3 class="section-heading">Direção</h3>
+        <div class="section-underline"></div>
+        <ul>
+          @for (m of direcao; track m.id) {
+            <li><strong>{{ m.cargo }}:</strong> {{ m.nome }}</li>
+          }
+        </ul>
+      }
 
-      <h3 class="section-heading">Conselho Fiscal</h3>
-      <div class="section-underline"></div>
-      <ul>
-        <li><strong>Presidente:</strong> Maria Fernanda Pardaleiro Velez</li>
-        <li><strong>Secretário:</strong> Agostinho Maria Medroa</li>
-        <li><strong>Vogal:</strong> António José Picanço dos Santos</li>
-      </ul>
+      @if (conselhoFiscal.length > 0) {
+        <h3 class="section-heading">Conselho Fiscal</h3>
+        <div class="section-underline"></div>
+        <ul>
+          @for (m of conselhoFiscal; track m.id) {
+            <li><strong>{{ m.cargo }}:</strong> {{ m.nome }}</li>
+          }
+        </ul>
+      }
     </div>
 
     <!-- Sidebar -->

@@ -13,8 +13,13 @@ export class AdminContactos implements OnInit {
   loading = signal(true);
   toast = signal('');
   toastType = signal('success');
+  tab: 'active' | 'inactive' = 'active';
 
-  constructor(private svc: AdminContactsService, private cdr: ChangeDetectorRef) {}
+  get activeContacts(): AdminContact[] { return this.contacts.filter(c => c.idState === 1); }
+  get inactiveContacts(): AdminContact[] { return this.contacts.filter(c => c.idState === 2); }
+  get filtered(): AdminContact[] { return this.tab === 'active' ? this.activeContacts : this.inactiveContacts; }
+
+  constructor(private svc: AdminContactsService, public cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void { this.load(); }
 

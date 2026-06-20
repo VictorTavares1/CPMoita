@@ -59,19 +59,15 @@ if ($method === 'POST') {
     }
 
     // Validação de tipo via finfo (mais fiável que mime_content_type)
-    $allowedMimes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ];
-    $allowedExts = ['pdf', 'doc', 'docx'];
+    $allowedMimes = ['application/pdf'];
+    $allowedExts  = ['pdf'];
     $ext  = strtolower(pathinfo($_FILES['doc']['name'], PATHINFO_EXTENSION));
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime  = $finfo->file($_FILES['doc']['tmp_name']);
 
     if (!in_array($ext, $allowedExts, true) || !in_array($mime, $allowedMimes, true)) {
         http_response_code(400);
-        echo json_encode(['error' => 'Tipo de ficheiro não permitido. Use PDF ou Word.']);
+        echo json_encode(['error' => 'Tipo de ficheiro não permitido. Use PDF.']);
         exit();
     }
 
